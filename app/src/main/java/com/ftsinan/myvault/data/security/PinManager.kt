@@ -1,0 +1,76 @@
+package com.ftsinan.myvault.data.security
+
+import android.content.Context
+import android.util.Base64
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import java.security.MessageDigest
+import java.security.SecureRandom
+
+private val Context.dataStore by preferencesDataStore(name = "vault_security")
+
+/**
+ * Stores the vault PIN as a salted SHA-256 hash in DataStore —
+ * the PIN itself is never saved. Also holds the biometric on/off setting.
+ */
+class PinManager(private val context: Context) {
+
+    val isPinSet: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[PIN_HASH] != null
+    }
+
+    val isBiometricEnabled: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[BIOMETRIC_ENABLED] ?: true
+    }
+
+    suspend fun setPin(pin: String) {
+        val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
+        val hash = hashPin(pin, salt)
+        context.dataStore.edit { prefs ->
+            prefs[PIN_HASH] = Base64.encodeToString(hash, Base64.NO_WRAP)
+            prefs[PIN_SALT] = Base64.encodeToString(salt, Base64.NO_WRAP)
+        }
+    }
+
+    suspend fun verifyPin(pin: String): Boolean {
+        val prefs = context.dataStore.data.first()
+        val storedHash = prefs[PIN_HASH] ?: return false
+        val salt = prefs[PIN_SALT]?.let { Base64.decode(it, Base64.NO_WRAP) }
+            ?: return false
+        val candidate = Base64.encodeToString(hashPin(pin, salt), Base64.NO_WRAP)
+        // MessageDigest.isEqual avoids timing leaks.
+        return MessageDigest.isEqual(
+            candidate.toByteArray(Charsets.UTF_8),
+            storedHash.toByteArray(Charsets.UTF_8)
+        )
+    }
+
+    suspend fun setBiometricEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[BIOMETRIC_ENABLED] = enabled }
+    }
+
+    private fun hashPin(pin: String, salt: ByteArray): ByteArray {
+        val digest = MessageDigest.getInstance("SHA-256")
+        digest.update(salt)
+        // A few thousand rounds make brute-forcing a 4-digit PIN from a
+        // stolen hash noticeably slower.
+        var hash = digest.digest(pin.toByteArray(Charsets.UTF_8))
+        repeat(HASH_ROUNDS) {
+            hash = digest.digest(hash)
+        }
+        return hash
+    }
+
+    companion object {
+        const val PIN_LENGTH = 4
+        private const val HASH_ROUNDS = 10_000
+        private val PIN_HASH = stringPreferencesKey("pin_hash")
+        private val PIN_SALT = stringPreferencesKey("pin_salt")
+        private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
+    }
+}
