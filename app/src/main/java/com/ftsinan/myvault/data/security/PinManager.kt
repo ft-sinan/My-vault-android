@@ -28,6 +28,11 @@ class PinManager(private val context: Context) {
         prefs[BIOMETRIC_ENABLED] ?: true
     }
 
+    /** Material You: use wallpaper-based colours on Android 12+. */
+    val useDynamicColor: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[USE_DYNAMIC_COLOR] ?: true
+    }
+
     suspend fun setPin(pin: String) {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
         val hash = hashPin(pin, salt)
@@ -54,6 +59,10 @@ class PinManager(private val context: Context) {
         context.dataStore.edit { it[BIOMETRIC_ENABLED] = enabled }
     }
 
+    suspend fun setUseDynamicColor(enabled: Boolean) {
+        context.dataStore.edit { it[USE_DYNAMIC_COLOR] = enabled }
+    }
+
     private fun hashPin(pin: String, salt: ByteArray): ByteArray {
         val digest = MessageDigest.getInstance("SHA-256")
         digest.update(salt)
@@ -72,5 +81,6 @@ class PinManager(private val context: Context) {
         private val PIN_HASH = stringPreferencesKey("pin_hash")
         private val PIN_SALT = stringPreferencesKey("pin_salt")
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
+        private val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
     }
 }

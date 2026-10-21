@@ -47,8 +47,8 @@ class MainActivity : FragmentActivity() {
         )
 
         setContent {
-            MyVaultTheme {
-                val lockState by lockViewModel.uiState.collectAsStateWithLifecycle()
+            val lockState by lockViewModel.uiState.collectAsStateWithLifecycle()
+            MyVaultTheme(useDynamicColor = lockState.useDynamicColor) {
 
                 when {
                     lockState.isLoading -> {

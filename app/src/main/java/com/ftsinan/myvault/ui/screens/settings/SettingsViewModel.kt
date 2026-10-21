@@ -29,6 +29,9 @@ class SettingsViewModel(
     val biometricEnabled: StateFlow<Boolean> = pinManager.isBiometricEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
 
+    val dynamicColorEnabled: StateFlow<Boolean> = pinManager.useDynamicColor
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
     val documentCount: StateFlow<Int> = repository.documentCount
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
@@ -40,6 +43,10 @@ class SettingsViewModel(
 
     fun setBiometricEnabled(enabled: Boolean) {
         viewModelScope.launch { pinManager.setBiometricEnabled(enabled) }
+    }
+
+    fun setDynamicColorEnabled(enabled: Boolean) {
+        viewModelScope.launch { pinManager.setUseDynamicColor(enabled) }
     }
 
     fun changePin(currentPin: String, newPin: String, confirmPin: String) {

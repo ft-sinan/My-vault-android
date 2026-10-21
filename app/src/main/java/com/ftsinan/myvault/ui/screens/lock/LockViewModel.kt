@@ -21,6 +21,7 @@ data class LockUiState(
     val isPinSet: Boolean = false,
     val isUnlocked: Boolean = false,
     val isBiometricEnabled: Boolean = true,
+    val useDynamicColor: Boolean = true,
     val error: String? = null,
     val failedAttempts: Int = 0
 )
@@ -47,6 +48,11 @@ class LockViewModel(
         viewModelScope.launch {
             pinManager.isBiometricEnabled.collect { enabled ->
                 _uiState.update { it.copy(isBiometricEnabled = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.useDynamicColor.collect { enabled ->
+                _uiState.update { it.copy(useDynamicColor = enabled) }
             }
         }
     }

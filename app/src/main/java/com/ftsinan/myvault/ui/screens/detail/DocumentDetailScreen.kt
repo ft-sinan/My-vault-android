@@ -31,6 +31,8 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -274,17 +276,34 @@ private fun DocumentDetailContent(
         // ---- Metadata ---------------------------------------------------
         item {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Details",
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Details",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = "Stored securely on this device",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 ExpiryChip(status = FormatUtils.expiryStatus(document.expiryDate))
             }
         }
 
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Card(
+                shape = RoundedCornerShape(32.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    modifier = Modifier.padding(20.dp)
+                ) {
                 DetailRow("Document type", document.docType)
                 DetailRow("Category", document.category.label)
                 DetailRow("Belongs to", document.holderName)
@@ -323,8 +342,9 @@ private fun DocumentDetailContent(
                 DetailRow("File size", FormatUtils.formatFileSize(document.fileSize))
                 DetailRow("Added on", FormatUtils.formatDate(document.createdAt))
                 DetailRow("Last updated", FormatUtils.formatDate(document.updatedAt))
-                if (!document.notes.isNullOrBlank()) {
-                    DetailRow("Notes", document.notes)
+                    if (!document.notes.isNullOrBlank()) {
+                        DetailRow("Notes", document.notes)
+                    }
                 }
             }
         }
@@ -358,8 +378,8 @@ private fun ZoomableImage(bytes: ByteArray) {
         modifier = Modifier
             .fillMaxWidth()
             .height(420.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clip(RoundedCornerShape(32.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
                     scale = (scale * zoom).coerceIn(1f, 5f)
@@ -415,7 +435,7 @@ private fun PdfPageList(file: File) {
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .clip(RoundedCornerShape(24.dp))
                     .background(Color.White)
             )
         }

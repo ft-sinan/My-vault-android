@@ -1,5 +1,9 @@
 package com.ftsinan.myvault.ui.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ftsinan.myvault.data.security.PinManager
 
@@ -34,33 +42,53 @@ fun PinDots(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(total) { index ->
-            val filled = index < entered
-            Box(
-                modifier = Modifier
-                    .size(16.dp)
-                    .clip(CircleShape)
-                    .then(
-                        if (filled) {
-                            Modifier.background(
-                                if (isError) MaterialTheme.colorScheme.error
-                                else MaterialTheme.colorScheme.primary
-                            )
-                        } else {
-                            Modifier.border(
-                                width = 1.5.dp,
-                                color = if (isError) MaterialTheme.colorScheme.error
-                                else MaterialTheme.colorScheme.outline,
-                                shape = CircleShape
-                            )
-                        }
-                    )
-            )
+            PinDot(filled = index < entered, isError = isError)
         }
     }
+}
+
+@Composable
+private fun PinDot(filled: Boolean, isError: Boolean) {
+    val scale by animateFloatAsState(
+        targetValue = if (filled) 1.18f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "pinDotScale"
+    )
+    val animatedColor by animateColorAsState(
+        targetValue = when {
+            filled && isError -> MaterialTheme.colorScheme.error
+            filled -> MaterialTheme.colorScheme.primary
+            else -> MaterialTheme.colorScheme.surfaceContainerHighest
+        },
+        label = "pinDotColor"
+    )
+
+    Box(
+        modifier = Modifier
+            .size(18.dp)
+            .graphicsLayer(scaleX = scale, scaleY = scale)
+            .clip(CircleShape)
+            .background(animatedColor)
+            .then(
+                if (filled) {
+                    Modifier
+                } else {
+                    Modifier.border(
+                        width = 1.5.dp,
+                        color = if (isError) MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.outlineVariant,
+                        shape = CircleShape
+                    )
+                }
+            )
+    )
 }
 
 @Composable
@@ -77,36 +105,44 @@ fun PinPad(
     )
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         rows.forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(26.dp)) {
                 row.forEach { digit ->
                     PinKey(label = digit, onClick = { onDigit(digit) })
                 }
             }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(26.dp)) {
             // Bottom-left: fingerprint shortcut (lock screen only)
             if (onBiometricClick != null) {
-                IconButton(onClick = onBiometricClick, modifier = Modifier.size(72.dp)) {
-                    Icon(
-                        imageVector = Icons.Filled.Fingerprint,
-                        contentDescription = "Unlock with fingerprint",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(32.dp)
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(76.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(onClick = onBiometricClick, modifier = Modifier.size(76.dp)) {
+                        Icon(
+                            imageVector = Icons.Filled.Fingerprint,
+                            contentDescription = "Unlock with fingerprint",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(34.dp)
+                        )
+                    }
                 }
             } else {
-                Spacer(modifier = Modifier.size(72.dp))
+                Spacer(modifier = Modifier.size(76.dp))
             }
             PinKey(label = "0", onClick = { onDigit("0") })
-            IconButton(onClick = onBackspace, modifier = Modifier.size(72.dp)) {
+            IconButton(onClick = onBackspace, modifier = Modifier.size(76.dp)) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Backspace,
                     contentDescription = "Delete digit",
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(29.dp)
                 )
             }
         }
@@ -115,16 +151,21 @@ fun PinPad(
 
 @Composable
 private fun PinKey(label: String, onClick: () -> Unit) {
+    val haptics = LocalHapticFeedback.current
     TextButton(
-        onClick = onClick,
+        onClick = {
+            haptics.performHapticFeedback(HapticFeedbackType.KeyboardTap)
+            onClick()
+        },
         modifier = Modifier
-            .size(72.dp)
+            .size(76.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface
         )
     }

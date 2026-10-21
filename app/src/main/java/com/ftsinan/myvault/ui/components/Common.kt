@@ -53,8 +53,8 @@ fun EmptyState(
     ) {
         Box(
             modifier = Modifier
-                .size(88.dp)
-                .clip(CircleShape)
+                .size(96.dp)
+                .clip(RoundedCornerShape(32.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center
         ) {
@@ -62,13 +62,13 @@ fun EmptyState(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.size(44.dp)
+                modifier = Modifier.size(48.dp)
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(6.dp))
@@ -120,21 +120,23 @@ fun DocumentCard(
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        shape = RoundedCornerShape(28.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(52.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(categoryColor(document.category).copy(alpha = 0.14f)),
+                    .size(58.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(categoryColor(document.category).copy(alpha = 0.16f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -147,7 +149,7 @@ fun DocumentCard(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 14.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(

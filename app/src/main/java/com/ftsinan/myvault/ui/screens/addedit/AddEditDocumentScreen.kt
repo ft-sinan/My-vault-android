@@ -34,17 +34,20 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,6 +56,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -92,11 +96,31 @@ fun AddEditDocumentScreen(
         ActivityResultContracts.OpenDocument()
     ) { uri -> viewModel.onFilePicked(uri, label = "Selected file") }
 
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+        rememberTopAppBarState()
+    )
+
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
+            LargeTopAppBar(
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
                 title = {
-                    Text(if (uiState.isEditMode) "Edit document" else "Add document")
+                    Column {
+                        Text(
+                            text = if (uiState.isEditMode) "Edit document" else "Add document",
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                        Text(
+                            text = "Encrypted before it is saved",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -109,23 +133,26 @@ fun AddEditDocumentScreen(
             )
         },
         bottomBar = {
-            Button(
-                onClick = viewModel::save,
-                enabled = !uiState.isSaving,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .height(52.dp)
-            ) {
-                if (uiState.isSaving) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(20.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Encrypting & saving…")
-                } else {
-                    Text(if (uiState.isEditMode) "Save changes" else "Save to vault")
+            Surface(color = MaterialTheme.colorScheme.background) {
+                Button(
+                    onClick = viewModel::save,
+                    enabled = !uiState.isSaving,
+                    shape = RoundedCornerShape(22.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                        .height(56.dp)
+                ) {
+                    if (uiState.isSaving) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Encrypting & saving…")
+                    } else {
+                        Text(if (uiState.isEditMode) "Save changes" else "Save to vault")
+                    }
                 }
             }
         }
@@ -134,20 +161,22 @@ fun AddEditDocumentScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             // --- Attached file -------------------------------------------
             SectionLabel("Document file *")
             Card(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(32.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(14.dp)) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     if (uiState.pendingUri != null) {
                         AsyncImage(
                             model = uiState.pendingUri,
@@ -156,7 +185,7 @@ fun AddEditDocumentScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(160.dp)
-                                .clip(RoundedCornerShape(12.dp))
+                                .clip(RoundedCornerShape(24.dp))
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                     }
@@ -176,19 +205,20 @@ fun AddEditDocumentScreen(
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        OutlinedButton(
+                        FilledTonalButton(
                             onClick = {
                                 val uri = viewModel.createCaptureUri()
                                 captureUri = uri
                                 cameraLauncher.launch(uri)
                             },
-                            modifier = Modifier.weight(1f)
+                            shape = RoundedCornerShape(18.dp),
+                            modifier = Modifier.weight(1f).height(48.dp)
                         ) {
                             Icon(Icons.Filled.CameraAlt, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
                             Text("Scan")
                         }
-                        OutlinedButton(
+                        FilledTonalButton(
                             onClick = {
                                 galleryLauncher.launch(
                                     PickVisualMediaRequest(
@@ -196,17 +226,19 @@ fun AddEditDocumentScreen(
                                     )
                                 )
                             },
-                            modifier = Modifier.weight(1f)
+                            shape = RoundedCornerShape(18.dp),
+                            modifier = Modifier.weight(1f).height(48.dp)
                         ) {
                             Icon(Icons.Filled.PhotoLibrary, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
                             Text("Gallery")
                         }
-                        OutlinedButton(
+                        FilledTonalButton(
                             onClick = {
                                 fileLauncher.launch(arrayOf("application/pdf", "image/*"))
                             },
-                            modifier = Modifier.weight(1f)
+                            shape = RoundedCornerShape(18.dp),
+                            modifier = Modifier.weight(1f).height(48.dp)
                         ) {
                             Icon(Icons.Filled.FolderOpen, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -235,6 +267,7 @@ fun AddEditDocumentScreen(
                 onValueChange = viewModel::onDocTypeChange,
                 label = { Text("e.g. Aadhaar Card") },
                 singleLine = true,
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -257,6 +290,7 @@ fun AddEditDocumentScreen(
                 onValueChange = viewModel::onTitleChange,
                 label = { Text("e.g. My Aadhaar Card") },
                 singleLine = true,
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -267,6 +301,7 @@ fun AddEditDocumentScreen(
                 onValueChange = viewModel::onHolderNameChange,
                 label = { Text("Full name on the document") },
                 singleLine = true,
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -286,6 +321,7 @@ fun AddEditDocumentScreen(
                 onValueChange = viewModel::onDocumentNumberChange,
                 label = { Text("Aadhaar / PAN / passport number…") },
                 singleLine = true,
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -310,6 +346,7 @@ fun AddEditDocumentScreen(
                 onValueChange = viewModel::onNotesChange,
                 label = { Text("Anything to remember about this document") },
                 minLines = 2,
+                shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 

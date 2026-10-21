@@ -35,6 +35,8 @@ data class HomeUiState(
     val isLoading: Boolean = true,
     val documents: List<VaultDocument> = emptyList(),
     val totalCount: Int = 0,
+    val favouriteCount: Int = 0,
+    val totalSize: Long = 0L,
     val categoryCounts: Map<Category, Int> = emptyMap(),
     val relationsInUse: List<Relation> = emptyList(),
     /** Documents expired or expiring within 30 days, most urgent first. */
@@ -56,6 +58,8 @@ class HomeViewModel(
             isLoading = false,
             documents = allDocuments.filter { it.matches(activeFilters) },
             totalCount = allDocuments.size,
+            favouriteCount = allDocuments.count { it.isFavourite },
+            totalSize = allDocuments.sumOf { it.fileSize },
             categoryCounts = allDocuments.groupingBy { it.category }.eachCount(),
             relationsInUse = allDocuments.map { it.relation }.distinct()
                 .sortedBy { it.ordinal },

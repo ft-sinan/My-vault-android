@@ -2,11 +2,16 @@
 
 A secure, offline Android vault for your **ID proofs, certificates and important documents** — Aadhaar, PAN, Passport, Driving Licence, SSLC/Degree certificates, RC book, insurance papers and more. Keep documents for the **whole family** (self, spouse, parents, children) in one encrypted place on your phone.
 
-> Built with **Kotlin + Jetpack Compose (Material 3)**. No accounts, no cloud, no ads — everything stays on your device.
+> Built with **Kotlin + Jetpack Compose (Material 3 / Material You)**. No accounts, no cloud, no ads — everything stays on your device.
 
 ---
 
 ## ✨ Features (v1.0 MVP)
+
+### 🎨 Material You design
+- **Dynamic colour** on Android 12+: the app matches your wallpaper (can be turned off in *Settings → Appearance*)
+- Expressive Material 3 look — large collapsing app bars, pillowy 28–36 dp corners, tonal surface containers, colourful category cards
+- Vault summary hero, pill-shaped search, animated PIN dots with tactile haptic feedback, light & dark themes
 
 ### 🔒 Security first
 - **PIN lock** (4-digit, stored only as a salted SHA-256 hash — never in plain text)
@@ -31,7 +36,7 @@ A secure, offline Android vault for your **ID proofs, certificates and important
 - **Expiry alerts**: expired / expiring-soon documents (passport, licence, insurance…) are flagged automatically
 
 ### ⚙️ Settings
-- Toggle biometric unlock, change PIN, view storage usage, lock vault instantly
+- Material You dynamic-colour toggle, biometric toggle, change PIN, view storage usage, lock vault instantly
 
 ---
 
@@ -80,7 +85,7 @@ app/src/main/java/com/ftsinan/myvault/
 │   │   ├── addedit/           # Camera/gallery/PDF import + metadata form
 │   │   ├── detail/            # Image/PDF viewer, share, favourite, delete
 │   │   └── settings/          # Biometric toggle, change PIN, storage
-│   └── theme/                 # Material 3 navy/teal theme (light + dark)
+│   └── theme/                 # Material You: dynamic colour + teal fallback, shapes & type
 └── util/                      # Masking, date/size formatting, expiry logic
 ```
 
