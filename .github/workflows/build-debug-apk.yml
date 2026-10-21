@@ -27,11 +27,33 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      # Gradle output is mirrored into ::error:: annotations on failure so
+      # compile errors are visible in the run summary / API, not only logs.
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace
+        shell: bash
+        run: |
+          set +e
+          ./gradlew testDebugUnitTest --stacktrace 2>&1 | tee /tmp/unit-test.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -E '^e: |error: |FAILED|FAILURE:' /tmp/unit-test.log | head -40 \
+              | sed -e 's/%/%25/g' -e 's/\r/%0D/g' \
+              | while IFS= read -r line; do echo "::error::$line"; done
+          fi
+          exit "$status"
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        shell: bash
+        run: |
+          set +e
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee /tmp/build.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -E '^e: |error: |FAILED|FAILURE:' /tmp/build.log | head -40 \
+              | sed -e 's/%/%25/g' -e 's/\r/%0D/g' \
+              | while IFS= read -r line; do echo "::error::$line"; done
+          fi
+          exit "$status"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
