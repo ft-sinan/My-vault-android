@@ -1,6 +1,8 @@
 package com.ftsinan.myvault.ui.screens.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,12 +13,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -34,13 +39,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -77,40 +83,100 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
+    val listState = rememberLazyListState()
+    val showProfileInTopBar by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0 ||
+                listState.firstVisibleItemScrollOffset > 220
+        }
+    }
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         rememberTopAppBarState()
     )
+    val owner = uiState.owner
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            LargeTopAppBar(
+            TopAppBar(
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
                 ),
                 title = {
-                    Column {
-                        Text(
-                            text = greetingText(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = uiState.owner?.member?.name
-                                ?: stringResource(R.string.app_name),
-                            style = MaterialTheme.typography.headlineLarge,
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Text(
-                            text = stringResource(R.string.home_subtitle),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    Crossfade(
+                        targetState = showProfileInTopBar && owner != null,
+                        label = "homeTopBarProfile"
+                    ) { showProfile ->
+                        val currentOwner = owner
+                        if (showProfile && currentOwner != null) {
+                            Row(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(50))
+                                    .clickable { onProfileClick(currentOwner.member.id) }
+                                    .padding(end = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                MemberAvatar(
+                                    name = currentOwner.member.name,
+                                    photoBytes = currentOwner.photoBytes,
+                                    size = 36.dp
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = currentOwner.member.name
+                                            .substringBefore(" "),
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.home_subtitle),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        } else {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .clip(RoundedCornerShape(13.dp))
+                                        .background(MaterialTheme.colorScheme.primaryContainer),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Shield,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                                Spacer(Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.app_name),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.home_subtitle),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        }
                     }
                 },
                 actions = {
@@ -133,6 +199,7 @@ fun HomeScreen(
         }
 
         LazyColumn(
+            state = listState,
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -282,7 +349,7 @@ private fun OwnerProfileCard(
     totalSize: Long,
     onClick: () -> Unit
 ) {
-    val gradient = Brush.linearGradient(
+    val gradient = Brush.horizontalGradient(
         listOf(
             MaterialTheme.colorScheme.primaryContainer,
             MaterialTheme.colorScheme.tertiaryContainer,
@@ -291,7 +358,7 @@ private fun OwnerProfileCard(
     )
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(36.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = Modifier.fillMaxWidth()
@@ -300,20 +367,80 @@ private fun OwnerProfileCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
-                .padding(20.dp)
         ) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    MemberAvatar(
-                        name = owner.member.name,
-                        photoBytes = owner.photoBytes,
-                        size = 58.dp
+            // Soft decorative shapes keep the compact banner from feeling flat.
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 34.dp, y = (-52).dp)
+                    .size(124.dp)
+                    .clip(CircleShape)
+                    .background(
+                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.20f)
                     )
-                    Spacer(Modifier.width(14.dp))
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-36).dp, y = 42.dp)
+                    .size(54.dp)
+                    .clip(CircleShape)
+                    .background(
+                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.12f)
+                    )
+            )
+            Icon(
+                imageVector = Icons.Filled.Shield,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.08f),
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .offset(x = 18.dp)
+                    .size(92.dp)
+            )
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, top = 14.dp, end = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .clip(CircleShape)
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainerLowest
+                                    .copy(alpha = 0.52f)
+                            )
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.surfaceContainerLowest
+                                    .copy(alpha = 0.75f),
+                                shape = CircleShape
+                            )
+                            .padding(3.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        MemberAvatar(
+                            name = owner.member.name,
+                            photoBytes = owner.photoBytes,
+                            size = 62.dp
+                        )
+                    }
+                    Spacer(Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = greetingText(),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            maxLines = 1
+                        )
                         Text(
                             text = owner.member.name,
                             style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -330,29 +457,64 @@ private fun OwnerProfileCard(
                         ).joinToString(" • ")
                         Text(
                             text = details.ifBlank {
-                                stringResource(R.string.home_private_subtitle)
+                                stringResource(R.string.home_private_encrypted)
                             },
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
-                                .copy(alpha = 0.8f)
+                                .copy(alpha = 0.78f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
-                    Icon(
-                        imageVector = Icons.Filled.Shield,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(CircleShape)
+                            .background(
+                                MaterialTheme.colorScheme.surfaceContainerLowest
+                                    .copy(alpha = 0.46f)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
-                Spacer(Modifier.height(16.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    HomePill(Icons.Filled.Description, totalCount.toString(),
-                        stringResource(R.string.stat_docs), Modifier.weight(1f))
-                    HomePill(Icons.Filled.Star, owner.documentCount.toString(),
-                        stringResource(R.string.stat_saved), Modifier.weight(1f))
-                    HomePill(Icons.Filled.Groups, peopleCount.toString(),
-                        stringResource(R.string.stat_people), Modifier.weight(1f))
-                    HomePill(Icons.Filled.Storage, FormatUtils.formatFileSize(totalSize),
-                        stringResource(R.string.stat_on_device), Modifier.weight(1.2f))
+
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainerLowest
+                                .copy(alpha = 0.32f)
+                        )
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    BannerStat(
+                        icon = Icons.Filled.Description,
+                        text = "$totalCount ${stringResource(R.string.stat_docs)}",
+                        modifier = Modifier.weight(1f)
+                    )
+                    BannerStat(
+                        icon = Icons.Filled.Groups,
+                        text = "$peopleCount ${stringResource(R.string.stat_people)}",
+                        modifier = Modifier.weight(1f)
+                    )
+                    BannerStat(
+                        icon = Icons.Filled.Storage,
+                        text = if (totalSize > 0) {
+                            FormatUtils.formatFileSize(totalSize)
+                        } else {
+                            "0 B"
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
         }
@@ -360,35 +522,31 @@ private fun OwnerProfileCard(
 }
 
 @Composable
-private fun HomePill(
+private fun BannerStat(
     icon: ImageVector,
-    value: String,
-    label: String,
+    text: String,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.62f))
-            .padding(horizontal = 9.dp, vertical = 10.dp)
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
-            Icon(icon, contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(17.dp))
-            Spacer(Modifier.height(5.dp))
-            Text(
-                text = value,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1
-            )
-        }
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(15.dp)
+        )
+        Spacer(Modifier.width(5.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 

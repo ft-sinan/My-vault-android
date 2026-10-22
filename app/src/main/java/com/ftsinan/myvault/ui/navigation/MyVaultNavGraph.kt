@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -223,8 +222,7 @@ fun MyVaultNavGraph(
                             icon = {
                                 Box(
                                     modifier = Modifier
-                                        .offset(y = (-8).dp)
-                                        .size(52.dp)
+                                        .size(36.dp)
                                         .background(
                                             MaterialTheme.colorScheme.primary,
                                             CircleShape
@@ -235,7 +233,7 @@ fun MyVaultNavGraph(
                                         Icons.Filled.Add,
                                         contentDescription = stringResource(R.string.tab_add),
                                         tint = MaterialTheme.colorScheme.onPrimary,
-                                        modifier = Modifier.size(28.dp)
+                                        modifier = Modifier.size(20.dp)
                                     )
                                 }
                             },
