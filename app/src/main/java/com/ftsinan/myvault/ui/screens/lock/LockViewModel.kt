@@ -7,7 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
+import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.LanguageManager
 import com.ftsinan.myvault.data.storage.VaultFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,22 +21,29 @@ import kotlinx.coroutines.launch
 
 data class LockUiState(
     val isLoading: Boolean = true,
+    val language: AppLanguage? = null,
+    val isLanguageLoaded: Boolean = false,
     val isPinSet: Boolean = false,
     val isUnlocked: Boolean = false,
     val isBiometricEnabled: Boolean = true,
     val useDynamicColor: Boolean = true,
+    val isProfileLoaded: Boolean = false,
+    val hasOwnerProfile: Boolean = false,
+    /** Name only is shown on the lock screen (never the photo). */
+    val ownerName: String? = null,
     val error: String? = null,
     val failedAttempts: Int = 0
 )
 
 /**
- * Owns the vault lock state for the whole app session.
- * The vault starts locked; it re-locks when the app has been in the
- * background for a while (handled by MainActivity calling [lock]).
+ * Owns app-entry state for the whole session: language choice, PIN lock
+ * and whether the owner's profile has been created yet.
  */
 class LockViewModel(
     private val pinManager: PinManager,
-    private val fileManager: VaultFileManager
+    private val fileManager: VaultFileManager,
+    private val languageManager: LanguageManager,
+    repository: DocumentRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LockUiState())
@@ -55,6 +65,26 @@ class LockViewModel(
                 _uiState.update { it.copy(useDynamicColor = enabled) }
             }
         }
+        viewModelScope.launch {
+            languageManager.language.collect { language ->
+                _uiState.update { it.copy(language = language, isLanguageLoaded = true) }
+            }
+        }
+        viewModelScope.launch {
+            repository.owner.collect { owner ->
+                _uiState.update {
+                    it.copy(
+                        isProfileLoaded = true,
+                        hasOwnerProfile = owner != null,
+                        ownerName = owner?.name
+                    )
+                }
+            }
+        }
+    }
+
+    fun setLanguage(language: AppLanguage) {
+        languageManager.setLanguage(language)
     }
 
     fun setupPin(pin: String) {
@@ -75,7 +105,7 @@ class LockViewModel(
             } else {
                 _uiState.update {
                     it.copy(
-                        error = "Wrong PIN. Try again.",
+                        error = "WRONG_PIN",
                         failedAttempts = it.failedAttempts + 1
                     )
                 }
@@ -102,7 +132,9 @@ class LockViewModel(
                 val app = this[APPLICATION_KEY] as MyVaultApplication
                 LockViewModel(
                     pinManager = app.container.pinManager,
-                    fileManager = app.container.fileManager
+                    fileManager = app.container.fileManager,
+                    languageManager = app.container.languageManager,
+                    repository = app.container.documentRepository
                 )
             }
         }

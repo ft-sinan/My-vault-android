@@ -75,6 +75,10 @@ dependencies {
     // Image loading (decrypted document previews)
     implementation(libs.io.coil.compose)
 
+    // ML Kit document scanner (multi-page) + on-device OCR for ID numbers
+    implementation(libs.mlkit.document.scanner)
+    implementation(libs.mlkit.text.recognition)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -3,6 +3,8 @@ package com.ftsinan.myvault.ui.screens.settings
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -22,6 +24,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Storage
@@ -29,6 +34,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -51,26 +57,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.ui.screens.lock.canUseBiometric
 import com.ftsinan.myvault.util.FormatUtils
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
     onLock: () -> Unit,
+    onManageMembers: () -> Unit,
+    onLanguageSelected: (AppLanguage) -> Unit,
     viewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
 ) {
     val context = LocalContext.current
     val biometricEnabled by viewModel.biometricEnabled.collectAsStateWithLifecycle()
     val dynamicColorEnabled by viewModel.dynamicColorEnabled.collectAsStateWithLifecycle()
+    val language by viewModel.language.collectAsStateWithLifecycle()
     val documentCount by viewModel.documentCount.collectAsStateWithLifecycle()
     val totalSize by viewModel.totalSize.collectAsStateWithLifecycle()
     val message by viewModel.message.collectAsStateWithLifecycle()
@@ -106,9 +118,9 @@ fun SettingsScreen(
                 ),
                 title = {
                     Column {
-                        Text("Settings", style = MaterialTheme.typography.headlineMedium)
+                        Text(stringResource(R.string.tab_settings), style = MaterialTheme.typography.headlineMedium)
                         Text(
-                            text = "Appearance, security & storage",
+                            text = stringResource(R.string.settings_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -116,7 +128,7 @@ fun SettingsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
                     }
                 }
             )
@@ -130,23 +142,61 @@ fun SettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // ---- Appearance (Material You) --------------------------------
-            SettingsCard(title = "Appearance", icon = { Icon(Icons.Filled.Palette, null) }) {
+
+            // ---- Language --------------------------------------------------
+            SettingsCard(title = stringResource(R.string.settings_language), icon = { Icon(Icons.Filled.Language, null) }) {
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AppLanguage.entries.forEach { option ->
+                        FilterChip(
+                            selected = language == option,
+                            onClick = { onLanguageSelected(option) },
+                            label = { Text(option.nativeName) }
+                        )
+                    }
+                }
+            }
+
+            // ---- Family ----------------------------------------------------
+            SettingsCard(title = stringResource(R.string.settings_family), icon = { Icon(Icons.Filled.Groups, null) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Match my wallpaper colours",
+                            stringResource(R.string.manage_members_title),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            stringResource(R.string.settings_family_subtitle),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    IconButton(onClick = onManageMembers) {
+                        Icon(Icons.Filled.ChevronRight, contentDescription = null)
+                    }
+                }
+            }
+
+            // ---- Appearance (Material You) --------------------------------
+            SettingsCard(title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            stringResource(R.string.settings_wallpaper_colors),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
                             text = if (dynamicColorAvailable) {
-                                "Material You dynamic colour from your wallpaper"
+                                stringResource(R.string.settings_wallpaper_colors_subtitle)
                             } else {
-                                "Needs Android 12 or newer; using the My Vault palette"
+                                stringResource(R.string.settings_wallpaper_colors_unavailable)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -160,14 +210,14 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Turn this off to use My Vault's calm sea-glass teal theme instead.",
+                    text = stringResource(R.string.settings_brand_theme_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             // ---- Security -------------------------------------------------
-            SettingsCard(title = "Security", icon = { Icon(Icons.Filled.Lock, null) }) {
+            SettingsCard(title = stringResource(R.string.settings_security), icon = { Icon(Icons.Filled.Lock, null) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -180,15 +230,15 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Fingerprint / face unlock",
+                            stringResource(R.string.settings_biometric_title),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium
                         )
                         Text(
                             text = if (biometricAvailable) {
-                                "Unlock the vault without typing your PIN"
+                                stringResource(R.string.settings_biometric_available)
                             } else {
-                                "No fingerprint/face is set up on this phone"
+                                stringResource(R.string.settings_biometric_unavailable)
                             },
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -203,7 +253,7 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    "Change PIN",
+                    stringResource(R.string.settings_change_pin),
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -211,24 +261,28 @@ fun SettingsScreen(
                 PinField(
                     value = currentPin,
                     onValueChange = { currentPin = it; viewModel.clearMessage() },
-                    label = "Current PIN"
+                    label = stringResource(R.string.settings_current_pin)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 PinField(
                     value = newPin,
                     onValueChange = { newPin = it; viewModel.clearMessage() },
-                    label = "New PIN"
+                    label = stringResource(R.string.settings_new_pin)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 PinField(
                     value = confirmPin,
                     onValueChange = { confirmPin = it; viewModel.clearMessage() },
-                    label = "Confirm new PIN"
+                    label = stringResource(R.string.settings_confirm_new_pin)
                 )
                 message?.let { msg ->
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = msg.text,
+                        text = if (msg.formatArg != null) {
+                            stringResource(msg.textRes, msg.formatArg)
+                        } else {
+                            stringResource(msg.textRes)
+                        },
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (msg.isError) MaterialTheme.colorScheme.error
                         else MaterialTheme.colorScheme.primary
@@ -239,35 +293,34 @@ fun SettingsScreen(
                     onClick = { viewModel.changePin(currentPin, newPin, confirmPin) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Change PIN")
+                    Text(stringResource(R.string.settings_change_pin))
                 }
             }
 
             // ---- Storage --------------------------------------------------
-            SettingsCard(title = "Storage", icon = { Icon(Icons.Filled.Storage, null) }) {
+            SettingsCard(title = stringResource(R.string.settings_storage), icon = { Icon(Icons.Filled.Storage, null) }) {
                 Text(
-                    text = if (documentCount == 1) "1 document in your vault"
-                    else "$documentCount documents in your vault",
+                    text = if (documentCount == 1) {
+                        stringResource(R.string.settings_storage_one)
+                    } else {
+                        stringResource(R.string.settings_storage_many, documentCount)
+                    },
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Using ${FormatUtils.formatFileSize(totalSize)} on this device",
+                    text = stringResource(
+                        R.string.settings_storage_using,
+                        FormatUtils.formatFileSize(totalSize)
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             // ---- Privacy info ---------------------------------------------
-            SettingsCard(title = "How your documents stay safe", icon = { Icon(Icons.Filled.Info, null) }) {
+            SettingsCard(title = stringResource(R.string.settings_how_safe), icon = { Icon(Icons.Filled.Info, null) }) {
                 Text(
-                    text = "• Every file is encrypted with AES-256 before it is saved.\n" +
-                        "• The encryption key never leaves this phone's secure keystore.\n" +
-                        "• The app works 100% offline — nothing is uploaded anywhere.\n" +
-                        "• Screenshots and recent-apps previews are blocked.\n" +
-                        "• The vault locks itself after 1 minute in the background.\n\n" +
-                        "⚠️ Important: if you forget your PIN and biometrics stop " +
-                        "working, your documents cannot be recovered. Keep your " +
-                        "original documents safe too.",
+                    text = stringResource(R.string.settings_safety_body),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -281,7 +334,7 @@ fun SettingsScreen(
             ) {
                 Icon(Icons.Filled.Lock, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Lock vault now")
+                Text(stringResource(R.string.settings_lock_now))
             }
 
             Text(

@@ -30,16 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.ui.components.PinDots
 import com.ftsinan.myvault.ui.components.PinPad
 
 @Composable
-fun LockScreen(viewModel: LockViewModel) {
+fun LockScreen(viewModel: LockViewModel, ownerName: String? = null) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var pin by remember { mutableStateOf("") }
@@ -77,10 +79,16 @@ fun LockScreen(viewModel: LockViewModel) {
     }
 
     LockScaffold(
-        title = "My Vault",
-        subtitle = "Enter your PIN to unlock",
+        title = if (!ownerName.isNullOrBlank()) {
+            stringResource(R.string.lock_welcome_back, ownerName)
+        } else {
+            stringResource(R.string.lock_my_vault)
+        },
+        subtitle = stringResource(R.string.lock_enter_pin),
         pinLength = pin.length,
-        error = uiState.error,
+        error = uiState.error?.let { message ->
+            if (message == "WRONG_PIN") stringResource(R.string.pin_wrong) else message
+        },
         onDigit = { digit ->
             if (pin.length < PinManager.PIN_LENGTH) pin += digit
         },
@@ -97,6 +105,7 @@ fun SetupPinScreen(viewModel: LockViewModel) {
     var firstPin by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
+    val mismatchText = stringResource(R.string.pin_mismatch)
 
     LaunchedEffect(pin) {
         if (pin.length == PinManager.PIN_LENGTH) {
@@ -111,7 +120,7 @@ fun SetupPinScreen(viewModel: LockViewModel) {
                     if (pin == firstPin) {
                         viewModel.setupPin(pin)
                     } else {
-                        error = "PINs don't match. Please start again."
+                        error = mismatchText
                         firstPin = ""
                         pin = ""
                         step = SetupStep.ENTER
@@ -122,12 +131,14 @@ fun SetupPinScreen(viewModel: LockViewModel) {
     }
 
     LockScaffold(
-        title = if (step == SetupStep.ENTER) "Create your PIN" else "Confirm your PIN",
-        subtitle = if (step == SetupStep.ENTER) {
-            "Choose a 4-digit PIN for your vault.\nRemember it — it cannot be recovered."
-        } else {
-            "Enter the same PIN once more to confirm."
-        },
+        title = stringResource(
+            if (step == SetupStep.ENTER) R.string.pin_create_title
+            else R.string.pin_confirm_title
+        ),
+        subtitle = stringResource(
+            if (step == SetupStep.ENTER) R.string.pin_create_subtitle
+            else R.string.pin_confirm_subtitle
+        ),
         pinLength = pin.length,
         error = error,
         onDigit = { digit ->
@@ -222,7 +233,7 @@ private fun LockScaffold(
                     .padding(horizontal = 14.dp, vertical = 7.dp)
             ) {
                 Text(
-                    text = "🔒 Offline  •  Encrypted  •  Private",
+                    text = stringResource(R.string.lock_trust_pill),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )

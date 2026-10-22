@@ -29,8 +29,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import android.view.HapticFeedbackConstants
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
 
 @Composable
@@ -128,7 +130,7 @@ fun PinPad(
                     IconButton(onClick = onBiometricClick, modifier = Modifier.size(76.dp)) {
                         Icon(
                             imageVector = Icons.Filled.Fingerprint,
-                            contentDescription = "Unlock with fingerprint",
+                            contentDescription = stringResource(R.string.pin_biometric_content_description),
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(34.dp)
                         )
@@ -141,7 +143,7 @@ fun PinPad(
             IconButton(onClick = onBackspace, modifier = Modifier.size(76.dp)) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Backspace,
-                    contentDescription = "Delete digit",
+                    contentDescription = stringResource(R.string.pin_delete_digit_content_description),
                     modifier = Modifier.size(29.dp)
                 )
             }

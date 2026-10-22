@@ -10,31 +10,35 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.ftsinan.myvault.data.model.VaultDocument
-import com.ftsinan.myvault.ui.theme.SuccessGreen
-import com.ftsinan.myvault.ui.theme.WarningOrange
-import com.ftsinan.myvault.util.ExpiryStatus
+import com.ftsinan.myvault.R
+import com.ftsinan.myvault.data.model.DocumentSummary
 import com.ftsinan.myvault.util.FormatUtils
 
 @Composable
@@ -84,39 +88,21 @@ fun EmptyState(
     }
 }
 
-@Composable
-fun ExpiryChip(status: ExpiryStatus, modifier: Modifier = Modifier) {
-    val (text, color) = when (status) {
-        is ExpiryStatus.None -> return
-        is ExpiryStatus.Valid -> "Valid" to SuccessGreen
-        is ExpiryStatus.ExpiringSoon -> when (status.daysLeft) {
-            0L -> "Expires today" to WarningOrange
-            1L -> "Expires tomorrow" to WarningOrange
-            else -> "Expires in ${status.daysLeft} days" to WarningOrange
-        }
-        is ExpiryStatus.Expired -> "Expired" to MaterialTheme.colorScheme.error
-    }
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(50))
-            .background(color.copy(alpha = 0.14f))
-            .padding(horizontal = 8.dp, vertical = 3.dp)
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = color,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-}
-
+/**
+ * Document list card. Long titles stay on one line, but expose a small
+ * corner expand/collapse button that wraps the *title only* (same font
+ * size) so the full name can be read without opening the document.
+ */
 @Composable
 fun DocumentCard(
-    document: VaultDocument,
+    summary: DocumentSummary,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val document = summary.document
+    var titleExpanded by remember(document.id) { mutableStateOf(false) }
+    var titleOverflows by remember(document.id, document.title) { mutableStateOf(false) }
+
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -130,7 +116,7 @@ fun DocumentCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Box(
                 modifier = Modifier
@@ -141,61 +127,115 @@ fun DocumentCard(
             ) {
                 Icon(
                     imageVector = categoryIcon(document.category),
-                    contentDescription = document.category.label,
+                    contentDescription = categoryLabel(document.category),
                     tint = categoryColor(document.category),
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(29.dp)
                 )
             }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = 14.dp)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.Top) {
                     Text(
                         text = document.title,
                         style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f, fill = false)
+                        maxLines = if (titleExpanded) Int.MAX_VALUE else 1,
+                        overflow = if (titleExpanded) TextOverflow.Visible
+                        else TextOverflow.Ellipsis,
+                        onTextLayout = { layout ->
+                            if (!titleExpanded) {
+                                titleOverflows = layout.hasVisualOverflow
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
                     )
                     if (document.isFavourite) {
                         Icon(
                             imageVector = Icons.Filled.Star,
-                            contentDescription = "Favourite",
+                            contentDescription = null,
                             tint = Color(0xFFF2B544),
                             modifier = Modifier
-                                .padding(start = 4.dp)
+                                .padding(start = 4.dp, top = 2.dp)
                                 .size(16.dp)
                         )
                     }
+                    if (titleExpanded || titleOverflows) {
+                        IconButton(
+                            onClick = { titleExpanded = !titleExpanded },
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (titleExpanded) Icons.Filled.ExpandLess
+                                else Icons.Filled.ExpandMore,
+                                contentDescription = document.title,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                 }
+
+                val assignedLabel = document.assignedGroup?.let { assignedGroupLabel(it) }
+                    ?: summary.assignedName
                 Text(
-                    text = "${document.docType} • ${document.holderName}",
+                    text = "${document.docType} • $assignedLabel",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (!document.documentNumber.isNullOrBlank()) {
-                    Text(
-                        text = FormatUtils.maskDocumentNumber(document.documentNumber),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    if (!document.documentNumber.isNullOrBlank()) {
+                        Text(
+                            text = FormatUtils.maskDocumentNumber(document.documentNumber),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    if (summary.pageCount > 1) {
+                        SmallInfoChip(
+                            text = stringResource(R.string.pages_count, summary.pageCount)
+                        )
+                    }
+                    if (summary.isPdf) {
+                        SmallInfoChip(text = "PDF")
+                    }
                 }
             }
-            Column(horizontalAlignment = Alignment.End) {
-                Icon(
-                    imageVector = if (document.isPdf) Icons.Filled.PictureAsPdf
-                    else Icons.Filled.Description,
-                    contentDescription = if (document.isPdf) "PDF" else "Image",
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                ExpiryChip(status = FormatUtils.expiryStatus(document.expiryDate))
-            }
+
+            Icon(
+                imageVector = if (summary.isPdf) Icons.Filled.PictureAsPdf
+                else Icons.Filled.Description,
+                contentDescription = if (summary.isPdf) "PDF" else null,
+                tint = MaterialTheme.colorScheme.outline,
+                modifier = Modifier
+                    .padding(top = 2.dp)
+                    .size(20.dp)
+            )
         }
+    }
+}
+
+@Composable
+private fun SmallInfoChip(text: String) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .padding(horizontal = 7.dp, vertical = 2.dp)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }

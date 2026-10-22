@@ -4,33 +4,44 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import android.text.format.DateFormat
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PictureAsPdf
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,15 +49,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -55,26 +66,31 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.ftsinan.myvault.data.model.VaultDocument
+import com.ftsinan.myvault.R
 import com.ftsinan.myvault.ui.components.EmptyState
-import com.ftsinan.myvault.ui.components.ExpiryChip
+import com.ftsinan.myvault.ui.components.categoryLabel
+import com.ftsinan.myvault.ui.components.assignedGroupIcon
+import com.ftsinan.myvault.ui.components.assignedGroupLabel
 import com.ftsinan.myvault.util.FormatUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,52 +98,151 @@ fun DocumentDetailScreen(
     documentId: Long,
     onBack: () -> Unit,
     onEdit: (Long) -> Unit,
-    onDeleted: () -> Unit,
     viewModel: DocumentDetailViewModel = viewModel(
         factory = DocumentDetailViewModel.factory(documentId)
     )
 ) {
-    val document by viewModel.document.collectAsStateWithLifecycle()
-    val preview by viewModel.preview.collectAsStateWithLifecycle()
-    val isDeleted by viewModel.isDeleted.collectAsStateWithLifecycle()
-
     val context = LocalContext.current
+    val clipboard = LocalClipboardManager.current
     val scope = rememberCoroutineScope()
+    val document by viewModel.document.collectAsState()
+    val pages by viewModel.pages.collectAsState()
+    val previews by viewModel.previews.collectAsState()
+    val previewError by viewModel.previewError.collectAsState()
+    val visualPageCount by viewModel.visualPageCount.collectAsState()
+    val isDeleted by viewModel.isDeleted.collectAsState()
+
+    var showNumber by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showShareDialog by remember { mutableStateOf(false) }
+    var preparingShare by remember { mutableStateOf(false) }
 
     LaunchedEffect(isDeleted) {
-        if (isDeleted) onDeleted()
+        if (isDeleted) onBack()
     }
-
-    fun shareDocument() {
-        scope.launch {
-            val payload = viewModel.prepareShare() ?: return@launch
-            val intent = Intent(Intent.ACTION_SEND).apply {
+    fun launchShare(payload: SharePayload) {
+        val intent = if (payload.uris.size > 1) {
+            Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                 type = payload.mimeType
-                putExtra(Intent.EXTRA_STREAM, payload.uri)
+                putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(payload.uris))
                 putExtra(Intent.EXTRA_SUBJECT, payload.title)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(
-                Intent.createChooser(intent, "Share ${payload.title}")
-            )
+        } else {
+            Intent(Intent.ACTION_SEND).apply {
+                type = payload.mimeType
+                putExtra(Intent.EXTRA_STREAM, payload.uris.firstOrNull())
+                putExtra(Intent.EXTRA_SUBJECT, payload.title)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         }
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)))
+    }
+
+    if (showShareDialog) {
+        AlertDialog(
+            onDismissRequest = { if (!preparingShare) showShareDialog = false },
+            title = { Text(stringResource(R.string.share_choose_format)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = {
+                            preparingShare = true
+                            scope.launch {
+                                val payload = viewModel.prepareShare(ShareFormat.PDF)
+                                preparingShare = false
+                                showShareDialog = false
+                                if (payload != null) launchShare(payload)
+                                else Toast.makeText(
+                                    context,
+                                    context.getString(R.string.share_failed),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        enabled = !preparingShare,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Filled.PictureAsPdf, contentDescription = null)
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.share_as_pdf))
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            preparingShare = true
+                            scope.launch {
+                                val payload = viewModel.prepareShare(ShareFormat.IMAGES)
+                                preparingShare = false
+                                showShareDialog = false
+                                if (payload != null) launchShare(payload)
+                                else Toast.makeText(
+                                    context,
+                                    context.getString(R.string.share_failed),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        enabled = !preparingShare,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Filled.Image, contentDescription = null)
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(R.string.share_as_images))
+                    }
+                    if (preparingShare) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            CircularProgressIndicator(Modifier.size(18.dp))
+                            Text(stringResource(R.string.share_preparing))
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(
+                    onClick = { showShareDialog = false },
+                    enabled = !preparingShare
+                ) { Text(stringResource(R.string.action_cancel)) }
+            }
+        )
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(R.string.detail_delete_title)) },
+            text = { Text(stringResource(R.string.detail_delete_message)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    viewModel.delete()
+                }) {
+                    Text(
+                        stringResource(R.string.action_delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = document?.title ?: "Document",
-                        maxLines = 1
-                    )
-                },
+                title = { Text(document?.title ?: stringResource(R.string.detail_details)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.action_back)
                         )
                     }
                 },
@@ -135,323 +250,329 @@ fun DocumentDetailScreen(
                     document?.let { doc ->
                         IconButton(onClick = viewModel::toggleFavourite) {
                             Icon(
-                                imageVector = if (doc.isFavourite) Icons.Filled.Star
-                                else Icons.Outlined.StarOutline,
-                                contentDescription = "Toggle favourite",
-                                tint = if (doc.isFavourite) Color(0xFFF2B544)
-                                else MaterialTheme.colorScheme.onSurface
+                                if (doc.isFavourite) Icons.Filled.Star
+                                else Icons.Outlined.StarBorder,
+                                contentDescription = stringResource(R.string.home_favourites)
                             )
                         }
-                        IconButton(onClick = { shareDocument() }) {
-                            Icon(Icons.Filled.Share, contentDescription = "Share")
+                        IconButton(onClick = { showShareDialog = true }) {
+                            Icon(
+                                Icons.Filled.Share,
+                                contentDescription = stringResource(R.string.action_share)
+                            )
                         }
                         IconButton(onClick = { onEdit(doc.id) }) {
-                            Icon(Icons.Filled.Edit, contentDescription = "Edit")
+                            Icon(
+                                Icons.Filled.Edit,
+                                contentDescription = stringResource(R.string.action_edit)
+                            )
                         }
                         IconButton(onClick = { showDeleteDialog = true }) {
                             Icon(
                                 Icons.Filled.Delete,
-                                contentDescription = "Delete",
-                                tint = MaterialTheme.colorScheme.error
+                                contentDescription = stringResource(R.string.action_delete)
                             )
                         }
                     }
                 }
             )
         }
-    ) { padding ->
+    ) { innerPadding ->
         val doc = document
-        if (doc == null && !isDeleted) {
+        if (doc == null) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                Modifier.fillMaxSize().padding(innerPadding),
                 contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else if (doc != null) {
-            DocumentDetailContent(
-                document = doc,
-                preview = preview,
-                modifier = Modifier.padding(padding)
-            )
+            ) { CircularProgressIndicator() }
+            return@Scaffold
         }
-    }
 
-    if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            icon = { Icon(Icons.Filled.Delete, contentDescription = null) },
-            title = { Text("Delete this document?") },
-            text = {
-                Text(
-                    "The encrypted copy inside your vault will be permanently " +
-                        "deleted. This cannot be undone."
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDeleteDialog = false
-                        viewModel.delete()
-                    }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    )
                 ) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
-            }
-        )
-    }
-}
-
-@Composable
-private fun DocumentDetailContent(
-    document: VaultDocument,
-    preview: PreviewState,
-    modifier: Modifier = Modifier
-) {
-    var showNumber by remember { mutableStateOf(false) }
-
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        // ---- Viewer ----------------------------------------------------
-        when (preview) {
-            is PreviewState.Loading -> {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(280.dp),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        Modifier.padding(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator()
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Text("Decrypting…")
+                        Text(
+                            doc.title,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            AssistChip(
+                                onClick = {},
+                                label = { Text(doc.docType) },
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Description, null, Modifier.size(16.dp))
+                                }
+                            )
+                            AssistChip(
+                                onClick = {},
+                                label = { Text(categoryLabel(doc.category)) },
+                                leadingIcon = {
+                                    Icon(Icons.Filled.Folder, null, Modifier.size(16.dp))
+                                }
+                            )
+                        }
+                        DetailRow(
+                            icon = doc.assignedGroup?.let { assignedGroupIcon(it) }
+                                ?: Icons.Filled.Person,
+                            label = stringResource(R.string.detail_belongs_to),
+                            value = doc.assignedGroup?.let { assignedGroupLabel(it) }
+                                ?: doc.holderName
+                        )
+                        DetailRow(
+                            icon = Icons.Filled.Description,
+                            label = stringResource(R.string.detail_pages),
+                            value = visualPageCount.takeIf { it > 0 }?.toString()
+                                ?: pages.size.takeIf { it > 0 }?.toString()
+                                ?: "1"
+                        )
+                        val totalSize = pages.sumOf { it.fileSize }
+                            .takeIf { it > 0 } ?: doc.fileSize
+                        DetailRow(
+                            icon = Icons.Filled.InsertDriveFile,
+                            label = stringResource(R.string.detail_file_size),
+                            value = FormatUtils.formatFileSize(totalSize)
+                        )
+                        DetailRow(
+                            icon = Icons.Filled.CalendarMonth,
+                            label = stringResource(R.string.detail_added_on),
+                            value = DateFormat.getMediumDateFormat(context)
+                                .format(Date(doc.createdAt))
+                        )
+                        doc.documentNumber?.takeIf { it.isNotBlank() }?.let { number ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    Icons.Filled.Badge,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Column(Modifier.weight(1f)) {
+                                    Text(
+                                        stringResource(R.string.detail_document_number),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        if (showNumber) number else FormatUtils.maskDocumentNumber(number),
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                                IconButton(onClick = { showNumber = !showNumber }) {
+                                    Icon(
+                                        if (showNumber) Icons.Filled.VisibilityOff
+                                        else Icons.Filled.Visibility,
+                                        contentDescription = null
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    clipboard.setText(AnnotatedString(number))
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.action_copied),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }) {
+                                    Icon(Icons.Filled.ContentCopy, contentDescription = null)
+                                }
+                            }
+                        }
+                        doc.notes?.takeIf { it.isNotBlank() }?.let { notes ->
+                            Column {
+                                Text(
+                                    stringResource(R.string.detail_notes),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(notes)
+                            }
                         }
                     }
                 }
             }
-            is PreviewState.Image -> {
-                item { ZoomableImage(bytes = preview.bytes) }
-                item {
-                    Text(
-                        text = "Pinch to zoom, drag to pan",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+            when {
+                previews == null -> item {
+                    Box(
+                        Modifier.fillMaxWidth().height(220.dp),
+                        contentAlignment = Alignment.Center
+                    ) { CircularProgressIndicator() }
                 }
-            }
-            is PreviewState.Pdf -> {
-                item { PdfPageList(file = preview.file) }
-            }
-            is PreviewState.OtherFile -> {
-                item {
+                previewError != null || previews.isNullOrEmpty() -> item {
                     EmptyState(
-                        icon = Icons.Filled.Description,
-                        title = "No preview available",
-                        subtitle = "Use the share button to open this file in another app.",
-                        modifier = Modifier.fillMaxWidth()
+                        icon = Icons.Filled.InsertDriveFile,
+                        title = stringResource(R.string.detail_preview_unavailable),
+                        subtitle = stringResource(R.string.detail_preview_unavailable_message)
                     )
                 }
-            }
-            is PreviewState.Error -> {
-                item {
-                    EmptyState(
-                        icon = Icons.Filled.Description,
-                        title = "Couldn't open document",
-                        subtitle = preview.message,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            }
-        }
-
-        // ---- Metadata ---------------------------------------------------
-        item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Details",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    Text(
-                        text = "Stored securely on this device",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                ExpiryChip(status = FormatUtils.expiryStatus(document.expiryDate))
-            }
-        }
-
-        item {
-            Card(
-                shape = RoundedCornerShape(32.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
-                    modifier = Modifier.padding(20.dp)
-                ) {
-                DetailRow("Document type", document.docType)
-                DetailRow("Category", document.category.label)
-                DetailRow("Belongs to", document.holderName)
-                DetailRow("Relation", document.relation.label)
-                if (!document.documentNumber.isNullOrBlank()) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "Document number",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = if (showNumber) document.documentNumber
-                                else FormatUtils.maskDocumentNumber(document.documentNumber),
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                        IconButton(onClick = { showNumber = !showNumber }) {
-                            Icon(
-                                imageVector = if (showNumber) Icons.Filled.VisibilityOff
-                                else Icons.Filled.Visibility,
-                                contentDescription = if (showNumber) "Hide number" else "Show number"
-                            )
+                else -> {
+                    val safePreviews = previews.orEmpty()
+                    var pageOffset = 0
+                    safePreviews.forEach { preview ->
+                        when (preview) {
+                            is PagePreview.Image -> {
+                                val pageNumber = pageOffset + 1
+                                item {
+                                    PageLabel(pageNumber, visualPageCount.coerceAtLeast(safePreviews.size))
+                                    ZoomableImage(bytes = preview.bytes)
+                                }
+                                pageOffset += 1
+                            }
+                            is PagePreview.Pdf -> {
+                                item {
+                                    PdfPageList(file = preview.file)
+                                }
+                                // Imported PDFs are stored as one file; detailed
+                                // internal labels are handled inside PdfPageList.
+                                pageOffset = visualPageCount
+                            }
+                            is PagePreview.Other -> {
+                                item {
+                                    EmptyState(
+                                        icon = Icons.Filled.InsertDriveFile,
+                                        title = stringResource(R.string.detail_preview_unavailable),
+                                        subtitle = stringResource(R.string.detail_preview_unavailable_message)
+                                    )
+                                }
+                                pageOffset += 1
+                            }
                         }
                     }
                 }
-                if (document.issueDate != null) {
-                    DetailRow("Issue date", FormatUtils.formatDate(document.issueDate))
-                }
-                if (document.expiryDate != null) {
-                    DetailRow("Expiry date", FormatUtils.formatDate(document.expiryDate))
-                }
-                DetailRow("File", document.originalFileName)
-                DetailRow("File size", FormatUtils.formatFileSize(document.fileSize))
-                DetailRow("Added on", FormatUtils.formatDate(document.createdAt))
-                DetailRow("Last updated", FormatUtils.formatDate(document.updatedAt))
-                    if (!document.notes.isNullOrBlank()) {
-                        DetailRow("Notes", document.notes)
-                    }
-                }
             }
         }
-
-        item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
 
 @Composable
-private fun DetailRow(label: String, value: String) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium
-        )
+private fun DetailRow(icon: ImageVector, label: String, value: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Column {
+            Text(
+                label,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(value, style = MaterialTheme.typography.bodyMedium)
+        }
     }
+}
+
+@Composable
+private fun PageLabel(pageNumber: Int, totalPages: Int) {
+    Text(
+        stringResource(R.string.detail_page_of, pageNumber, totalPages.coerceAtLeast(pageNumber)),
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
 }
 
 @Composable
 private fun ZoomableImage(bytes: ByteArray) {
-    var scale by remember { mutableFloatStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
+    var scale by remember(bytes.size) { mutableStateOf(1f) }
+    var offsetX by remember(bytes.size) { mutableStateOf(0f) }
+    var offsetY by remember(bytes.size) { mutableStateOf(0f) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(420.dp)
-            .clip(RoundedCornerShape(32.dp))
-            .background(MaterialTheme.colorScheme.surfaceContainer)
-            .pointerInput(Unit) {
-                detectTransformGestures { _, pan, zoom, _ ->
-                    scale = (scale * zoom).coerceIn(1f, 5f)
-                    offset = if (scale == 1f) Offset.Zero else offset + pan
-                }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        AsyncImage(
-            model = bytes,
-            contentDescription = "Document image",
-            contentScale = ContentScale.Fit,
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offset.x,
-                    translationY = offset.y
-                )
-        )
+                .fillMaxWidth()
+                .aspectRatio(0.72f)
+                .clip(MaterialTheme.shapes.large)
+                .pointerInput(Unit) {
+                    detectTransformGestures { _, pan, zoom, _ ->
+                        scale = (scale * zoom).coerceIn(1f, 5f)
+                        if (scale > 1f) {
+                            offsetX += pan.x
+                            offsetY += pan.y
+                        } else {
+                            offsetX = 0f
+                            offsetY = 0f
+                        }
+                    }
+                }
+        ) {
+            AsyncImage(
+                model = bytes,
+                contentDescription = stringResource(R.string.detail_document_preview),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        translationX = offsetX
+                        translationY = offsetY
+                    }
+            )
+        }
     }
 }
 
-/**
- * Renders every PDF page to a bitmap off the main thread.
- * Fine for typical 1–5 page ID/certificate PDFs; page-by-page lazy
- * rendering would be the next step for large documents.
- */
 @Composable
 private fun PdfPageList(file: File) {
-    val pages by rememberPdfPages(file)
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        if (pages.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(220.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        pages.forEachIndexed { index, bitmap ->
-            Text(
-                text = "Page ${index + 1} of ${pages.size}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Image(
-                bitmap = bitmap.asImageBitmap(),
-                contentDescription = "PDF page ${index + 1}",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(Color.White)
-            )
-        }
-    }
-}
-
-@Composable
-private fun rememberPdfPages(file: File): State<List<Bitmap>> =
-    produceState(initialValue = emptyList(), file) {
+    val bitmaps by produceState<List<Bitmap>?>(initialValue = null, file.absolutePath) {
         value = withContext(Dispatchers.IO) {
             runCatching { renderPdfPages(file) }.getOrDefault(emptyList())
         }
     }
+    when {
+        bitmaps == null -> Box(
+            Modifier.fillMaxWidth().height(220.dp),
+            contentAlignment = Alignment.Center
+        ) { CircularProgressIndicator() }
+        bitmaps.isNullOrEmpty() -> EmptyState(
+            icon = Icons.Filled.PictureAsPdf,
+            title = stringResource(R.string.detail_preview_unavailable),
+            subtitle = stringResource(R.string.detail_preview_unavailable_message)
+        )
+        else -> Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            bitmaps!!.forEachIndexed { index, bitmap ->
+                Column {
+                    PageLabel(index + 1, bitmaps!!.size)
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = stringResource(
+                                R.string.detail_page_of,
+                                index + 1,
+                                bitmaps!!.size
+                            ),
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth().background(
+                                MaterialTheme.colorScheme.surface
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 
 private fun renderPdfPages(file: File): List<Bitmap> {
-    val result = mutableListOf<Bitmap>()
+    val output = mutableListOf<Bitmap>()
     val descriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
     descriptor.use { fd ->
         PdfRenderer(fd).use { renderer ->
@@ -460,13 +581,17 @@ private fun renderPdfPages(file: File): List<Bitmap> {
                     val width = (page.width * 2).coerceAtLeast(1)
                     val height = (page.height * 2).coerceAtLeast(1)
                     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                    // PdfRenderer draws on transparent background otherwise.
                     bitmap.eraseColor(android.graphics.Color.WHITE)
-                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                    result += bitmap
+                    page.render(
+                        bitmap,
+                        null,
+                        null,
+                        PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                    )
+                    output += bitmap
                 }
             }
         }
     }
-    return result
+    return output
 }

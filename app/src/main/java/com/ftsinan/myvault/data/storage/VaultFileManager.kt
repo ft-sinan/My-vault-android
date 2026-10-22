@@ -62,22 +62,47 @@ class VaultFileManager(
     fun encryptedFile(document: VaultDocument): File =
         File(vaultDir, document.encryptedFileName)
 
+    fun encryptedFile(encryptedFileName: String): File =
+        File(vaultDir, encryptedFileName)
+
     /** Decrypted bytes for in-memory image rendering. */
     fun decryptToBytes(document: VaultDocument): ByteArray =
-        cryptoManager.decryptToBytes(encryptedFile(document))
+        decryptToBytes(document.encryptedFileName)
+
+    fun decryptToBytes(encryptedFileName: String): ByteArray =
+        cryptoManager.decryptToBytes(encryptedFile(encryptedFileName))
 
     /**
      * Decrypts into the cache dir and returns the plain file.
      * Needed for PdfRenderer and for sharing. Callers must rely on
      * [clearDecryptedCache] (done on lock) to wipe these again.
      */
-    fun decryptToCache(document: VaultDocument, forSharing: Boolean = false): File {
+    fun decryptToCache(document: VaultDocument, forSharing: Boolean = false): File =
+        decryptToCache(
+            encryptedFileName = document.encryptedFileName,
+            originalFileName = document.originalFileName,
+            cacheKey = document.id.toString(),
+            forSharing = forSharing
+        )
+
+    fun decryptToCache(
+        encryptedFileName: String,
+        originalFileName: String,
+        cacheKey: String,
+        forSharing: Boolean = false
+    ): File {
         val dir = if (forSharing) shareDir else previewDir
-        val safeName = document.originalFileName
+        val safeName = originalFileName
             .replace(Regex("[^A-Za-z0-9._-]"), "_")
             .ifBlank { "document" }
-        val outFile = File(dir, "${document.id}_$safeName")
-        return cryptoManager.decryptToFile(encryptedFile(document), outFile)
+        val outFile = File(dir, "${cacheKey}_$safeName")
+        return cryptoManager.decryptToFile(encryptedFile(encryptedFileName), outFile)
+    }
+
+    /** Cache file a generated share image/PDF can be written into. */
+    fun shareCacheFile(fileName: String): File {
+        shareDir.mkdirs()
+        return File(shareDir, fileName)
     }
 
     /** Empty file used as the camera capture target. */

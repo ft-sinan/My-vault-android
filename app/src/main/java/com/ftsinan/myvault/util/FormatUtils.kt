@@ -3,14 +3,6 @@ package com.ftsinan.myvault.util
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.TimeUnit
-
-sealed interface ExpiryStatus {
-    data object None : ExpiryStatus
-    data class Valid(val daysLeft: Long) : ExpiryStatus
-    data class ExpiringSoon(val daysLeft: Long) : ExpiryStatus
-    data class Expired(val daysAgo: Long) : ExpiryStatus
-}
 
 object FormatUtils {
 
@@ -42,16 +34,4 @@ object FormatUtils {
             "•••• $last4"
         }
     }
-
-    fun expiryStatus(expiryDate: Long?, now: Long = System.currentTimeMillis()): ExpiryStatus {
-        if (expiryDate == null) return ExpiryStatus.None
-        val days = TimeUnit.MILLISECONDS.toDays(expiryDate - now)
-        return when {
-            days < 0 -> ExpiryStatus.Expired(daysAgo = -days)
-            days <= EXPIRING_SOON_DAYS -> ExpiryStatus.ExpiringSoon(daysLeft = days)
-            else -> ExpiryStatus.Valid(daysLeft = days)
-        }
-    }
-
-    private const val EXPIRING_SOON_DAYS = 30L
 }

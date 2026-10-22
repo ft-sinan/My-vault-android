@@ -35,6 +35,20 @@ interface DocumentDao {
     @Query("SELECT COUNT(*) FROM documents")
     fun observeCount(): Flow<Int>
 
-    @Query("SELECT COALESCE(SUM(fileSize), 0) FROM documents")
+    @Query("SELECT COALESCE(SUM(fileSize), 0) FROM document_pages")
     fun observeTotalSize(): Flow<Long>
+
+    /** When a member is renamed, keep document display names in sync. */
+    @Query(
+        "UPDATE documents SET holderName = :name, relation = :relation, " +
+            "updatedAt = :updatedAt WHERE memberId = :memberId"
+    )
+    suspend fun syncMemberDisplay(memberId: Long, name: String, relation: String, updatedAt: Long)
+
+    /** Deleted members' documents move to the Family group, never deleted. */
+    @Query(
+        "UPDATE documents SET memberId = NULL, assignedGroup = 'FAMILY', " +
+            "updatedAt = :updatedAt WHERE memberId = :memberId"
+    )
+    suspend fun reassignMemberDocumentsToFamily(memberId: Long, updatedAt: Long)
 }

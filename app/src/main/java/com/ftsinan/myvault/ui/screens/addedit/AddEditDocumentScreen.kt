@@ -1,8 +1,8 @@
 package com.ftsinan.myvault.ui.screens.addedit
 
-import android.net.Uri
+import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,23 +16,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AttachFile
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FilterChip
@@ -44,57 +43,115 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.ftsinan.myvault.R
+import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.model.Category
 import com.ftsinan.myvault.data.model.DocumentTypes
-import com.ftsinan.myvault.data.model.Relation
-import com.ftsinan.myvault.util.FormatUtils
+import com.ftsinan.myvault.ui.components.assignedGroupLabel
+import com.ftsinan.myvault.ui.components.categoryLabel
+import com.ftsinan.myvault.ui.screens.lock.findFragmentActivity
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AddEditDocumentScreen(
     documentId: Long?,
+    initialSource: ImportSource = ImportSource.NONE,
     onBack: () -> Unit,
     onSaved: () -> Unit,
     viewModel: AddEditDocumentViewModel = viewModel(factory = AddEditDocumentViewModel.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val scanLabel = stringResource(R.string.add_scan)
+    val fileLabel = stringResource(R.string.add_file)
+    val scannerFailedText = stringResource(R.string.add_scanner_failed)
 
     LaunchedEffect(documentId) { viewModel.load(documentId) }
     LaunchedEffect(uiState.isSaved) { if (uiState.isSaved) onSaved() }
 
-    // --- File pickers ---------------------------------------------------
-    var captureUri by remember { mutableStateOf<Uri?>(null) }
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) viewModel.onFilePicked(captureUri, label = "Captured photo")
+    val scanner = remember {
+        val options = GmsDocumentScannerOptions.Builder()
+            .setGalleryImportAllowed(false)
+            .setPageLimit(10)
+            .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_JPEG)
+            .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
+            .build()
+        GmsDocumentScanning.getClient(options)
     }
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri -> viewModel.onFilePicked(uri, label = "Gallery image") }
+
+    val scannerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val scanResult = GmsDocumentScanningResult
+                .fromActivityResultIntent(result.data)
+            val uris = scanResult?.pages?.map { it.imageUri }.orEmpty()
+            if (uris.isNotEmpty()) viewModel.onPagesPicked(uris, scanLabel)
+        }
+    }
+
     val fileLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument()
-    ) { uri -> viewModel.onFilePicked(uri, label = "Selected file") }
+    ) { uri ->
+        if (uri != null) viewModel.onPagesPicked(listOf(uri), fileLabel)
+    }
+
+    fun launchScanner() {
+        val activity = context.findFragmentActivity()
+        if (activity == null) {
+            viewModel.onScannerError(scannerFailedText)
+            return
+        }
+        scanner.getStartScanIntent(activity)
+            .addOnSuccessListener { intentSender ->
+                runCatching {
+                    scannerLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+                }.onFailure { viewModel.onScannerError(scannerFailedText) }
+            }
+            .addOnFailureListener { viewModel.onScannerError(scannerFailedText) }
+    }
+
+    fun launchFilePicker() {
+        fileLauncher.launch(arrayOf("application/pdf", "image/*"))
+    }
+
+    var autoLaunchDone by rememberSaveable(documentId, initialSource) {
+        mutableStateOf(false)
+    }
+    LaunchedEffect(initialSource, documentId) {
+        if (!autoLaunchDone && documentId == null) {
+            autoLaunchDone = true
+            when (initialSource) {
+                ImportSource.SCAN -> launchScanner()
+                ImportSource.FILE -> launchFilePicker()
+                ImportSource.NONE -> Unit
+            }
+        }
+    }
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         rememberTopAppBarState()
@@ -112,11 +169,14 @@ fun AddEditDocumentScreen(
                 title = {
                     Column {
                         Text(
-                            text = if (uiState.isEditMode) "Edit document" else "Add document",
+                            stringResource(
+                                if (uiState.isEditMode) R.string.edit_title
+                                else R.string.add_title
+                            ),
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Text(
-                            text = "Encrypted before it is saved",
+                            stringResource(R.string.add_encrypted_note),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -126,7 +186,7 @@ fun AddEditDocumentScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.action_back)
                         )
                     }
                 }
@@ -148,10 +208,15 @@ fun AddEditDocumentScreen(
                             modifier = Modifier.size(20.dp),
                             color = MaterialTheme.colorScheme.onPrimary
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Encrypting & saving…")
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.add_encrypting))
                     } else {
-                        Text(if (uiState.isEditMode) "Save changes" else "Save to vault")
+                        Text(
+                            stringResource(
+                                if (uiState.isEditMode) R.string.action_save_changes
+                                else R.string.add_save_to_vault
+                            )
+                        )
                     }
                 }
             }
@@ -166,8 +231,7 @@ fun AddEditDocumentScreen(
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // --- Attached file -------------------------------------------
-            SectionLabel("Document file *")
+            SectionLabel(stringResource(R.string.add_document_file))
             Card(
                 shape = RoundedCornerShape(32.dp),
                 colors = CardDefaults.cardColors(
@@ -176,96 +240,99 @@ fun AddEditDocumentScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    if (uiState.pendingUri != null) {
-                        AsyncImage(
-                            model = uiState.pendingUri,
-                            contentDescription = "Selected document preview",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(160.dp)
-                                .clip(RoundedCornerShape(24.dp))
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
+                Column(Modifier.padding(16.dp)) {
+                    if (!uiState.isEditMode && uiState.pendingUris.isNotEmpty() &&
+                        !uiState.pendingIsPdf
+                    ) {
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            items(uiState.pendingUris) { uri ->
+                                AsyncImage(
+                                    model = uri,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(width = 104.dp, height = 138.dp)
+                                        .clip(RoundedCornerShape(18.dp))
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(12.dp))
                     }
-                    Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            Icons.Filled.AttachFile,
+                            imageVector = if (uiState.pendingIsPdf) Icons.Filled.PictureAsPdf
+                            else Icons.Filled.AttachFile,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(Modifier.width(8.dp))
                         Text(
-                            text = uiState.pendingFileLabel
-                                ?: "No file attached yet",
+                            text = when {
+                                uiState.isEditMode -> stringResource(
+                                    R.string.pages_count,
+                                    uiState.existingPages.size.coerceAtLeast(1)
+                                )
+                                uiState.pendingUris.size > 1 -> stringResource(
+                                    R.string.pages_count,
+                                    uiState.pendingUris.size
+                                )
+                                else -> uiState.pendingFileLabel
+                                    ?: stringResource(R.string.add_no_file)
+                            },
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = 1
                         )
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilledTonalButton(
-                            onClick = {
-                                val uri = viewModel.createCaptureUri()
-                                captureUri = uri
-                                cameraLauncher.launch(uri)
-                            },
-                            shape = RoundedCornerShape(18.dp),
-                            modifier = Modifier.weight(1f).height(48.dp)
-                        ) {
-                            Icon(Icons.Filled.CameraAlt, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Scan")
-                        }
-                        FilledTonalButton(
-                            onClick = {
-                                galleryLauncher.launch(
-                                    PickVisualMediaRequest(
-                                        ActivityResultContracts.PickVisualMedia.ImageOnly
-                                    )
-                                )
-                            },
-                            shape = RoundedCornerShape(18.dp),
-                            modifier = Modifier.weight(1f).height(48.dp)
-                        ) {
-                            Icon(Icons.Filled.PhotoLibrary, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("Gallery")
-                        }
-                        FilledTonalButton(
-                            onClick = {
-                                fileLauncher.launch(arrayOf("application/pdf", "image/*"))
-                            },
-                            shape = RoundedCornerShape(18.dp),
-                            modifier = Modifier.weight(1f).height(48.dp)
-                        ) {
-                            Icon(Icons.Filled.FolderOpen, contentDescription = null)
-                            Spacer(Modifier.width(4.dp))
-                            Text("PDF/File")
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        stringResource(R.string.add_pages_fixed_note),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    if (!uiState.isEditMode) {
+                        Spacer(Modifier.height(12.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            FilledTonalButton(
+                                onClick = { launchScanner() },
+                                shape = RoundedCornerShape(18.dp),
+                                modifier = Modifier.weight(1f).height(50.dp)
+                            ) {
+                                Icon(Icons.Filled.QrCodeScanner, null)
+                                Spacer(Modifier.width(6.dp))
+                                Text(stringResource(R.string.add_scan))
+                            }
+                            FilledTonalButton(
+                                onClick = { launchFilePicker() },
+                                shape = RoundedCornerShape(18.dp),
+                                modifier = Modifier.weight(1f).height(50.dp)
+                            ) {
+                                Icon(Icons.Filled.FolderOpen, null)
+                                Spacer(Modifier.width(6.dp))
+                                Text(stringResource(R.string.add_file))
+                            }
                         }
                     }
                 }
             }
 
-            // --- Category --------------------------------------------------
-            SectionLabel("Category")
+            SectionLabel(stringResource(R.string.field_category))
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Category.entries.forEach { category ->
                     FilterChip(
                         selected = uiState.category == category,
                         onClick = { viewModel.onCategoryChange(category) },
-                        label = { Text(category.label) }
+                        label = { Text(categoryLabel(category)) }
                     )
                 }
             }
 
-            // --- Document type --------------------------------------------
-            SectionLabel("Document type *")
+            SectionLabel(stringResource(R.string.field_doc_type))
             OutlinedTextField(
                 value = uiState.docType,
                 onValueChange = viewModel::onDocTypeChange,
-                label = { Text("e.g. Aadhaar Card") },
+                label = { Text(stringResource(R.string.field_doc_type_hint)) },
                 singleLine = true,
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -283,82 +350,113 @@ fun AddEditDocumentScreen(
                 }
             }
 
-            // --- Title -----------------------------------------------------
-            SectionLabel("Title *")
+            SectionLabel(stringResource(R.string.field_title))
             OutlinedTextField(
                 value = uiState.title,
                 onValueChange = viewModel::onTitleChange,
-                label = { Text("e.g. My Aadhaar Card") },
+                label = { Text(stringResource(R.string.field_title_hint)) },
                 singleLine = true,
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // --- Holder ----------------------------------------------------
-            SectionLabel("Whose document is this? *")
-            OutlinedTextField(
-                value = uiState.holderName,
-                onValueChange = viewModel::onHolderNameChange,
-                label = { Text("Full name on the document") },
-                singleLine = true,
-                shape = RoundedCornerShape(18.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
+            SectionLabel(stringResource(R.string.field_belongs_to))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = uiState.assignmentMode == AssignmentMode.PERSON,
+                    onClick = { viewModel.onAssignmentModeChange(AssignmentMode.PERSON) },
+                    label = { Text(stringResource(R.string.assignment_person)) }
+                )
+                FilterChip(
+                    selected = uiState.assignmentMode == AssignmentMode.GROUP,
+                    onClick = { viewModel.onAssignmentModeChange(AssignmentMode.GROUP) },
+                    label = { Text(stringResource(R.string.assignment_group)) }
+                )
+            }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Relation.entries.forEach { relation ->
-                    FilterChip(
-                        selected = uiState.relation == relation,
-                        onClick = { viewModel.onRelationChange(relation) },
-                        label = { Text(relation.label) }
-                    )
+                if (uiState.assignmentMode == AssignmentMode.PERSON) {
+                    uiState.members.forEach { member ->
+                        FilterChip(
+                            selected = uiState.selectedMemberId == member.id,
+                            onClick = { viewModel.onMemberSelected(member.id) },
+                            label = { Text(member.name) }
+                        )
+                    }
+                } else {
+                    AssignedGroup.entries.forEach { group ->
+                        FilterChip(
+                            selected = uiState.selectedGroup == group,
+                            onClick = { viewModel.onGroupSelected(group) },
+                            label = { Text(assignedGroupLabel(group)) }
+                        )
+                    }
                 }
             }
 
-            // --- Number / dates / notes -------------------------------------
-            SectionLabel("Document number (optional)")
+            SectionLabel(stringResource(R.string.field_document_number))
             OutlinedTextField(
                 value = uiState.documentNumber,
                 onValueChange = viewModel::onDocumentNumberChange,
-                label = { Text("Aadhaar / PAN / passport number…") },
+                label = { Text(stringResource(R.string.field_document_number_hint)) },
                 singleLine = true,
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
-
-            DateField(
-                label = "Issue date (optional)",
-                value = uiState.issueDate,
-                onChange = viewModel::onIssueDateChange
-            )
-            DateField(
-                label = if (DocumentTypes.usuallyHasExpiry(uiState.docType)) {
-                    "Expiry date (recommended)"
-                } else {
-                    "Expiry date (optional)"
-                },
-                value = uiState.expiryDate,
-                onChange = viewModel::onExpiryDateChange
-            )
-
-            SectionLabel("Notes (optional)")
-            OutlinedTextField(
-                value = uiState.notes,
-                onValueChange = viewModel::onNotesChange,
-                label = { Text("Anything to remember about this document") },
-                minLines = 2,
-                shape = RoundedCornerShape(18.dp),
-                modifier = Modifier.fillMaxWidth()
-            )
+            if (!uiState.pendingIsPdf && uiState.pendingUris.isNotEmpty()) {
+                when {
+                    uiState.isOcrRunning -> {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            CircularProgressIndicator(Modifier.size(17.dp), strokeWidth = 2.dp)
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                stringResource(R.string.ocr_looking),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    uiState.ocrCompleted && uiState.ocrFoundNumber -> {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Filled.CheckCircle,
+                                null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                stringResource(R.string.ocr_found),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                    uiState.ocrCompleted -> {
+                        Text(
+                            stringResource(R.string.ocr_not_found),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
 
             uiState.error?.let { error ->
                 Text(
-                    text = error,
+                    text = when (error) {
+                        "ERR_DOC_TYPE_REQUIRED" -> stringResource(R.string.error_doc_type_required)
+                        "ERR_TITLE_REQUIRED" -> stringResource(R.string.error_title_required)
+                        "ERR_OWNER_REQUIRED" -> stringResource(R.string.error_owner_required)
+                        "ERR_FILE_REQUIRED" -> stringResource(R.string.error_file_required)
+                        "ERR_SAVE_FAILED" -> stringResource(R.string.error_save_failed)
+                        else -> error
+                    },
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(8.dp))
         }
     }
 }
@@ -371,62 +469,4 @@ private fun SectionLabel(text: String) {
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun DateField(
-    label: String,
-    value: Long?,
-    onChange: (Long?) -> Unit
-) {
-    var showPicker by remember { mutableStateOf(false) }
-
-    Column {
-        SectionLabel(label)
-        Spacer(modifier = Modifier.height(6.dp))
-        OutlinedTextField(
-            value = if (value == null) "" else FormatUtils.formatDate(value),
-            onValueChange = {},
-            readOnly = true,
-            placeholder = { Text("Tap to pick a date") },
-            leadingIcon = {
-                IconButton(onClick = { showPicker = true }) {
-                    Icon(Icons.Filled.DateRange, contentDescription = "Pick date")
-                }
-            },
-            trailingIcon = {
-                if (value != null) {
-                    IconButton(onClick = { onChange(null) }) {
-                        Icon(Icons.Filled.Clear, contentDescription = "Clear date")
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        // Make the whole field tappable via a text button below for simplicity
-        if (value == null) {
-            TextButton(onClick = { showPicker = true }) { Text("Pick a date") }
-        }
-    }
-
-    if (showPicker) {
-        val state = rememberDatePickerState(
-            initialSelectedDateMillis = value ?: System.currentTimeMillis()
-        )
-        DatePickerDialog(
-            onDismissRequest = { showPicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    onChange(state.selectedDateMillis)
-                    showPicker = false
-                }) { Text("OK") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showPicker = false }) { Text("Cancel") }
-            }
-        ) {
-            DatePicker(state = state, showModeToggle = false)
-        }
-    }
 }

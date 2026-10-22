@@ -83,19 +83,9 @@ object DocumentTypes {
     fun suggestionsFor(category: Category): List<String> =
         byCategory[category].orEmpty()
 
-    /**
-     * Document types that normally have an expiry date worth tracking.
-     */
-    private val expiringTypes = setOf(
-        "Passport",
-        "Driving Licence",
-        "Vehicle Insurance",
-        "Pollution Certificate (PUC)",
-        "Income Certificate",
-        "Insurance Policy (Life)",
-        "Health Insurance Card",
-        "Rental Agreement"
-    )
+    fun categoryForType(docType: String): Category? =
+        byCategory.entries.firstOrNull { (_, types) ->
+            types.any { it.equals(docType, ignoreCase = true) }
+        }?.key
 
-    fun usuallyHasExpiry(docType: String): Boolean = docType in expiringTypes
 }

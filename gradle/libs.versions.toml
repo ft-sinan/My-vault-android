@@ -14,6 +14,8 @@ room = "2.6.1"
 biometric = "1.1.0"
 datastore = "1.1.1"
 coil = "2.7.0"
+mlkitDocumentScanner = "16.0.0"
+mlkitTextRecognition = "16.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +42,8 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 io-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+mlkit-document-scanner = { group = "com.google.android.gms", name = "play-services-mlkit-document-scanner", version.ref = "mlkitDocumentScanner" }
+mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkitTextRecognition" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

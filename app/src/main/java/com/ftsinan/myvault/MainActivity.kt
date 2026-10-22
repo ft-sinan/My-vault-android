@@ -1,5 +1,6 @@
 package com.ftsinan.myvault
 
+import android.content.Context
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -13,10 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.LanguageManager
 import com.ftsinan.myvault.ui.navigation.MyVaultNavGraph
+import com.ftsinan.myvault.ui.screens.lock.LanguageSelectionScreen
 import com.ftsinan.myvault.ui.screens.lock.LockScreen
 import com.ftsinan.myvault.ui.screens.lock.LockViewModel
 import com.ftsinan.myvault.ui.screens.lock.SetupPinScreen
+import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
 import com.ftsinan.myvault.ui.theme.MyVaultTheme
 
 /**
@@ -24,19 +29,23 @@ import com.ftsinan.myvault.ui.theme.MyVaultTheme
  *
  * Must be a [FragmentActivity] because BiometricPrompt needs one.
  *
+ * Entry flow: choose language -> create/enter PIN -> create owner
+ * profile (name required, rest optional) -> vault.
+ *
  * Security behaviours:
  *  - FLAG_SECURE: vault content never appears in screenshots /
  *    screen recordings / the recent-apps thumbnail.
- *  - Auto-lock: if the app stays in the background for more than
- *    [AUTO_LOCK_MILLIS], the vault locks itself (short trips to the
- *    camera / file picker stay under this, leaving & forgetting
- *    the app does not).
+ *  - Auto-lock after [AUTO_LOCK_MILLIS] in the background.
  */
 class MainActivity : FragmentActivity() {
 
     private val lockViewModel: LockViewModel by viewModels { LockViewModel.Factory }
 
     private var backgroundedAt: Long? = null
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LanguageManager.wrap(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +58,9 @@ class MainActivity : FragmentActivity() {
         setContent {
             val lockState by lockViewModel.uiState.collectAsStateWithLifecycle()
             MyVaultTheme(useDynamicColor = lockState.useDynamicColor) {
-
                 when {
-                    lockState.isLoading -> {
+                    lockState.isLoading || !lockState.isLanguageLoaded ||
+                        !lockState.isProfileLoaded -> {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
@@ -59,12 +68,38 @@ class MainActivity : FragmentActivity() {
                             CircularProgressIndicator()
                         }
                     }
+
+                    lockState.language == null -> LanguageSelectionScreen(
+                        onLanguageSelected = ::changeLanguage
+                    )
+
                     !lockState.isPinSet -> SetupPinScreen(lockViewModel)
-                    !lockState.isUnlocked -> LockScreen(lockViewModel)
-                    else -> MyVaultNavGraph(onLock = { lockViewModel.lock() })
+
+                    !lockState.isUnlocked -> LockScreen(
+                        viewModel = lockViewModel,
+                        ownerName = lockState.ownerName
+                    )
+
+                    !lockState.hasOwnerProfile -> MemberEditScreen(
+                        memberId = null,
+                        ownerSetup = true,
+                        onBack = null,
+                        onSaved = {}
+                    )
+
+                    else -> MyVaultNavGraph(
+                        onLock = { lockViewModel.lock() },
+                        onLanguageSelected = ::changeLanguage
+                    )
                 }
             }
         }
+    }
+
+    private fun changeLanguage(language: AppLanguage) {
+        if (LanguageManager.read(this) == language) return
+        lockViewModel.setLanguage(language)
+        recreate()
     }
 
     override fun onStop() {

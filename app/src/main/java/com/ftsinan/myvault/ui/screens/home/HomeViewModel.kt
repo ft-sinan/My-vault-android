@@ -7,105 +7,44 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
-import com.ftsinan.myvault.data.model.Category
-import com.ftsinan.myvault.data.model.Relation
-import com.ftsinan.myvault.data.model.VaultDocument
+import com.ftsinan.myvault.data.model.DocumentSummary
+import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.data.repository.DocumentRepository
-import com.ftsinan.myvault.util.ExpiryStatus
-import com.ftsinan.myvault.util.FormatUtils
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-
-data class HomeFilters(
-    val searchQuery: String = "",
-    val category: Category? = null,
-    val relation: Relation? = null,
-    val favouritesOnly: Boolean = false
-) {
-    val isActive: Boolean
-        get() = searchQuery.isNotBlank() || category != null ||
-            relation != null || favouritesOnly
-}
 
 data class HomeUiState(
     val isLoading: Boolean = true,
-    val documents: List<VaultDocument> = emptyList(),
+    val owner: MemberListItem? = null,
+    val members: List<MemberListItem> = emptyList(),
+    val recent: List<DocumentSummary> = emptyList(),
+    val favourites: List<DocumentSummary> = emptyList(),
     val totalCount: Int = 0,
-    val favouriteCount: Int = 0,
-    val totalSize: Long = 0L,
-    val categoryCounts: Map<Category, Int> = emptyMap(),
-    val relationsInUse: List<Relation> = emptyList(),
-    /** Documents expired or expiring within 30 days, most urgent first. */
-    val expiryAlerts: List<VaultDocument> = emptyList(),
-    val filters: HomeFilters = HomeFilters()
+    val totalSize: Long = 0L
 )
 
-class HomeViewModel(
-    repository: DocumentRepository
-) : ViewModel() {
-
-    private val filters = MutableStateFlow(HomeFilters())
+class HomeViewModel(repository: DocumentRepository) : ViewModel() {
 
     val uiState: StateFlow<HomeUiState> = combine(
-        repository.documents,
-        filters
-    ) { allDocuments, activeFilters ->
+        repository.memberListItems,
+        repository.documentSummaries
+    ) { members, summaries ->
         HomeUiState(
             isLoading = false,
-            documents = allDocuments.filter { it.matches(activeFilters) },
-            totalCount = allDocuments.size,
-            favouriteCount = allDocuments.count { it.isFavourite },
-            totalSize = allDocuments.sumOf { it.fileSize },
-            categoryCounts = allDocuments.groupingBy { it.category }.eachCount(),
-            relationsInUse = allDocuments.map { it.relation }.distinct()
-                .sortedBy { it.ordinal },
-            expiryAlerts = allDocuments
-                .filter {
-                    when (FormatUtils.expiryStatus(it.expiryDate)) {
-                        is ExpiryStatus.Expired, is ExpiryStatus.ExpiringSoon -> true
-                        else -> false
-                    }
-                }
-                .sortedBy { it.expiryDate },
-            filters = activeFilters
+            owner = members.firstOrNull { it.member.isOwner },
+            members = members,
+            recent = summaries.sortedByDescending { it.document.updatedAt }.take(5),
+            favourites = summaries.filter { it.document.isFavourite }.take(5),
+            totalCount = summaries.size,
+            totalSize = summaries.sumOf { it.totalSize }
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = HomeUiState()
     )
-
-    private fun VaultDocument.matches(filters: HomeFilters): Boolean {
-        if (filters.category != null && category != filters.category) return false
-        if (filters.relation != null && relation != filters.relation) return false
-        if (filters.favouritesOnly && !isFavourite) return false
-        val query = filters.searchQuery.trim()
-        if (query.isBlank()) return true
-        val searchable = listOfNotNull(
-            title, docType, holderName, documentNumber, notes, category.label
-        ).joinToString(" ")
-        return searchable.contains(query, ignoreCase = true)
-    }
-
-    fun onSearchChange(query: String) =
-        filters.update { it.copy(searchQuery = query) }
-
-    fun onCategorySelected(category: Category?) =
-        filters.update { it.copy(category = category) }
-
-    fun onRelationSelected(relation: Relation?) =
-        filters.update { it.copy(relation = relation) }
-
-    fun onFavouritesOnlyChange(enabled: Boolean) =
-        filters.update { it.copy(favouritesOnly = enabled) }
-
-    fun clearFilters() {
-        filters.value = HomeFilters()
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

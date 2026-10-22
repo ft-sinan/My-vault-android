@@ -6,6 +6,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.ftsinan.myvault.R
 
 fun canUseBiometric(context: Context): Boolean =
     BiometricManager.from(context).canAuthenticate(
@@ -52,9 +53,9 @@ fun promptBiometricUnlock(
     )
 
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle("Unlock My Vault")
-        .setSubtitle("Use your fingerprint or face to open your vault")
-        .setNegativeButtonText("Use PIN")
+        .setTitle(activity.getString(R.string.biometric_title))
+        .setSubtitle(activity.getString(R.string.biometric_subtitle))
+        .setNegativeButtonText(activity.getString(R.string.biometric_use_pin))
         .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
         .build()
 

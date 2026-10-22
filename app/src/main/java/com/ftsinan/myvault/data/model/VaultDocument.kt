@@ -18,8 +18,7 @@ enum class Category(val label: String) {
 }
 
 /**
- * Whose document is this? Indian households usually keep documents
- * for the whole family in one place.
+ * Relationship of a family member to the phone owner.
  */
 enum class Relation(val label: String) {
     SELF("Self"),
@@ -33,8 +32,27 @@ enum class Relation(val label: String) {
 }
 
 /**
- * One document in the vault. The actual file (photo / PDF) is stored
- * AES-GCM encrypted in internal storage; this row only holds metadata.
+ * Built-in non-personal owners for documents that do not belong to one
+ * specific person (vehicle papers, home documents, family documents...).
+ */
+enum class AssignedGroup(val label: String) {
+    FAMILY("Family"),
+    VEHICLE("Vehicle"),
+    HOME("Home / Property"),
+    OTHER("Other")
+}
+
+/**
+ * One document in the vault. Its pages live in [DocumentPage] rows and
+ * are stored AES-GCM encrypted in internal storage.
+ *
+ * A document is assigned either to a family member ([memberId]) or to a
+ * built-in non-personal group ([assignedGroup]).
+ *
+ * The single-file fields ([encryptedFileName] etc.) and the legacy
+ * issue/expiry columns are kept for the v1 -> v2 migration: new
+ * documents mirror their first page into them, and the current UI no
+ * longer asks for issue/expiry dates.
  */
 @Entity(tableName = "documents")
 data class VaultDocument(
@@ -48,22 +66,29 @@ data class VaultDocument(
     /** Specific type, e.g. "Aadhaar Card", "PAN Card", "SSLC Certificate". */
     val docType: String,
 
-    /** Name of the person this document belongs to. */
+    /** Snapshot of the assignee display name (kept in sync with the member). */
     val holderName: String,
 
     val relation: Relation = Relation.SELF,
 
-    /** Aadhaar no., PAN no., passport no. etc. Shown masked by default. */
+    /** Family member this document belongs to, if personal. */
+    val memberId: Long? = null,
+
+    /** Non-personal group this document belongs to, if not personal. */
+    val assignedGroup: AssignedGroup? = null,
+
+    /** Aadhaar no., PAN no., licence no. etc. Shown masked by default. */
     val documentNumber: String? = null,
 
+    // Legacy columns (not collected by the current UI).
     val issueDate: Long? = null,
     val expiryDate: Long? = null,
     val notes: String? = null,
 
-    /** File name (not path) of the encrypted file inside files/vault/. */
+    /** Legacy/first-page file name of the encrypted file inside files/vault/. */
     val encryptedFileName: String,
 
-    /** MIME type of the original file, e.g. image/jpeg or application/pdf. */
+    /** MIME type of the first page/original file. */
     val mimeType: String,
 
     val originalFileName: String,

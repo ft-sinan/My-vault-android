@@ -1,5 +1,6 @@
 package com.ftsinan.myvault.ui.screens.settings
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -7,8 +8,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
+import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.LanguageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,14 +21,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class SettingsMessage(
-    val text: String,
-    val isError: Boolean
+    @StringRes val textRes: Int,
+    val isError: Boolean,
+    val formatArg: Int? = null
 )
 
 class SettingsViewModel(
     private val pinManager: PinManager,
-    repository: DocumentRepository
+    repository: DocumentRepository,
+    languageManager: LanguageManager
 ) : ViewModel() {
+
+    val language: StateFlow<AppLanguage?> =
+        languageManager.language
 
     val biometricEnabled: StateFlow<Boolean> = pinManager.isBiometricEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
@@ -53,14 +62,18 @@ class SettingsViewModel(
         viewModelScope.launch {
             _message.value = when {
                 newPin.length != PinManager.PIN_LENGTH || newPin.any { !it.isDigit() } ->
-                    SettingsMessage("New PIN must be ${PinManager.PIN_LENGTH} digits.", true)
+                    SettingsMessage(
+                        R.string.settings_pin_length_error,
+                        isError = true,
+                        formatArg = PinManager.PIN_LENGTH
+                    )
                 newPin != confirmPin ->
-                    SettingsMessage("New PIN and confirmation don't match.", true)
+                    SettingsMessage(R.string.settings_pin_mismatch_error, isError = true)
                 !pinManager.verifyPin(currentPin) ->
-                    SettingsMessage("Current PIN is wrong.", true)
+                    SettingsMessage(R.string.settings_current_pin_wrong, isError = true)
                 else -> {
                     pinManager.setPin(newPin)
-                    SettingsMessage("PIN changed successfully.", false)
+                    SettingsMessage(R.string.settings_pin_changed, isError = false)
                 }
             }
         }
@@ -76,7 +89,8 @@ class SettingsViewModel(
                 val app = this[APPLICATION_KEY] as MyVaultApplication
                 SettingsViewModel(
                     pinManager = app.container.pinManager,
-                    repository = app.container.documentRepository
+                    repository = app.container.documentRepository,
+                    languageManager = app.container.languageManager
                 )
             }
         }
