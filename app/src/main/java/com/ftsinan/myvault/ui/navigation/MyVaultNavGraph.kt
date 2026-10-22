@@ -116,13 +116,13 @@ fun MyVaultNavGraph(
         Routes.SETTINGS
     )
 
-    fun navigateTopLevel(route: String) {
+    fun navigateTopLevel(route: String, restoreSavedState: Boolean = true) {
         navController.navigate(route) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
             launchSingleTop = true
-            restoreState = true
+            restoreState = restoreSavedState
         }
     }
 
@@ -305,7 +305,12 @@ fun MyVaultNavGraph(
             composable(Routes.FAMILY) {
                 FamilyScreen(
                     onProfileClick = { navController.navigate(Routes.profile(it)) },
-                    onGroupClick = { navigateTopLevel(Routes.documents(group = it)) },
+                    onGroupClick = {
+                        navigateTopLevel(
+                            Routes.documents(group = it),
+                            restoreSavedState = false
+                        )
+                    },
                     onManageMembers = { navController.navigate(Routes.MANAGE_MEMBERS) }
                 )
             }
