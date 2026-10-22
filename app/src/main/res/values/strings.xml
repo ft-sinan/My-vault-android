@@ -127,8 +127,7 @@
     <string name="share_as_images">Share as images</string>
     <string name="share_choose_format">How do you want to share this document?</string>
     <string name="family_title">Family</string>
-    <string name="family_subtitle">Profiles and shared groups</string>
-    <string name="family_shared_groups">Shared groups</string>
+    <string name="family_subtitle">Family member profiles</string>
     <string name="family_manage">Manage</string>
     <string name="profile_share">Share profile</string>
     <string name="profile_edit">Edit profile</string>

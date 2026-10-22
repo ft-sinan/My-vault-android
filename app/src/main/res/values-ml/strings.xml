@@ -121,8 +121,7 @@
     <string name="share_as_images">ഇമേജുകളായി പങ്കിടുക</string>
     <string name="share_choose_format">ഈ രേഖ എങ്ങനെ പങ്കിടണം?</string>
     <string name="family_title">കുടുംബം</string>
-    <string name="family_subtitle">പ്രൊഫൈലുകളും പങ്കിട്ട ഗ്രൂപ്പുകളും</string>
-    <string name="family_shared_groups">പങ്കിട്ട ഗ്രൂപ്പുകൾ</string>
+    <string name="family_subtitle">കുടുംബാംഗ പ്രൊഫൈലുകൾ</string>
     <string name="family_manage">കൈകാര്യം ചെയ്യുക</string>
     <string name="profile_share">പ്രൊഫൈൽ പങ്കിടുക</string>
     <string name="profile_edit">പ്രൊഫൈൽ തിരുത്തുക</string>

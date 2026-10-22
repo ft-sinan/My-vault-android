@@ -396,7 +396,7 @@ private fun OwnerProfileCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, top = 10.dp, end = 14.dp),
+                        .padding(start = 16.dp, top = 4.dp, end = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
@@ -423,7 +423,11 @@ private fun OwnerProfileCard(
                         )
                     }
                     Spacer(Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Top)
+                            .weight(1f)
+                    ) {
                         Text(
                             text = greetingText(),
                             style = MaterialTheme.typography.labelLarge,

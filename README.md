@@ -20,7 +20,7 @@ Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no 
 ### Family profiles and groups
 - Personal documents belong to a selected family member
 - Shared/non-personal documents can be assigned to **Family**, **Vehicle**, **Home / Property** or **Other**
-- Family tab shows every profile, document count, blood-group chip and shared-group counts
+- Family tab shows every profile with its document count and blood-group chip
 - **Settings → Manage family members** supports add/edit/delete and drag-to-reorder
 - Member order is visual only; it does not silently change a default document owner
 - Deleting a member does not delete their documents — they move to the Family group

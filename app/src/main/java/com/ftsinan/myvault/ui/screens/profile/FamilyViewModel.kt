@@ -7,39 +7,27 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
-import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 data class FamilyUiState(
     val isLoading: Boolean = true,
-    val members: List<MemberListItem> = emptyList(),
-    val groupCounts: Map<AssignedGroup, Int> = emptyMap()
+    val members: List<MemberListItem> = emptyList()
 )
 
 class FamilyViewModel(repository: DocumentRepository) : ViewModel() {
 
-    val uiState: StateFlow<FamilyUiState> = combine(
-        repository.memberListItems,
-        repository.documentSummaries
-    ) { members, summaries ->
-        FamilyUiState(
-            isLoading = false,
-            members = members,
-            groupCounts = summaries
-                .mapNotNull { it.document.assignedGroup }
-                .groupingBy { it }
-                .eachCount()
+    val uiState: StateFlow<FamilyUiState> = repository.memberListItems
+        .map { members -> FamilyUiState(isLoading = false, members = members) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = FamilyUiState()
         )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = FamilyUiState()
-    )
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

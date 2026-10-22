@@ -303,12 +303,6 @@ fun MyVaultNavGraph(
             composable(Routes.FAMILY) {
                 FamilyScreen(
                     onProfileClick = { navController.navigate(Routes.profile(it)) },
-                    onGroupClick = {
-                        navigateTopLevel(
-                            Routes.documents(group = it),
-                            restoreSavedState = false
-                        )
-                    },
                     onManageMembers = { navController.navigate(Routes.MANAGE_MEMBERS) }
                 )
             }

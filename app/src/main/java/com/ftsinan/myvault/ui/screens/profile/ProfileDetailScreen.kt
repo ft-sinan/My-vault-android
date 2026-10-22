@@ -186,10 +186,10 @@ private fun ProfileIdCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
-                .padding(22.dp)
+                .padding(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 18.dp)
         ) {
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.Top) {
                     MemberAvatar(
                         name = member.name,
                         photoBytes = item.photoBytes,
