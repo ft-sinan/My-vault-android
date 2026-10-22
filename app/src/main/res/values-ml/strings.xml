@@ -180,7 +180,7 @@
     <string name="detail_preview_unavailable_message">ഈ ഫയൽ ഇവിടെ തുറക്കാൻ കഴിയില്ല. എന്നാൽ പങ്കിടാനും വിവരങ്ങൾ തിരുത്താനും കഴിയും.</string>
     <string name="share_failed">പങ്കിടാൻ ഫയൽ തയ്യാറാക്കാൻ കഴിഞ്ഞില്ല</string>
     <string name="share_preparing">പങ്കിടാൻ തയ്യാറാക്കുന്നു…</string>
-    <string name="settings_brand_theme_note">My Vault-ന്റെ ശാന്തമായ സീ-ഗ്ലാസ് ടീൽ തീം ഉപയോഗിക്കാൻ ഇത് ഓഫ് ചെയ്യുക.</string>
+    <string name="settings_brand_theme_note">താഴെ തിരഞ്ഞെടുത്ത ആക്സന്റ് നിറം ഉപയോഗിക്കാൻ ഇത് ഓഫ് ചെയ്യുക.</string>
     <string name="settings_biometric_title">ഫിംഗർപ്രിന്റ് / ഫേസ് അൺലോക്ക്</string>
     <string name="settings_biometric_available">PIN ടൈപ്പ് ചെയ്യാതെ വോൾട്ട് അൺലോക്ക് ചെയ്യുക</string>
     <string name="settings_biometric_unavailable">ഈ ഫോണിൽ ഫിംഗർപ്രിന്റോ ഫേസോ സജ്ജമാക്കിയിട്ടില്ല</string>
@@ -213,4 +213,15 @@
     <string name="gender_other">മറ്റുള്ളവ</string>
     <string name="gender_prefer_not_to_say">പറയാൻ ആഗ്രഹിക്കുന്നില്ല</string>
     <string name="blood_group_unknown">അറിയില്ല</string>
+    <string name="settings_theme_mode">ആപ്പ് തീം</string>
+    <string name="settings_theme_system">സിസ്റ്റം</string>
+    <string name="settings_theme_light">ലൈറ്റ്</string>
+    <string name="settings_theme_dark">ഡാർക്ക്</string>
+    <string name="settings_accent_color">ആക്സന്റ് നിറം</string>
+    <string name="settings_accent_subtitle">വാൾപേപ്പർ നിറങ്ങൾ ഓഫ് ആയിരിക്കുമ്പോൾ ഉപയോഗിക്കുന്നു</string>
+    <string name="accent_teal">ടീൽ</string>
+    <string name="accent_navy">നേവി</string>
+    <string name="accent_emerald">എമറാൾഡ്</string>
+    <string name="accent_indigo">ഇൻഡിഗോ</string>
+    <string name="settings_appearance_preview">പ്രിവ്യൂ</string>
 </resources>

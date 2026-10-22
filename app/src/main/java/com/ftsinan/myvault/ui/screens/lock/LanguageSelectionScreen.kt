@@ -1,6 +1,8 @@
 package com.ftsinan.myvault.ui.screens.lock
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ftsinan.myvault.data.settings.AppLanguage
@@ -38,18 +39,10 @@ import com.ftsinan.myvault.data.settings.AppLanguage
 fun LanguageSelectionScreen(
     onLanguageSelected: (AppLanguage) -> Unit
 ) {
-    val brush = Brush.verticalGradient(
-        listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.72f),
-            MaterialTheme.colorScheme.background,
-            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f)
-        )
-    )
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(brush)
                 .padding(horizontal = 28.dp, vertical = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -57,8 +50,13 @@ fun LanguageSelectionScreen(
             Box(
                 modifier = Modifier
                     .size(96.dp)
-                    .clip(RoundedCornerShape(34.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                    .clip(RoundedCornerShape(28.dp))
+                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = RoundedCornerShape(28.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -89,6 +87,10 @@ fun LanguageSelectionScreen(
                     shape = RoundedCornerShape(26.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+                    ),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant
                     ),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                     modifier = Modifier.fillMaxWidth()

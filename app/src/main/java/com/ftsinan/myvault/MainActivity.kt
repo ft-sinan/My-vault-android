@@ -6,16 +6,21 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.LanguageManager
+import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.ui.navigation.MyVaultNavGraph
 import com.ftsinan.myvault.ui.screens.lock.LanguageSelectionScreen
 import com.ftsinan.myvault.ui.screens.lock.LockScreen
@@ -57,7 +62,23 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val lockState by lockViewModel.uiState.collectAsStateWithLifecycle()
-            MyVaultTheme(useDynamicColor = lockState.useDynamicColor) {
+            val systemDarkTheme = isSystemInDarkTheme()
+            val darkTheme = when (lockState.themeMode) {
+                ThemeMode.SYSTEM -> systemDarkTheme
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
+            val view = LocalView.current
+            SideEffect {
+                val insetsController = WindowCompat.getInsetsController(window, view)
+                insetsController.isAppearanceLightStatusBars = !darkTheme
+                insetsController.isAppearanceLightNavigationBars = !darkTheme
+            }
+            MyVaultTheme(
+                darkTheme = darkTheme,
+                useDynamicColor = lockState.useDynamicColor,
+                accentColor = lockState.accentColor
+            ) {
                 when {
                     lockState.isLoading || !lockState.isLanguageLoaded ||
                         !lockState.isProfileLoaded -> {

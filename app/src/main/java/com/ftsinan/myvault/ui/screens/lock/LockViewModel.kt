@@ -9,7 +9,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.data.settings.LanguageManager
 import com.ftsinan.myvault.data.storage.VaultFileManager
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +29,8 @@ data class LockUiState(
     val isUnlocked: Boolean = false,
     val isBiometricEnabled: Boolean = true,
     val useDynamicColor: Boolean = true,
+    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val accentColor: AccentColor = AccentColor.TEAL,
     val isProfileLoaded: Boolean = false,
     val hasOwnerProfile: Boolean = false,
     /** Name only is shown on the lock screen (never the photo). */
@@ -63,6 +67,16 @@ class LockViewModel(
         viewModelScope.launch {
             pinManager.useDynamicColor.collect { enabled ->
                 _uiState.update { it.copy(useDynamicColor = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.themeMode.collect { mode ->
+                _uiState.update { it.copy(themeMode = mode) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.accentColor.collect { accent ->
+                _uiState.update { it.copy(accentColor = accent) }
             }
         }
         viewModelScope.launch {

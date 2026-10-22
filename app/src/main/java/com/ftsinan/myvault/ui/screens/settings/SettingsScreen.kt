@@ -17,12 +17,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.BrightnessAuto
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
@@ -35,6 +39,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -66,8 +71,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.ui.screens.lock.canUseBiometric
+import com.ftsinan.myvault.ui.theme.accentColorValue
 import com.ftsinan.myvault.util.FormatUtils
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -82,6 +90,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val biometricEnabled by viewModel.biometricEnabled.collectAsStateWithLifecycle()
     val dynamicColorEnabled by viewModel.dynamicColorEnabled.collectAsStateWithLifecycle()
+    val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+    val accentColor by viewModel.accentColor.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
     val documentCount by viewModel.documentCount.collectAsStateWithLifecycle()
     val totalSize by viewModel.totalSize.collectAsStateWithLifecycle()
@@ -180,8 +190,46 @@ fun SettingsScreen(
                 }
             }
 
-            // ---- Appearance (Material You) --------------------------------
+            // ---- Appearance -------------------------------------------------
             SettingsCard(title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
+                Text(
+                    stringResource(R.string.settings_theme_mode),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    ThemeMode.entries.forEach { mode ->
+                        FilterChip(
+                            selected = themeMode == mode,
+                            onClick = { viewModel.setThemeMode(mode) },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = when (mode) {
+                                        ThemeMode.SYSTEM -> Icons.Filled.BrightnessAuto
+                                        ThemeMode.LIGHT -> Icons.Filled.LightMode
+                                        ThemeMode.DARK -> Icons.Filled.DarkMode
+                                    },
+                                    contentDescription = null,
+                                    modifier = Modifier.size(17.dp)
+                                )
+                            },
+                            label = {
+                                Text(
+                                    stringResource(
+                                        when (mode) {
+                                            ThemeMode.SYSTEM -> R.string.settings_theme_system
+                                            ThemeMode.LIGHT -> R.string.settings_theme_light
+                                            ThemeMode.DARK -> R.string.settings_theme_dark
+                                        }
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(18.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -208,12 +256,58 @@ fun SettingsScreen(
                         enabled = dynamicColorAvailable
                     )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(R.string.settings_brand_theme_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                Text(
+                    stringResource(R.string.settings_accent_color),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    stringResource(R.string.settings_accent_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                val accentSelectionEnabled = !(dynamicColorEnabled && dynamicColorAvailable)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AccentColor.entries.forEach { accent ->
+                        FilterChip(
+                            selected = accentColor == accent,
+                            enabled = accentSelectionEnabled,
+                            onClick = { viewModel.setAccentColor(accent) },
+                            leadingIcon = {
+                                Box(
+                                    modifier = Modifier
+                                        .size(14.dp)
+                                        .clip(CircleShape)
+                                        .background(accentColorValue(accent))
+                                )
+                            },
+                            label = {
+                                Text(
+                                    stringResource(
+                                        when (accent) {
+                                            AccentColor.TEAL -> R.string.accent_teal
+                                            AccentColor.NAVY -> R.string.accent_navy
+                                            AccentColor.EMERALD -> R.string.accent_emerald
+                                            AccentColor.INDIGO -> R.string.accent_indigo
+                                        }
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                AppearancePreview()
             }
 
             // ---- Security -------------------------------------------------
@@ -379,6 +473,45 @@ private fun SettingsCard(
             Spacer(modifier = Modifier.height(16.dp))
             content(this)
         }
+    }
+}
+
+@Composable
+private fun AppearancePreview() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.settings_appearance_preview),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f)
+        )
+        Box(
+            modifier = Modifier
+                .size(width = 38.dp, height = 24.dp)
+                .clip(RoundedCornerShape(50))
+                .background(MaterialTheme.colorScheme.primary)
+        )
+        Spacer(Modifier.width(6.dp))
+        Box(
+            modifier = Modifier
+                .size(width = 38.dp, height = 24.dp)
+                .clip(RoundedCornerShape(50))
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        )
+        Spacer(Modifier.width(6.dp))
+        Box(
+            modifier = Modifier
+                .size(width = 38.dp, height = 24.dp)
+                .clip(RoundedCornerShape(50))
+                .background(MaterialTheme.colorScheme.secondaryContainer)
+        )
     }
 }
 

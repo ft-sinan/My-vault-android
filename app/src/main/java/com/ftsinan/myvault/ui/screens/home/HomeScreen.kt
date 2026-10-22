@@ -1,6 +1,7 @@
 package com.ftsinan.myvault.ui.screens.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,7 +32,6 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -52,8 +52,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -349,61 +347,56 @@ private fun OwnerProfileCard(
     totalSize: Long,
     onClick: () -> Unit
 ) {
-    val gradient = Brush.horizontalGradient(
-        listOf(
-            MaterialTheme.colorScheme.primaryContainer,
-            MaterialTheme.colorScheme.tertiaryContainer,
-            MaterialTheme.colorScheme.secondaryContainer
-        )
-    )
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(gradient)
-        ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             // Soft decorative shapes keep the compact banner from feeling flat.
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 34.dp, y = (-52).dp)
-                    .size(124.dp)
-                    .clip(CircleShape)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.20f)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(x = (-36).dp, y = 42.dp)
-                    .size(54.dp)
+                    .offset(x = 28.dp, y = (-34).dp)
+                    .size(84.dp)
                     .clip(CircleShape)
                     .background(
                         MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.12f)
                     )
             )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = (-26).dp, y = 34.dp)
+                    .size(38.dp)
+                    .clip(CircleShape)
+                    .background(
+                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.08f)
+                    )
+            )
             Icon(
                 imageVector = Icons.Filled.Shield,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.08f),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.05f),
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .offset(x = 18.dp)
-                    .size(92.dp)
+                    .offset(x = 12.dp)
+                    .size(64.dp)
             )
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, top = 14.dp, end = 14.dp),
+                        .padding(start = 16.dp, top = 10.dp, end = 14.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
@@ -485,15 +478,15 @@ private fun OwnerProfileCard(
                     }
                 }
 
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(6.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
                             MaterialTheme.colorScheme.surfaceContainerLowest
-                                .copy(alpha = 0.32f)
+                                .copy(alpha = 0.24f)
                         )
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(horizontal = 16.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     BannerStat(

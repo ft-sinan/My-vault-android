@@ -1,0 +1,29 @@
+package com.ftsinan.myvault.data.settings
+
+/** How the app chooses between its light and dark colour schemes. */
+enum class ThemeMode {
+    SYSTEM,
+    LIGHT,
+    DARK;
+
+    companion object {
+        fun fromName(value: String?): ThemeMode =
+            entries.firstOrNull { it.name == value } ?: SYSTEM
+    }
+}
+
+/**
+ * Professional brand accents used when Android wallpaper colours are off.
+ * Values are stored by enum name, so the UI can safely evolve visually.
+ */
+enum class AccentColor {
+    TEAL,
+    NAVY,
+    EMERALD,
+    INDIGO;
+
+    companion object {
+        fun fromName(value: String?): AccentColor =
+            entries.firstOrNull { it.name == value } ?: TEAL
+    }
+}

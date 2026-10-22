@@ -6,6 +6,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.ftsinan.myvault.data.settings.AccentColor
+import com.ftsinan.myvault.data.settings.ThemeMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -31,6 +33,14 @@ class PinManager(private val context: Context) {
     /** Material You: use wallpaper-based colours on Android 12+. */
     val useDynamicColor: Flow<Boolean> = context.dataStore.data.map { prefs ->
         prefs[USE_DYNAMIC_COLOR] ?: true
+    }
+
+    val themeMode: Flow<ThemeMode> = context.dataStore.data.map { prefs ->
+        ThemeMode.fromName(prefs[THEME_MODE])
+    }
+
+    val accentColor: Flow<AccentColor> = context.dataStore.data.map { prefs ->
+        AccentColor.fromName(prefs[ACCENT_COLOR])
     }
 
     suspend fun setPin(pin: String) {
@@ -63,6 +73,14 @@ class PinManager(private val context: Context) {
         context.dataStore.edit { it[USE_DYNAMIC_COLOR] = enabled }
     }
 
+    suspend fun setThemeMode(mode: ThemeMode) {
+        context.dataStore.edit { it[THEME_MODE] = mode.name }
+    }
+
+    suspend fun setAccentColor(accent: AccentColor) {
+        context.dataStore.edit { it[ACCENT_COLOR] = accent.name }
+    }
+
     private fun hashPin(pin: String, salt: ByteArray): ByteArray {
         val digest = MessageDigest.getInstance("SHA-256")
         digest.update(salt)
@@ -82,5 +100,7 @@ class PinManager(private val context: Context) {
         private val PIN_SALT = stringPreferencesKey("pin_salt")
         private val BIOMETRIC_ENABLED = booleanPreferencesKey("biometric_enabled")
         private val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
+        private val THEME_MODE = stringPreferencesKey("theme_mode")
+        private val ACCENT_COLOR = stringPreferencesKey("accent_color")
     }
 }

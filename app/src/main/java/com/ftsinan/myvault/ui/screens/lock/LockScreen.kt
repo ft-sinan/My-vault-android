@@ -1,6 +1,7 @@
 package com.ftsinan.myvault.ui.screens.lock
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +30,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -159,13 +159,6 @@ private fun LockScaffold(
     onBackspace: () -> Unit,
     onBiometricClick: (() -> Unit)?
 ) {
-    val backgroundBrush = Brush.verticalGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.72f),
-            MaterialTheme.colorScheme.background,
-            MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.52f)
-        )
-    )
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -173,7 +166,6 @@ private fun LockScaffold(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(backgroundBrush)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 32.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -183,8 +175,13 @@ private fun LockScaffold(
                 Box(
                     modifier = Modifier
                         .size(104.dp)
-                        .clip(RoundedCornerShape(38.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerLowest),
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            shape = RoundedCornerShape(30.dp)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -227,9 +224,7 @@ private fun LockScaffold(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(50))
-                    .background(
-                        MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.78f)
-                    )
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
                     .padding(horizontal = 14.dp, vertical = 7.dp)
             ) {
                 Text(

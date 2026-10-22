@@ -188,7 +188,7 @@
     <string name="detail_preview_unavailable_message">This file cannot be opened here. You can still share it or edit its details.</string>
     <string name="share_failed">Could not prepare the file for sharing</string>
     <string name="share_preparing">Preparing to share…</string>
-    <string name="settings_brand_theme_note">Turn this off to use My Vault\'s calm sea-glass teal theme instead.</string>
+    <string name="settings_brand_theme_note">Turn this off to use the accent colour selected below.</string>
     <string name="settings_biometric_title">Fingerprint / face unlock</string>
     <string name="settings_biometric_available">Unlock the vault without typing your PIN</string>
     <string name="settings_biometric_unavailable">No fingerprint/face is set up on this phone</string>
@@ -221,4 +221,15 @@
     <string name="gender_other">Other</string>
     <string name="gender_prefer_not_to_say">Prefer not to say</string>
     <string name="blood_group_unknown">Unknown</string>
+    <string name="settings_theme_mode">App theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_accent_color">Accent colour</string>
+    <string name="settings_accent_subtitle">Used when wallpaper colours are turned off</string>
+    <string name="accent_teal">Teal</string>
+    <string name="accent_navy">Navy</string>
+    <string name="accent_emerald">Emerald</string>
+    <string name="accent_indigo">Indigo</string>
+    <string name="settings_appearance_preview">Preview</string>
 </resources>

@@ -15,7 +15,7 @@ Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no 
 - Owner and family members each get an ID-card-style profile with their own documents underneath
 - Lock screen greets the owner by **name only — never by photo**
 - English and Malayalam throughout the app; language can be changed later in Settings
-- Material You dynamic colour on Android 12+, with the app palette available when dynamic colour is turned off
+- Appearance settings for System/Light/Dark theme, Material You wallpaper colours on Android 12+, and professional Teal, Navy, Emerald, or Indigo accents when wallpaper colours are off
 
 ### Family profiles and groups
 - Personal documents belong to a selected family member

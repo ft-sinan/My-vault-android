@@ -11,7 +11,9 @@ import com.ftsinan.myvault.MyVaultApplication
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.data.settings.LanguageManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,6 +43,12 @@ class SettingsViewModel(
     val dynamicColorEnabled: StateFlow<Boolean> = pinManager.useDynamicColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
 
+    val themeMode: StateFlow<ThemeMode> = pinManager.themeMode
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ThemeMode.SYSTEM)
+
+    val accentColor: StateFlow<AccentColor> = pinManager.accentColor
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccentColor.TEAL)
+
     val documentCount: StateFlow<Int> = repository.documentCount
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
@@ -56,6 +64,14 @@ class SettingsViewModel(
 
     fun setDynamicColorEnabled(enabled: Boolean) {
         viewModelScope.launch { pinManager.setUseDynamicColor(enabled) }
+    }
+
+    fun setThemeMode(mode: ThemeMode) {
+        viewModelScope.launch { pinManager.setThemeMode(mode) }
+    }
+
+    fun setAccentColor(accent: AccentColor) {
+        viewModelScope.launch { pinManager.setAccentColor(accent) }
     }
 
     fun changePin(currentPin: String, newPin: String, confirmPin: String) {
