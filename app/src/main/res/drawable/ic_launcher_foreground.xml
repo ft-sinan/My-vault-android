@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Shield with keyhole: the My Vault logo -->
+<!--
+    M-Vault Monogram adaptive-icon foreground.
+
+    The M is intentionally kept inside the central adaptive-icon safe zone
+    (roughly 29.6-78.4 x 33.2-74.8 in the 108dp layer), so circle, squircle,
+    rounded-square and teardrop launcher masks do not clip its points.
+-->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- shield -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,18 L80,28 L80,50 C80,68 69,82 54,90 C39,82 28,68 28,50 L28,28 Z" />
-    <!-- keyhole -->
+        android:fillColor="#34349C"
+        android:pathData="M29.6,74.8 L29.6,33.2 L54,54.6 L78.4,33.2 L78.4,74.8 L67.1,74.8 L67.1,50.7 L54,62 L40.9,50.7 L40.9,74.8 Z" />
+
+    <!-- Lime keyhole accent at the point of the M. -->
     <path
-        android:fillColor="#0B2239"
-        android:pathData="M54,42 m-7,0 a7,7 0 1,0 14,0 a7,7 0 1,0 -14,0" />
+        android:fillColor="#C8F169"
+        android:pathData="M54,53.8 m-3.3,0 a3.3,3.3 0 1,0 6.6,0 a3.3,3.3 0 1,0 -6.6,0" />
     <path
-        android:fillColor="#0B2239"
-        android:pathData="M51.5,46 L56.5,46 L58,62 L50,62 Z" />
+        android:fillColor="#C8F169"
+        android:pathData="M52.2,58.8 L55.8,58.8 L56.7,63.2 L51.3,63.2 Z" />
 </vector>

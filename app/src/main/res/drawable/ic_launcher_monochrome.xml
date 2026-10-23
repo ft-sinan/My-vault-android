@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Single-silhouette M for Android themed (monochrome) launcher icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M29.6,74.8 L29.6,33.2 L54,54.6 L78.4,33.2 L78.4,74.8 L67.1,74.8 L67.1,50.7 L54,62 L40.9,50.7 L40.9,74.8 Z" />
+</vector>
