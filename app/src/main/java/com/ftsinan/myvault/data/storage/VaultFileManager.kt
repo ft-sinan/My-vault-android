@@ -136,6 +136,20 @@ class VaultFileManager(
         return File(shareDir, fileName)
     }
 
+    /**
+     * Decrypts straight into the share cache under an exact user-facing
+     * [outputFileName] (e.g. "Sinan mk - Driving Licence.pdf"), so the
+     * receiving app shows that name instead of an internal cache name.
+     */
+    fun decryptToShareFile(encryptedFileName: String, outputFileName: String): File {
+        shareDir.mkdirs()
+        val safeName = File(outputFileName).name.ifBlank { "document" }
+        return cryptoManager.decryptToFile(
+            encryptedFile(encryptedFileName),
+            File(shareDir, safeName)
+        )
+    }
+
     /** Empty file used as the camera capture target. */
     fun createCaptureFile(): File {
         captureDir.mkdirs()

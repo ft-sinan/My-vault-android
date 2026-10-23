@@ -19,6 +19,7 @@ import com.ftsinan.myvault.data.model.DocumentPage
 import com.ftsinan.myvault.data.model.VaultDocument
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.util.MimeTypeDetector
+import com.ftsinan.myvault.util.ShareNaming
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -41,7 +42,9 @@ enum class ShareFormat { PDF, IMAGES }
 data class SharePayload(
     val uris: List<Uri>,
     val mimeType: String,
-    val title: String
+    val title: String,
+    /** Caption sent with the files (image shares only). */
+    val text: String? = null
 )
 
 class DocumentDetailViewModel(
@@ -187,9 +190,14 @@ class DocumentDetailViewModel(
         return withContext(Dispatchers.IO) {
             runCatching {
                 val pages = loadPagesOrLegacy(doc)
+                // Personal documents are shared under the owner's name;
+                // group documents have no owner prefix.
+                val ownerName = doc.memberId?.let { memberId ->
+                    repository.getMember(memberId)?.name ?: doc.holderName
+                }
                 when (format) {
-                    ShareFormat.PDF -> preparePdfShare(doc, pages)
-                    ShareFormat.IMAGES -> prepareImagesShare(doc, pages)
+                    ShareFormat.PDF -> preparePdfShare(doc, pages, ownerName)
+                    ShareFormat.IMAGES -> prepareImagesShare(doc, pages, ownerName)
                 }
             }.getOrNull()
         }
@@ -197,29 +205,30 @@ class DocumentDetailViewModel(
 
     private fun preparePdfShare(
         document: VaultDocument,
-        pages: List<DocumentPage>
+        pages: List<DocumentPage>,
+        ownerName: String?
     ): SharePayload {
+        val fileName = ShareNaming.pdfFileName(ownerName, document.title)
         val singlePdf = pages.singleOrNull()?.takeIf { it.isPdf }
         val file = if (singlePdf != null) {
-            repository.fileManager.decryptToCache(
+            repository.fileManager.decryptToShareFile(
                 encryptedFileName = singlePdf.encryptedFileName,
-                originalFileName = singlePdf.originalFileName,
-                cacheKey = "${document.id}-share",
-                forSharing = true
+                outputFileName = fileName
             )
         } else {
-            createPdfFromPages(document, pages)
+            createPdfFromPages(pages, fileName)
         }
         return SharePayload(
             uris = listOf(file.toShareUri()),
             mimeType = "application/pdf",
-            title = document.title
+            title = fileName.removeSuffix(".pdf")
         )
     }
 
     private fun prepareImagesShare(
         document: VaultDocument,
-        pages: List<DocumentPage>
+        pages: List<DocumentPage>,
+        ownerName: String?
     ): SharePayload {
         val files = mutableListOf<File>()
         pages.forEachIndexed { pageIndex, page ->
@@ -261,17 +270,21 @@ class DocumentDetailViewModel(
         return SharePayload(
             uris = files.map { it.toShareUri() },
             mimeType = mime,
-            title = document.title
+            title = document.title,
+            text = ShareNaming.imageShareText(
+                ownerName = ownerName,
+                docType = document.docType,
+                documentNumber = document.documentNumber,
+                fallbackTitle = document.title
+            )
         )
     }
 
     private fun createPdfFromPages(
-        document: VaultDocument,
-        pages: List<DocumentPage>
+        pages: List<DocumentPage>,
+        outputFileName: String
     ): File {
-        val safeTitle = document.title.replace(Regex("[^A-Za-z0-9._-]"), "_")
-            .ifBlank { "document" }
-        val outFile = repository.fileManager.shareCacheFile("${document.id}_$safeTitle.pdf")
+        val outFile = repository.fileManager.shareCacheFile(outputFileName)
         val pdfDocument = PdfDocument()
         try {
             var pageNumber = 1

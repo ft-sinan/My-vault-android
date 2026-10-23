@@ -126,6 +126,9 @@ fun DocumentDetailScreen(
                 type = payload.mimeType
                 putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(payload.uris))
                 putExtra(Intent.EXTRA_SUBJECT, payload.title)
+                payload.text?.takeIf { it.isNotBlank() }?.let {
+                    putExtra(Intent.EXTRA_TEXT, it)
+                }
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         } else {
@@ -133,6 +136,9 @@ fun DocumentDetailScreen(
                 type = payload.mimeType
                 putExtra(Intent.EXTRA_STREAM, payload.uris.firstOrNull())
                 putExtra(Intent.EXTRA_SUBJECT, payload.title)
+                payload.text?.takeIf { it.isNotBlank() }?.let {
+                    putExtra(Intent.EXTRA_TEXT, it)
+                }
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
