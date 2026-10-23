@@ -422,29 +422,40 @@ private fun LockScaffold(
                 .statusBarsPadding()
                 .navigationBarsPadding()
         ) {
-            val veryCompact = maxHeight < 620.dp
-            val compact = maxHeight < 730.dp
+            val availableWidth = maxWidth
+            val availableHeight = maxHeight
+            val tinyHeight = availableHeight < 500.dp
+            val veryCompact = availableHeight < 620.dp
+            val compact = availableHeight < 730.dp
             val markSize = when {
+                tinyHeight -> 50.dp
                 veryCompact -> 60.dp
                 compact -> 68.dp
                 else -> 76.dp
             }
-            val keySize = when {
-                veryCompact -> 54.dp
-                compact -> 62.dp
-                maxHeight < 840.dp -> 68.dp
-                else -> 72.dp
-            }
             val keyHorizontalSpacing = when {
+                tinyHeight -> 16.dp
                 veryCompact -> 18.dp
                 compact -> 22.dp
                 else -> 26.dp
             }
             val keyVerticalSpacing = when {
+                tinyHeight -> 6.dp
                 veryCompact -> 8.dp
                 compact -> 9.dp
                 else -> 10.dp
             }
+            val keySizeByHeight = when {
+                tinyHeight -> ((availableHeight - 190.dp) * 0.25f).coerceIn(42.dp, 54.dp)
+                veryCompact -> 54.dp
+                compact -> 62.dp
+                availableHeight < 840.dp -> 68.dp
+                else -> 72.dp
+            }
+            val keySize = minOf(
+                keySizeByHeight,
+                (availableWidth - 48.dp - keyHorizontalSpacing * 2) * 0.334f
+            )
 
             Box(
                 modifier = Modifier
@@ -508,7 +519,7 @@ private fun LockScaffold(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                if (maxHeight >= 410.dp) {
+                if (availableHeight >= 410.dp) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = subtitle,
@@ -547,13 +558,21 @@ private fun LockScaffold(
                 PinDots(
                     entered = pinLength,
                     isError = error != null,
-                    dotSize = if (veryCompact) 13.dp else 15.dp,
-                    spacing = if (veryCompact) 13.dp else 15.dp
+                    dotSize = when {
+                        tinyHeight -> 12.dp
+                        veryCompact -> 13.dp
+                        else -> 15.dp
+                    },
+                    spacing = when {
+                        tinyHeight -> 12.dp
+                        veryCompact -> 13.dp
+                        else -> 15.dp
+                    }
                 )
                 Box(
                     modifier = Modifier
-                        .padding(top = 8.dp)
-                        .heightIn(min = 26.dp),
+                        .padding(top = if (tinyHeight) 4.dp else 8.dp)
+                        .heightIn(min = if (tinyHeight) 22.dp else 26.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (error != null) {
