@@ -190,6 +190,15 @@
     <string name="settings_storage">Storage</string>
     <string name="settings_how_safe">How your documents stay safe</string>
     <string name="settings_lock_now">Lock vault now</string>
+    <string name="settings_screenshots_title">Temporary screenshots</string>
+    <string name="settings_screenshots_subtitle">Blocked by default. Allow for 5 minutes only</string>
+    <string name="settings_screenshots_active">Screenshots are allowed for a short time. Locking or leaving the app stops them early</string>
+    <string name="settings_screenshots_start">Allow screenshots for 5 minutes</string>
+    <string name="settings_screenshots_stop">Stop allowing screenshots</string>
+    <string name="settings_screenshots_dialog_title">Allow screenshots?</string>
+    <string name="settings_screenshots_dialog_body">Screenshots, screen recording and recent-apps previews will be allowed for 5 minutes. Enter your current PIN to continue.</string>
+    <string name="settings_screenshots_warning">Use only fake/sample documents for published screenshots. Do not capture real Aadhaar, PAN or other private documents.</string>
+    <string name="settings_screenshots_confirm">Allow for 5 minutes</string>
 
     <!-- Enums -->
     <string name="category_identity">Identity</string>

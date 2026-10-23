@@ -16,6 +16,7 @@ import com.ftsinan.myvault.data.backup.BackupSummary
 import com.ftsinan.myvault.data.backup.PreparedBackupRestore
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.security.ScreenshotAllowanceManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
@@ -62,7 +63,8 @@ class SettingsViewModel(
     private val pinManager: PinManager,
     repository: DocumentRepository,
     languageManager: LanguageManager,
-    private val backupManager: BackupManager
+    private val backupManager: BackupManager,
+    private val screenshotAllowanceManager: ScreenshotAllowanceManager
 ) : ViewModel() {
 
     val language: StateFlow<AppLanguage?> =
@@ -105,6 +107,9 @@ class SettingsViewModel(
     val backupState: StateFlow<BackupUiState> = _backupState.asStateFlow()
     private var preparedRestore: PreparedBackupRestore? = null
 
+    val screenshotAllowanceExpiresAt: StateFlow<Long> =
+        screenshotAllowanceManager.expiresAtMillis
+
     fun setBiometricEnabled(enabled: Boolean) {
         viewModelScope.launch { pinManager.setBiometricEnabled(enabled) }
     }
@@ -146,6 +151,15 @@ class SettingsViewModel(
     }
 
     suspend fun verifyCurrentPin(pin: String): Boolean = pinManager.verifyPin(pin)
+
+    /** Call only after the current PIN has been verified in the UI. */
+    fun allowScreenshotsTemporarily() {
+        screenshotAllowanceManager.allowTemporarily()
+    }
+
+    fun stopScreenshotAllowance() {
+        screenshotAllowanceManager.clear()
+    }
 
     fun createBackup(
         destination: Uri,
@@ -327,7 +341,8 @@ class SettingsViewModel(
                     pinManager = app.container.pinManager,
                     repository = app.container.documentRepository,
                     languageManager = app.container.languageManager,
-                    backupManager = app.container.backupManager
+                    backupManager = app.container.backupManager,
+                    screenshotAllowanceManager = app.container.screenshotAllowanceManager
                 )
             }
         }

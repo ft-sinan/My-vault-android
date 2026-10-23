@@ -7,6 +7,7 @@ import com.ftsinan.myvault.data.backup.BackupManager
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.CryptoManager
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.security.ScreenshotAllowanceManager
 import com.ftsinan.myvault.data.settings.LanguageManager
 import com.ftsinan.myvault.data.storage.VaultFileManager
 import com.ftsinan.myvault.util.OcrManager
@@ -19,6 +20,7 @@ class AppContainer(context: Context) {
 
     val cryptoManager = CryptoManager()
     val pinManager = PinManager(context)
+    val screenshotAllowanceManager = ScreenshotAllowanceManager()
     val languageManager = LanguageManager(context)
     val fileManager = VaultFileManager(context, cryptoManager)
     val documentRepository = DocumentRepository(

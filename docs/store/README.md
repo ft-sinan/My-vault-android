@@ -1,6 +1,6 @@
 # My Vault — Orion Store listing assets
 
-These assets use the fictional **Nair** family and masked sample document numbers only. They are rendered store-preview graphics based on the My Vault interface; no real family documents, photos, or ID numbers are used.
+The listing uses the fictional **Nair** family only; no real family documents, photos, or ID numbers are used. The four screenshot PNGs currently in this folder are interim rendered previews. They will be replaced in place with real device screenshots captured after restoring the fictional sample vault below, so the existing raw URLs will not change.
 
 ## Assets
 
@@ -11,8 +11,21 @@ These assets use the fictional **Nair** family and masked sample document number
 | Documents preview | [`screenshots/02-documents.png`](screenshots/02-documents.png) | 1080 × 2400 |
 | Family preview | [`screenshots/03-family.png`](screenshots/03-family.png) | 1080 × 2400 |
 | Backup preview | [`screenshots/04-backup.png`](screenshots/04-backup.png) | 1080 × 2400 |
+| Fictional screenshot vault | [`my-vault-sample-vault.mvbackup`](my-vault-sample-vault.mvbackup) | 4 members, 8 documents |
 
 The reusable Shield Keyhole source is in [`icon.svg`](icon.svg).
+
+## Capturing the real screenshots
+
+> [!WARNING]
+> Restoring the sample replaces the contents of the install used for the screenshots. Use a separate Android work profile, secondary user, or data-free test install. **Do not restore it into the real family vault.**
+
+1. Install a build containing **Settings → Security → Temporary screenshots** in the separate test profile/install.
+2. Complete first setup with a temporary PIN and temporary owner name.
+3. Open **Settings → Storage & privacy → Restore backup**, choose `my-vault-sample-vault.mvbackup`, confirm the temporary PIN, and replace the empty test vault.
+4. Open **Settings → Security**, tap **Allow screenshots for 5 minutes**, read the warning, and confirm the temporary PIN.
+5. Capture, in order: **Home**, **Documents**, **Family**, and **Settings → Storage & privacy** (Backup & restore card visible). If the five-minute window expires, repeat step 4. Leaving the app or locking it ends the window early.
+6. Keep the original, uncropped PNGs. Review them for notifications or other private information before sharing them, then replace the four files above using the same filenames.
 
 ## Listing fields
 

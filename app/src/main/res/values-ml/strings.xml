@@ -183,6 +183,15 @@
     <string name="settings_storage">സ്റ്റോറേജ്</string>
     <string name="settings_how_safe">രേഖകൾ എങ്ങനെ സുരക്ഷിതമായിരിക്കും</string>
     <string name="settings_lock_now">വോൾട്ട് ഇപ്പോൾ ലോക്ക് ചെയ്യുക</string>
+    <string name="settings_screenshots_title">താൽക്കാലിക സ്ക്രീൻഷോട്ടുകൾ</string>
+    <string name="settings_screenshots_subtitle">സ്ഥിരമായി ബ്ലോക്ക് ചെയ്തതാണ്. അഞ്ച് മിനിറ്റ് മാത്രം അനുവദിക്കാം</string>
+    <string name="settings_screenshots_active">അല്പസമയം സ്ക്രീൻഷോട്ടുകൾ അനുവദിച്ചിരിക്കുന്നു. ലോക്ക് ചെയ്താലോ ആപ്പിൽ നിന്ന് പുറത്ത് പോയാലോ നേരത്തെ അവസാനിക്കും</string>
+    <string name="settings_screenshots_start">5 മിനിറ്റിന് സ്ക്രീൻഷോട്ടുകൾ അനുവദിക്കുക</string>
+    <string name="settings_screenshots_stop">സ്ക്രീൻഷോട്ട് അനുമതി നിർത്തുക</string>
+    <string name="settings_screenshots_dialog_title">സ്ക്രീൻഷോട്ടുകൾ അനുവദിക്കണോ?</string>
+    <string name="settings_screenshots_dialog_body">സ്ക്രീൻഷോട്ടുകൾ, സ്ക്രീൻ റെക്കോർഡിങ്, അടുത്തിടെ ഉപയോഗിച്ച ആപ്പുകൾ എന്നിവയിലെ പ്രിവ്യൂകൾ 5 മിനിറ്റ് അനുവദിക്കും. തുടരാൻ നിലവിലെ PIN നൽകുക.</string>
+    <string name="settings_screenshots_warning">പ്രസിദ്ധീകരിക്കുന്ന സ്ക്രീൻഷോട്ടുകൾക്ക് വ്യാജ/സാമ്പിൾ രേഖകൾ മാത്രം ഉപയോഗിക്കുക. യഥാർത്ഥ ആധാർ, PAN അല്ലെങ്കിൽ മറ്റ് സ്വകാര്യ രേഖകൾ ക്യാപ്ചർ ചെയ്യരുത്.</string>
+    <string name="settings_screenshots_confirm">5 മിനിറ്റിന് അനുവദിക്കുക</string>
 
     <string name="category_identity">ഐഡന്റിറ്റി</string>
     <string name="category_education">വിദ്യാഭ്യാസം</string>
