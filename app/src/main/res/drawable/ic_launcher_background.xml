@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- M-Vault Monogram adaptive-icon background: soft lavender with one quiet orbit. -->
+<!-- Shield Keyhole adaptive-icon background: deep vault green with one soft lime orbit. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:fillColor="#ECEBFF"
+        android:fillColor="#173F35"
         android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
     <path
-        android:fillColor="#DCD9FF"
-        android:pathData="M100,5 m-33,0 a33,33 0 1,0 66,0 a33,33 0 1,0 -66,0" />
+        android:fillColor="#24C8F169"
+        android:pathData="M88,15 m-26,0 a26,26 0 1,0 52,0 a26,26 0 1,0 -52,0" />
 </vector>

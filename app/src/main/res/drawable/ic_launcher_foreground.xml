@@ -1,25 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    M-Vault Monogram adaptive-icon foreground.
+    Shield Keyhole adaptive-icon foreground.
 
-    The M is intentionally kept inside the central adaptive-icon safe zone
-    (roughly 29.6-78.4 x 33.2-74.8 in the 108dp layer), so circle, squircle,
-    rounded-square and teardrop launcher masks do not clip its points.
+    The shield is kept inside the adaptive-icon safe zone (roughly
+    29.5-78.5 x 22.2-83.2 in the 108dp layer), so circle, squircle,
+    rounded-square and teardrop launcher masks do not clip it.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    <!-- Cream shield. -->
     <path
-        android:fillColor="#34349C"
-        android:pathData="M29.6,74.8 L29.6,33.2 L54,54.6 L78.4,33.2 L78.4,74.8 L67.1,74.8 L67.1,50.7 L54,62 L40.9,50.7 L40.9,74.8 Z" />
+        android:fillColor="#F2EFE3"
+        android:pathData="M54,22.2 L78.5,29.1 L78.5,48.8 C78.5,64.3 68.7,75.5 54,83.2 C39.3,75.5 29.5,64.3 29.5,48.8 L29.5,29.1 Z" />
 
-    <!-- Lime keyhole accent at the point of the M. -->
+    <!-- Inner shield line. -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#173F35"
+        android:strokeWidth="3.6"
+        android:strokeLineJoin="round"
+        android:pathData="M54,29.9 L70.7,35.1 L70.7,48.8 C70.7,60 63.8,68.6 54,73.8 C44.2,68.6 37.3,60 37.3,48.8 L37.3,35.1 Z" />
+
+    <!-- Lime keyhole badge. -->
     <path
         android:fillColor="#C8F169"
-        android:pathData="M54,53.8 m-3.3,0 a3.3,3.3 0 1,0 6.6,0 a3.3,3.3 0 1,0 -6.6,0" />
+        android:pathData="M54,53 m-12.8,0 a12.8,12.8 0 1,0 25.6,0 a12.8,12.8 0 1,0 -25.6,0" />
     <path
-        android:fillColor="#C8F169"
-        android:pathData="M52.2,58.8 L55.8,58.8 L56.7,63.2 L51.3,63.2 Z" />
+        android:fillColor="#173F35"
+        android:pathData="M54,49.7 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
+    <path
+        android:fillColor="#173F35"
+        android:pathData="M50.9,52.3 L57.1,52.3 L58.8,61.4 L49.2,61.4 Z" />
 </vector>
