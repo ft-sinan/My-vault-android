@@ -7,13 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
@@ -26,6 +21,7 @@ import com.ftsinan.myvault.ui.screens.lock.LanguageSelectionScreen
 import com.ftsinan.myvault.ui.screens.lock.LockScreen
 import com.ftsinan.myvault.ui.screens.lock.LockViewModel
 import com.ftsinan.myvault.ui.screens.lock.SetupPinScreen
+import com.ftsinan.myvault.ui.screens.lock.VaultStartupScreen
 import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
 import com.ftsinan.myvault.ui.theme.MyVaultTheme
 
@@ -86,14 +82,7 @@ class MainActivity : FragmentActivity() {
             ) {
                 when {
                     lockState.isLoading || !lockState.isLanguageLoaded ||
-                        !lockState.isProfileLoaded -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
+                        !lockState.isProfileLoaded -> VaultStartupScreen()
 
                     lockState.language == null -> LanguageSelectionScreen(
                         onLanguageSelected = ::changeLanguage

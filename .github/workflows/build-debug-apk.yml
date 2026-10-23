@@ -55,6 +55,23 @@ jobs:
           fi
           exit "$status"
 
+      # The signed public APK is published by release.yml from version tags.
+      # Build the minified release variant here too so R8 problems are caught
+      # before a maintainer creates a release tag. This unsigned output is
+      # only a compile/minify sanity check and is not uploaded.
+      - name: Check release build
+        shell: bash
+        run: |
+          set +e
+          ./gradlew assembleRelease --stacktrace 2>&1 | tee /tmp/release-check.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            grep -E '^e: |error: |FAILED|FAILURE:' /tmp/release-check.log | head -40 \
+              | sed -e 's/%/%25/g' -e 's/\r/%0D/g' \
+              | while IFS= read -r line; do echo "::error::$line"; done
+          fi
+          exit "$status"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

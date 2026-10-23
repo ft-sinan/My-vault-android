@@ -3,13 +3,30 @@ package com.ftsinan.myvault.ui.screens.settings
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
@@ -25,7 +42,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.gestures.animateScrollBy
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -41,7 +58,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Animation
 import androidx.compose.material.icons.filled.BlurOn
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Shield
@@ -58,6 +82,9 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -82,6 +109,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,9 +120,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -103,6 +134,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ftsinan.myvault.BuildConfig
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.settings.AccentColor
@@ -110,6 +142,7 @@ import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.ui.components.ExpressiveChip
 import com.ftsinan.myvault.ui.components.ExpressiveStat
+import com.ftsinan.myvault.ui.components.ExpressiveHeroHeader
 import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.BlobShape
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
@@ -122,9 +155,37 @@ import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
 import com.ftsinan.myvault.ui.theme.isDarkScheme
 import com.ftsinan.myvault.ui.theme.localSelectionHaptic
 import com.ftsinan.myvault.ui.theme.vaultColorScheme
+import com.ftsinan.myvault.util.AppUpdateManager
 import com.ftsinan.myvault.util.FormatUtils
+import com.ftsinan.myvault.util.UpdateRelease
+import com.ftsinan.myvault.util.UpdateVersion
+import java.io.File
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+private enum class SettingsPage {
+    HUB,
+    APPEARANCE,
+    MOTION,
+    SECURITY,
+    LANGUAGE,
+    STORAGE,
+    ACKNOWLEDGEMENTS
+}
+
+private sealed interface UpdateStatus {
+    object Idle : UpdateStatus
+    object Checking : UpdateStatus
+    object UpToDate : UpdateStatus
+    data class Available(val release: UpdateRelease) : UpdateStatus
+    data class Downloading(val release: UpdateRelease, val progress: Int?) : UpdateStatus
+    data class Verifying(val release: UpdateRelease) : UpdateStatus
+    data class NeedsInstallPermission(val release: UpdateRelease) : UpdateStatus
+    data class Failed(@StringRes val messageRes: Int) : UpdateStatus
+}
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -165,16 +226,101 @@ fun SettingsScreen(
         }
     }
 
-    val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
-    val sectionOffsets = remember { mutableStateMapOf<String, Int>() }
-    fun sectionModifier(key: String): Modifier = Modifier.onGloballyPositioned { coordinates ->
-        sectionOffsets[key] = coordinates.positionInParent().y.toInt()
+    var page by rememberSaveable { mutableStateOf(SettingsPage.HUB) }
+    var acknowledgementsReturnPage by rememberSaveable { mutableStateOf(SettingsPage.HUB) }
+
+    fun openSettingsPage(key: String) {
+        when (key) {
+            "appearance" -> page = SettingsPage.APPEARANCE
+            "motion" -> page = SettingsPage.MOTION
+            "security" -> page = SettingsPage.SECURITY
+            "language" -> page = SettingsPage.LANGUAGE
+            "storage" -> page = SettingsPage.STORAGE
+            "family" -> onManageMembers()
+        }
     }
-    fun jumpToSection(key: String) {
-        val target = sectionOffsets[key] ?: return
+
+    fun openAcknowledgements(from: SettingsPage) {
+        acknowledgementsReturnPage = from
+        page = SettingsPage.ACKNOWLEDGEMENTS
+    }
+
+    fun closeSettingsSubpage() {
+        page = if (page == SettingsPage.ACKNOWLEDGEMENTS) {
+            acknowledgementsReturnPage
+        } else {
+            SettingsPage.HUB
+        }
+    }
+
+    BackHandler(enabled = page != SettingsPage.HUB, onBack = ::closeSettingsSubpage)
+
+    var updateStatus by remember { mutableStateOf<UpdateStatus>(UpdateStatus.Idle) }
+    var downloadedUpdate by remember { mutableStateOf<File?>(null) }
+
+    fun checkForUpdates() {
+        if (updateStatus is UpdateStatus.Checking ||
+            updateStatus is UpdateStatus.Downloading ||
+            updateStatus is UpdateStatus.Verifying
+        ) return
         coroutineScope.launch {
-            scrollState.animateScrollBy(((target - 10).coerceAtLeast(0) - scrollState.value).toFloat())
+            updateStatus = UpdateStatus.Checking
+            runCatching { AppUpdateManager.fetchLatestRelease() }
+                .onSuccess { release ->
+                    if (UpdateVersion.isNewer(release.versionName, BuildConfig.VERSION_NAME)) {
+                        downloadedUpdate = null
+                        updateStatus = UpdateStatus.Available(release)
+                    } else {
+                        updateStatus = UpdateStatus.UpToDate
+                    }
+                }
+                .onFailure {
+                    updateStatus = UpdateStatus.Failed(R.string.settings_updates_failed)
+                }
+        }
+    }
+
+    fun installDownloadedUpdate(release: UpdateRelease) {
+        val apk = downloadedUpdate ?: return
+        if (!AppUpdateManager.canInstallPackages(context)) {
+            updateStatus = UpdateStatus.NeedsInstallPermission(release)
+            return
+        }
+        runCatching { AppUpdateManager.openInstaller(context, apk) }
+            .onSuccess { updateStatus = UpdateStatus.Available(release) }
+            .onFailure {
+                updateStatus = UpdateStatus.Failed(R.string.settings_updates_open_installer_failed)
+            }
+    }
+
+    fun downloadUpdate(release: UpdateRelease) {
+        if (downloadedUpdate != null) {
+            installDownloadedUpdate(release)
+            return
+        }
+        coroutineScope.launch {
+            try {
+                updateStatus = UpdateStatus.Downloading(release, null)
+                val apk = AppUpdateManager.downloadReleaseApk(context, release) { progress ->
+                    updateStatus = UpdateStatus.Downloading(release, progress)
+                }
+                updateStatus = UpdateStatus.Verifying(release)
+                val verified = AppUpdateManager.verifyChecksum(release, apk)
+                if (release.checksumDownloadUrl != null && verified != true) {
+                    apk.delete()
+                    updateStatus = UpdateStatus.Failed(R.string.settings_updates_checksum_failed)
+                    return@launch
+                }
+                downloadedUpdate = apk
+                if (AppUpdateManager.canInstallPackages(context)) {
+                    installDownloadedUpdate(release)
+                } else {
+                    updateStatus = UpdateStatus.NeedsInstallPermission(release)
+                }
+            } catch (_: Exception) {
+                updateStatus = UpdateStatus.Failed(R.string.settings_updates_download_failed)
+            }
         }
     }
 
@@ -183,15 +329,32 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp)
-                .padding(top = 10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        AnimatedContent(
+            targetState = page,
+            transitionSpec = {
+                val duration = if (reduceAnimations) 0 else 280
+                val forward = targetState.ordinal >= initialState.ordinal
+                val direction = if (forward) 1 else -1
+                (
+                    fadeIn(tween(duration)) +
+                        slideInHorizontally(tween(duration)) { width -> direction * width / 10 }
+                    ).togetherWith(
+                    fadeOut(tween(duration)) +
+                        slideOutHorizontally(tween(duration)) { width -> -direction * width / 10 }
+                )
+            },
+            label = "settingsPage"
+        ) { targetPage ->
+            val pageScrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .verticalScroll(pageScrollState)
+                    .padding(top = if (targetPage == SettingsPage.HUB) 10.dp else 0.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+            if (targetPage == SettingsPage.HUB) {
             SettingsHubHeader(
                 onBack = onBack,
                 documentCount = documentCount,
@@ -216,49 +379,79 @@ fun SettingsScreen(
                     R.string.settings_storage_using,
                     FormatUtils.formatFileSize(totalSize)
                 ),
-                onJump = ::jumpToSection,
-                modifier = Modifier.expressiveReveal(0, "settings-hub")
+                onJump = ::openSettingsPage,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .expressiveReveal(0, "settings-hub")
             )
+            } else {
+                ExpressiveHeroHeader(
+                    title = stringResource(
+                        when (targetPage) {
+                            SettingsPage.APPEARANCE -> R.string.settings_appearance
+                            SettingsPage.MOTION -> R.string.settings_motion_feel
+                            SettingsPage.SECURITY -> R.string.settings_security
+                            SettingsPage.LANGUAGE -> R.string.settings_language
+                            SettingsPage.STORAGE -> R.string.settings_storage_privacy
+                            SettingsPage.ACKNOWLEDGEMENTS -> R.string.settings_acknowledgements
+                            SettingsPage.HUB -> R.string.tab_settings
+                        }
+                    ),
+                    subtitle = stringResource(
+                        when (targetPage) {
+                            SettingsPage.APPEARANCE -> R.string.settings_page_appearance_subtitle
+                            SettingsPage.MOTION -> R.string.settings_page_motion_subtitle
+                            SettingsPage.SECURITY -> R.string.settings_page_security_subtitle
+                            SettingsPage.LANGUAGE -> R.string.settings_page_language_subtitle
+                            SettingsPage.STORAGE -> R.string.settings_page_storage_subtitle
+                            SettingsPage.ACKNOWLEDGEMENTS -> R.string.settings_acknowledgements_subtitle
+                            SettingsPage.HUB -> R.string.settings_subtitle
+                        }
+                    ),
+                    icon = when (targetPage) {
+                        SettingsPage.APPEARANCE -> Icons.Filled.Palette
+                        SettingsPage.MOTION -> Icons.Filled.TouchApp
+                        SettingsPage.SECURITY -> Icons.Filled.Lock
+                        SettingsPage.LANGUAGE -> Icons.Filled.Language
+                        SettingsPage.STORAGE -> Icons.Filled.Storage
+                        SettingsPage.ACKNOWLEDGEMENTS -> Icons.Filled.WorkspacePremium
+                        SettingsPage.HUB -> Icons.Filled.Settings
+                    },
+                    onBack = ::closeSettingsSubpage,
+                    backContentDescription = stringResource(R.string.action_back),
+                    includeStatusPadding = false
+                )
+            }
 
             // ---- Language --------------------------------------------------
-            SettingsCard(modifier = sectionModifier("language"), title = stringResource(R.string.settings_language), icon = { Icon(Icons.Filled.Language, null) }) {
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AppLanguage.entries.forEach { option ->
-                        FilterChip(
-                            selected = language == option,
-                            onClick = { onLanguageSelected(option) },
-                            label = { Text(option.nativeName) }
-                        )
+            if (targetPage == SettingsPage.LANGUAGE) {
+            SettingsCard(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = stringResource(R.string.settings_language),
+                icon = { Icon(Icons.Filled.Language, null) }
+            ) {
+                AppLanguage.entries.forEachIndexed { index, option ->
+                    LanguageOptionRow(
+                        option = option,
+                        selected = language == option,
+                        onClick = { onLanguageSelected(option) }
+                    )
+                    if (index != AppLanguage.entries.lastIndex) {
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
+                Spacer(modifier = Modifier.height(14.dp))
+                Text(
+                    text = stringResource(R.string.settings_language_selected_note),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             }
 
-            // ---- Family ----------------------------------------------------
-            SettingsCard(modifier = sectionModifier("family"), title = stringResource(R.string.settings_family), icon = { Icon(Icons.Filled.Groups, null) }) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            stringResource(R.string.manage_members_title),
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            stringResource(R.string.settings_family_subtitle),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    IconButton(onClick = onManageMembers) {
-                        Icon(Icons.Filled.ChevronRight, contentDescription = null)
-                    }
-                }
-            }
-
+            if (targetPage == SettingsPage.APPEARANCE) {
             // ---- Appearance -------------------------------------------------
-            SettingsCard(modifier = sectionModifier("appearance"), title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
+            SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
                 Text(
                     stringResource(R.string.settings_theme_mode),
                     style = MaterialTheme.typography.bodyLarge,
@@ -333,9 +526,11 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 AppearancePreview()
             }
+            }
 
+            if (targetPage == SettingsPage.MOTION) {
             // ---- Motion & feel ------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_motion_feel), icon = { Icon(Icons.Filled.TouchApp, null) }) {
+            SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_motion_feel), icon = { Icon(Icons.Filled.TouchApp, null) }) {
                 FeelToggleRow(
                     icon = Icons.Filled.BlurOn,
                     title = stringResource(R.string.settings_glass_bottom_bar),
@@ -366,9 +561,11 @@ fun SettingsScreen(
                     showDivider = false
                 )
             }
+            }
 
+            if (targetPage == SettingsPage.SECURITY) {
             // ---- Security -------------------------------------------------
-            SettingsCard(modifier = sectionModifier("security"), title = stringResource(R.string.settings_security), icon = { Icon(Icons.Filled.Lock, null) }) {
+            SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_security), icon = { Icon(Icons.Filled.Lock, null) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -448,8 +645,22 @@ fun SettingsScreen(
                 }
             }
 
+            OutlinedButton(
+                onClick = onLock,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(52.dp)
+            ) {
+                Icon(Icons.Filled.Lock, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(R.string.settings_lock_now))
+            }
+            }
+
+            if (targetPage == SettingsPage.STORAGE) {
             // ---- Storage --------------------------------------------------
-            SettingsCard(modifier = sectionModifier("storage"), title = stringResource(R.string.settings_storage), icon = { Icon(Icons.Filled.Storage, null) }) {
+            SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_storage), icon = { Icon(Icons.Filled.Storage, null) }) {
                 Text(
                     text = if (documentCount == 1) {
                         stringResource(R.string.settings_storage_one)
@@ -469,7 +680,7 @@ fun SettingsScreen(
             }
 
             // ---- Privacy info ---------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_how_safe), icon = { Icon(Icons.Filled.Info, null) }) {
+            SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_how_safe), icon = { Icon(Icons.Filled.Info, null) }) {
                 Text(
                     text = stringResource(R.string.settings_safety_body),
                     style = MaterialTheme.typography.bodyMedium,
@@ -477,30 +688,51 @@ fun SettingsScreen(
                 )
             }
 
-            CreatorSpace(
-                documentCount = documentCount,
-                totalSize = totalSize,
-                modifier = sectionModifier("creator")
+            AppUpdateCard(
+                status = updateStatus,
+                hasDownloadedApk = downloadedUpdate != null,
+                onCheck = ::checkForUpdates,
+                onDownload = ::downloadUpdate,
+                onAllowInstalls = {
+                    runCatching { AppUpdateManager.openInstallPermissionSettings(context) }
+                },
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            OutlinedButton(
-                onClick = onLock,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
+            SettingsCard(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = stringResource(R.string.settings_acknowledgements),
+                icon = { Icon(Icons.Filled.WorkspacePremium, null) }
             ) {
-                Icon(Icons.Filled.Lock, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.settings_lock_now))
+                Text(
+                    text = stringResource(R.string.settings_acknowledgements_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = { openAcknowledgements(SettingsPage.STORAGE) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.settings_page_continue))
+                }
+            }
             }
 
-            Text(
-                text = "My Vault v1.0.0",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+            if (targetPage == SettingsPage.ACKNOWLEDGEMENTS) {
+                AcknowledgementsContent(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+            }
+
+            if (targetPage == SettingsPage.HUB) {
+                CreatorSpace(
+                    onAcknowledgements = { openAcknowledgements(SettingsPage.HUB) }
+                )
+            }
+
             Spacer(modifier = Modifier.height(96.dp))
+            }
         }
     }
 }
@@ -896,6 +1128,343 @@ private fun PaletteSwatches(
     }
 }
 
+
+@Composable
+private fun LanguageOptionRow(
+    option: AppLanguage,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val animationsEnabled = LocalAnimationsEnabled.current
+    val shape = RoundedCornerShape(24.dp)
+    val container by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        },
+        animationSpec = if (animationsEnabled) tween(220) else snap(),
+        label = "languageOptionContainer"
+    )
+    val contentColor = if (selected) {
+        MaterialTheme.colorScheme.onPrimary
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(74.dp)
+            .clip(shape)
+            .background(container)
+            .springPress(shape, onClick = onClick)
+            .padding(horizontal = 14.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            MorphingShapeBox(
+                modifier = Modifier.size(44.dp),
+                color = if (selected) {
+                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f)
+                } else {
+                    MaterialTheme.colorScheme.primaryContainer
+                },
+                lobes = 9,
+                wave = 0.13f
+            ) {
+                Text(
+                    text = option.code.uppercase(),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = option.nativeName,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = contentColor,
+                    fontWeight = FontWeight.SemiBold
+                )
+                if (option.englishName != option.nativeName) {
+                    Text(
+                        text = option.englishName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = contentColor.copy(alpha = 0.78f)
+                    )
+                }
+            }
+            if (selected) {
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppUpdateCard(
+    status: UpdateStatus,
+    hasDownloadedApk: Boolean,
+    onCheck: () -> Unit,
+    onDownload: (UpdateRelease) -> Unit,
+    onAllowInstalls: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    SettingsCard(
+        modifier = modifier,
+        title = stringResource(R.string.settings_updates_title),
+        icon = { Icon(Icons.Filled.SystemUpdate, null) }
+    ) {
+        Text(
+            text = stringResource(R.string.settings_updates_current, BuildConfig.VERSION_NAME),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium
+        )
+        Text(
+            text = stringResource(R.string.settings_updates_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+
+        when (status) {
+            UpdateStatus.Idle -> {
+                Button(onClick = onCheck, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Filled.SystemUpdate, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.settings_updates_check))
+                }
+            }
+
+            UpdateStatus.Checking -> {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(modifier = Modifier.size(22.dp), strokeWidth = 2.dp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        stringResource(R.string.settings_updates_checking),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            UpdateStatus.UpToDate -> {
+                Text(
+                    text = stringResource(R.string.settings_updates_up_to_date),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedButton(onClick = onCheck, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.settings_updates_check))
+                }
+            }
+
+            is UpdateStatus.Available -> {
+                UpdateReleaseDetails(status.release)
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(
+                    onClick = { onDownload(status.release) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Filled.Download, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.settings_updates_download))
+                }
+                if (!hasDownloadedApk) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedButton(onClick = onCheck, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.settings_updates_check))
+                    }
+                }
+            }
+
+            is UpdateStatus.Downloading -> {
+                val progressValue = status.progress
+                Text(
+                    text = progressValue?.let { progress ->
+                        stringResource(R.string.settings_updates_downloading, progress)
+                    } ?: stringResource(R.string.settings_updates_downloading_unknown),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                if (progressValue != null) {
+                    LinearProgressIndicator(
+                        progress = { progressValue / 100f },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                } else {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            }
+
+            is UpdateStatus.Verifying -> {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CircularProgressIndicator(modifier = Modifier.size(22.dp), strokeWidth = 2.dp)
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        stringResource(R.string.settings_updates_verify),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            is UpdateStatus.NeedsInstallPermission -> {
+                Text(
+                    text = stringResource(R.string.settings_updates_allow_install),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Button(onClick = onAllowInstalls, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.settings_updates_allow_install_action))
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = { onDownload(status.release) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.settings_updates_download))
+                }
+            }
+
+            is UpdateStatus.Failed -> {
+                Text(
+                    text = stringResource(status.messageRes),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(onClick = onCheck, modifier = Modifier.fillMaxWidth()) {
+                    Text(stringResource(R.string.settings_updates_check))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpdateReleaseDetails(release: UpdateRelease) {
+    Text(
+        text = stringResource(R.string.settings_updates_available, "v${release.versionName}"),
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.SemiBold
+    )
+    if (release.apkSizeBytes > 0) {
+        Text(
+            text = stringResource(
+                R.string.settings_updates_file_size,
+                FormatUtils.formatFileSize(release.apkSizeBytes)
+            ),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+    Spacer(modifier = Modifier.height(12.dp))
+    Text(
+        text = stringResource(R.string.settings_updates_release_notes),
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.SemiBold
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    Text(
+        text = release.releaseNotes ?: stringResource(R.string.settings_updates_no_notes),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
+@Composable
+private fun AcknowledgementsContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        AcknowledgementCard(
+            title = stringResource(R.string.ack_orion_title),
+            body = stringResource(R.string.ack_orion_body),
+            icon = Icons.Filled.Star,
+            url = "https://github.com/RookieEnough/Orion-Store"
+        )
+        AcknowledgementCard(
+            title = stringResource(R.string.ack_space_grotesk_title),
+            body = stringResource(R.string.ack_space_grotesk_body),
+            icon = Icons.Filled.Palette,
+            url = "https://fonts.google.com/specimen/Space+Grotesk"
+        )
+        AcknowledgementCard(
+            title = stringResource(R.string.ack_androidx_title),
+            body = stringResource(R.string.ack_androidx_body),
+            icon = Icons.Filled.Code,
+            url = "https://developer.android.com/jetpack/androidx"
+        )
+        AcknowledgementCard(
+            title = stringResource(R.string.ack_mlkit_title),
+            body = stringResource(R.string.ack_mlkit_body),
+            icon = Icons.Filled.Info,
+            url = "https://developers.google.com/ml-kit"
+        )
+        AcknowledgementCard(
+            title = stringResource(R.string.ack_coil_title),
+            body = stringResource(R.string.ack_coil_body),
+            icon = Icons.Filled.Code,
+            url = "https://coil-kt.github.io/coil/"
+        )
+        AcknowledgementCard(
+            title = "My Vault · GPL-3.0",
+            body = stringResource(R.string.ack_my_vault_license),
+            icon = Icons.Filled.WorkspacePremium,
+            url = "https://github.com/ft-sinan/My-vault-android/blob/main/LICENSE"
+        )
+    }
+}
+
+@Composable
+private fun AcknowledgementCard(
+    title: String,
+    body: String,
+    icon: ImageVector,
+    url: String
+) {
+    val context = LocalContext.current
+    SettingsCard(title = title, icon = { Icon(icon, null) }) {
+        Text(
+            text = body,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        TextButton(
+            onClick = {
+                runCatching {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                }
+            }
+        ) {
+            Text(stringResource(R.string.ack_open_project))
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(Icons.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(16.dp))
+        }
+    }
+}
+
 @Composable
 private fun FeelToggleRow(
     icon: ImageVector,
@@ -974,7 +1543,7 @@ private fun SettingsHubHeader(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "My Vault v1.0.0 · " + if (documentCount == 1) {
+            text = "My Vault v${BuildConfig.VERSION_NAME} · " + if (documentCount == 1) {
                 stringResource(R.string.settings_storage_one)
             } else {
                 stringResource(R.string.settings_storage_many, documentCount)
@@ -1106,18 +1675,18 @@ private fun SettingsHubHeader(
         ) {
             SettingsBentoCard(
                 icon = Icons.Filled.Storage,
-                title = stringResource(R.string.settings_storage),
+                title = stringResource(R.string.settings_storage_privacy),
                 subtitle = storageText,
                 seed = Color(0xFFC65D00),
                 onClick = { onJump("storage") },
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
             SettingsBentoCard(
-                icon = Icons.Filled.Star,
-                title = stringResource(R.string.creator_title),
-                subtitle = stringResource(R.string.creator_name),
+                icon = Icons.Filled.TouchApp,
+                title = stringResource(R.string.settings_motion_feel),
+                subtitle = stringResource(R.string.settings_page_motion_subtitle),
                 seed = Color(0xFFB03070),
-                onClick = { onJump("creator") },
+                onClick = { onJump("motion") },
                 modifier = Modifier.weight(1f).fillMaxHeight()
             )
         }
@@ -1262,22 +1831,68 @@ private fun SettingsBentoCard(
     }
 }
 
-/** A complete creator area modelled on Orion's About tab, including its flipping coin. */
-@OptIn(ExperimentalLayoutApi::class)
+/** A full-width Creator Coin stage: the final, playful signature area of Settings. */
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun CreatorSpace(
-    documentCount: Int,
-    totalSize: Long,
+    onAcknowledgements: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
+    val haptic = localSelectionHaptic()
+    val copiedText = stringResource(R.string.action_copied)
     val animationsEnabled = LocalAnimationsEnabled.current
+
     var flipped by remember { mutableStateOf(false) }
+    var selectedBadge by remember { mutableStateOf<Int?>(null) }
+    var tiltTargetX by remember { mutableStateOf(0f) }
+    var tiltTargetY by remember { mutableStateOf(0f) }
     val rotation by animateFloatAsState(
         targetValue = if (flipped) 180f else 0f,
         animationSpec = if (animationsEnabled) tween(680) else snap(),
         label = "creatorCoinFlip"
     )
+    val tiltX by animateFloatAsState(
+        targetValue = tiltTargetX,
+        animationSpec = if (animationsEnabled) {
+            spring(dampingRatio = 0.62f, stiffness = 420f)
+        } else {
+            snap()
+        },
+        label = "creatorCoinTiltX"
+    )
+    val tiltY by animateFloatAsState(
+        targetValue = tiltTargetY,
+        animationSpec = if (animationsEnabled) {
+            spring(dampingRatio = 0.62f, stiffness = 420f)
+        } else {
+            snap()
+        },
+        label = "creatorCoinTiltY"
+    )
+    val creatorTransition = rememberInfiniteTransition(label = "creatorStage")
+    val orbitAngle by creatorTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = (2f * PI.toFloat()),
+        animationSpec = infiniteRepeatable(
+            animation = tween(24_000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "creatorOrbit"
+    )
+    val shineOffset by creatorTransition.animateFloat(
+        initialValue = -170f,
+        targetValue = 170f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(5_600),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "creatorCoinShine"
+    )
+    val effectiveOrbitAngle = if (animationsEnabled) orbitAngle else 0.65f
+    val effectiveShine = if (animationsEnabled) shineOffset else -170f
+
     LaunchedEffect(flipped) {
         if (flipped) {
             delay(2_400)
@@ -1285,30 +1900,53 @@ private fun CreatorSpace(
         }
     }
 
+    fun openUrl(url: String) {
+        runCatching {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }
+    }
+
+    fun copyCreatorText(value: String) {
+        clipboardManager.setText(AnnotatedString(value))
+        haptic()
+        Toast.makeText(context, copiedText, Toast.LENGTH_SHORT).show()
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(32.dp))
+            .clip(RoundedCornerShape(36.dp))
             .background(
                 Brush.verticalGradient(
                     listOf(
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.62f),
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.68f),
                         MaterialTheme.colorScheme.surfaceContainerLow
                     )
                 )
             )
-            .padding(20.dp)
+            .padding(horizontal = 20.dp, vertical = 22.dp)
     ) {
         MorphingShapeBox(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = 54.dp, y = (-70).dp)
-                .size(180.dp),
+                .offset(x = 62.dp, y = (-84).dp)
+                .size(210.dp),
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
             lobes = 12,
             wave = 0.19f,
             spinMillis = 30_000
         )
+        MorphingShapeBox(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .offset(x = (-72).dp, y = 76.dp)
+                .size(170.dp),
+            color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.08f),
+            lobes = 11,
+            wave = 0.17f,
+            spinMillis = 34_000
+        )
+
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -1316,16 +1954,16 @@ private fun CreatorSpace(
             ExpressiveChip(
                 text = stringResource(R.string.creator_title).uppercase(),
                 icon = Icons.Filled.Star,
-                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.72f),
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.74f),
                 modifier = Modifier.align(Alignment.Start)
             )
 
             Box(
-                modifier = Modifier.size(width = 230.dp, height = 190.dp),
+                modifier = Modifier.size(width = 276.dp, height = 228.dp),
                 contentAlignment = Alignment.Center
             ) {
                 MorphingShapeBox(
-                    modifier = Modifier.size(178.dp),
+                    modifier = Modifier.size(204.dp),
                     color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.58f),
                     lobes = 12,
                     wave = 0.19f,
@@ -1333,12 +1971,39 @@ private fun CreatorSpace(
                 )
                 Box(
                     modifier = Modifier
-                        .size(128.dp)
+                        .size(152.dp)
                         .graphicsLayer {
-                            rotationY = rotation
+                            rotationY = rotation + tiltX
+                            rotationX = -tiltY
                             cameraDistance = 18.dp.toPx()
                         }
-                        .springPress(BlobShape(lobes = 12, wave = 0.16f)) { flipped = !flipped },
+                        .pointerInput(animationsEnabled) {
+                            detectTapGestures(
+                                onPress = { offset ->
+                                    if (animationsEnabled) {
+                                        val centerX = size.width / 2f
+                                        val centerY = size.height / 2f
+                                        if (centerX > 0f) {
+                                            tiltTargetX =
+                                                ((offset.x - centerX) / centerX)
+                                                    .coerceIn(-1f, 1f) * 9f
+                                        }
+                                        if (centerY > 0f) {
+                                            tiltTargetY =
+                                                ((offset.y - centerY) / centerY)
+                                                    .coerceIn(-1f, 1f) * 9f
+                                        }
+                                    }
+                                    tryAwaitRelease()
+                                    tiltTargetX = 0f
+                                    tiltTargetY = 0f
+                                },
+                                onTap = {
+                                    haptic()
+                                    flipped = !flipped
+                                }
+                            )
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     if (rotation <= 90f) {
@@ -1349,9 +2014,18 @@ private fun CreatorSpace(
                             wave = 0.16f,
                             spinMillis = 18_000
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .offset(x = effectiveShine.dp)
+                                    .width(34.dp)
+                                    .fillMaxHeight()
+                                    .graphicsLayer { rotationZ = 18f }
+                                    .background(Color.White.copy(alpha = 0.14f))
+                            )
                             Text(
                                 text = "S",
-                                style = MaterialTheme.typography.displaySmall,
+                                style = MaterialTheme.typography.displayMedium,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Bold
                             )
@@ -1369,29 +2043,25 @@ private fun CreatorSpace(
                                 Icons.Filled.Shield,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onTertiaryContainer,
-                                modifier = Modifier.size(50.dp)
+                                modifier = Modifier.size(60.dp)
                             )
                         }
                     }
                 }
-                CreatorOrbitBadge(
-                    icon = Icons.Filled.Star,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .offset(x = 16.dp, y = 18.dp)
-                )
-                CreatorOrbitBadge(
-                    icon = Icons.Filled.Code,
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .offset(x = (-4).dp)
-                )
-                CreatorOrbitBadge(
-                    icon = Icons.Filled.Shield,
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .offset(x = 28.dp, y = (-8).dp)
-                )
+
+                listOf(Icons.Filled.Star, Icons.Filled.Code, Icons.Filled.Shield)
+                    .forEachIndexed { index, icon ->
+                        val angle = effectiveOrbitAngle + index * ((2f * PI.toFloat()) / 3f)
+                        CreatorOrbitBadge(
+                            icon = icon,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .offset(
+                                    x = (cos(angle) * 106f).dp,
+                                    y = (sin(angle) * 80f).dp
+                                )
+                        )
+                    }
             }
 
             Text(
@@ -1404,16 +2074,28 @@ private fun CreatorSpace(
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center
             )
-            Text(
-                text = if (flipped) {
-                    stringResource(R.string.creator_back_subtitle)
-                } else {
-                    "@ft-sinan"
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center
-            )
+            if (flipped) {
+                Text(
+                    text = stringResource(R.string.creator_back_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .springPress(CircleShape) { copyCreatorText("@ft-sinan") }
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "@ft-sinan",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
             Spacer(Modifier.height(6.dp))
             Text(
                 text = stringResource(R.string.creator_role),
@@ -1426,7 +2108,7 @@ private fun CreatorSpace(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 6.dp)
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
             Spacer(Modifier.height(8.dp))
             Text(
@@ -1440,23 +2122,63 @@ private fun CreatorSpace(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ExpressiveChip(
+                CreatorBadgeChip(
                     text = stringResource(R.string.creator_badge_creator),
                     icon = Icons.Filled.Star,
+                    selected = selectedBadge == 0,
                     containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    onClick = { selectedBadge = if (selectedBadge == 0) null else 0 }
                 )
-                ExpressiveChip(
+                CreatorBadgeChip(
                     text = stringResource(R.string.creator_badge_privacy),
                     icon = Icons.Filled.Shield,
+                    selected = selectedBadge == 1,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    onClick = { selectedBadge = if (selectedBadge == 1) null else 1 }
                 )
-                ExpressiveChip(
+                CreatorBadgeChip(
+                    text = stringResource(R.string.creator_badge_offline),
+                    icon = Icons.Filled.Lock,
+                    selected = selectedBadge == 2,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    onClick = { selectedBadge = if (selectedBadge == 2) null else 2 }
+                )
+                CreatorBadgeChip(
                     text = "Kotlin · Android",
                     icon = Icons.Filled.Code,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    selected = selectedBadge == 3,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    onClick = { selectedBadge = if (selectedBadge == 3) null else 3 }
                 )
+            }
+            val selectedBadgeDescription = when (selectedBadge) {
+                0 -> stringResource(R.string.creator_badge_creator_desc)
+                1 -> stringResource(R.string.creator_badge_privacy_desc)
+                2 -> stringResource(R.string.creator_badge_offline_desc)
+                3 -> stringResource(R.string.creator_badge_code_desc)
+                else -> null
+            }
+            if (selectedBadgeDescription != null) {
+                Spacer(Modifier.height(10.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.68f))
+                        .padding(horizontal = 14.dp, vertical = 10.dp)
+                ) {
+                    Text(
+                        text = selectedBadgeDescription,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
 
             Spacer(Modifier.height(18.dp))
@@ -1469,7 +2191,7 @@ private fun CreatorSpace(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ExpressiveStat(
-                    value = "1.0.0",
+                    value = BuildConfig.VERSION_NAME,
                     label = stringResource(R.string.creator_version),
                     modifier = Modifier.weight(1f)
                 )
@@ -1480,8 +2202,8 @@ private fun CreatorSpace(
                         .background(MaterialTheme.colorScheme.outlineVariant)
                 )
                 ExpressiveStat(
-                    value = documentCount.toString(),
-                    label = stringResource(R.string.stat_docs),
+                    value = "Android",
+                    label = stringResource(R.string.creator_platform),
                     modifier = Modifier.weight(1f)
                 )
                 Box(
@@ -1491,35 +2213,83 @@ private fun CreatorSpace(
                         .background(MaterialTheme.colorScheme.outlineVariant)
                 )
                 ExpressiveStat(
-                    value = FormatUtils.formatFileSize(totalSize),
-                    label = stringResource(R.string.settings_storage),
+                    value = "Kotlin",
+                    label = stringResource(R.string.creator_built_with),
                     modifier = Modifier.weight(1f)
                 )
             }
 
-            Spacer(Modifier.height(20.dp))
-            Text(
-                text = stringResource(R.string.creator_connect),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.align(Alignment.Start)
-            )
+            Spacer(Modifier.height(22.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.creator_connect),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = stringResource(R.string.creator_long_press_copy),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Spacer(Modifier.height(10.dp))
-            val githubShape = RoundedCornerShape(24.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CreatorConnectTile(
+                    icon = Icons.Filled.Code,
+                    label = "GitHub",
+                    modifier = Modifier.weight(1f),
+                    onClick = { openUrl("https://github.com/ft-sinan") },
+                    onLongClick = { copyCreatorText("https://github.com/ft-sinan") }
+                )
+                CreatorConnectTile(
+                    icon = Icons.Filled.Send,
+                    label = "Telegram",
+                    modifier = Modifier.weight(1f),
+                    onClick = { openUrl("https://t.me/Exotatic") },
+                    onLongClick = { copyCreatorText("@Exotatic") }
+                )
+                CreatorConnectTile(
+                    icon = Icons.Filled.Chat,
+                    label = "WhatsApp",
+                    modifier = Modifier.weight(1f),
+                    onClick = { openUrl("https://wa.me/917558874118") },
+                    onLongClick = { copyCreatorText("+91 7558874118") }
+                )
+                CreatorConnectTile(
+                    icon = Icons.Filled.Email,
+                    label = stringResource(R.string.creator_email),
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        runCatching {
+                            context.startActivity(
+                                Intent(
+                                    Intent.ACTION_SENDTO,
+                                    Uri.parse("mailto:Mail.tosinaan@gmail.com")
+                                )
+                            )
+                        }
+                    },
+                    onLongClick = { copyCreatorText("Mail.tosinaan@gmail.com") }
+                )
+            }
+
+            Spacer(Modifier.height(10.dp))
+            val websiteShape = RoundedCornerShape(24.dp)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(66.dp)
-                    .clip(githubShape)
+                    .clip(websiteShape)
                     .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.78f))
-                    .springPress(githubShape) {
-                        runCatching {
-                            context.startActivity(
-                                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ft-sinan"))
-                            )
-                        }
-                    }
+                    .springPress(websiteShape) { openUrl("https://sinanmk.my.id") }
                     .padding(horizontal = 14.dp)
             ) {
                 Row(
@@ -1533,7 +2303,7 @@ private fun CreatorSpace(
                         wave = 0.13f
                     ) {
                         Icon(
-                            Icons.Filled.Code,
+                            Icons.Filled.Language,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(22.dp)
@@ -1542,12 +2312,12 @@ private fun CreatorSpace(
                     Spacer(Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = stringResource(R.string.creator_github),
+                            text = stringResource(R.string.creator_visit_website),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.SemiBold
                         )
                         Text(
-                            text = "github.com/ft-sinan",
+                            text = "Sinanmk.my.id",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1555,6 +2325,113 @@ private fun CreatorSpace(
                     Icon(Icons.Filled.OpenInNew, contentDescription = null)
                 }
             }
+
+            Spacer(Modifier.height(14.dp))
+            TextButton(onClick = onAcknowledgements) {
+                Icon(
+                    Icons.Filled.WorkspacePremium,
+                    contentDescription = null,
+                    modifier = Modifier.size(17.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text(stringResource(R.string.creator_acknowledgements))
+            }
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "made with 🤍 by sinan",
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun CreatorBadgeChip(
+    text: String,
+    icon: ImageVector,
+    selected: Boolean,
+    containerColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit
+) {
+    val background = if (selected) MaterialTheme.colorScheme.primary else containerColor
+    val foreground = if (selected) MaterialTheme.colorScheme.onPrimary else contentColor
+    Row(
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(background)
+            .springPress(CircleShape, onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 7.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, contentDescription = null, tint = foreground, modifier = Modifier.size(16.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            color = foreground,
+            maxLines = 1
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun CreatorConnectTile(
+    icon: ImageVector,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val haptic = localSelectionHaptic()
+    val shape = RoundedCornerShape(22.dp)
+    Box(
+        modifier = modifier
+            .height(82.dp)
+            .clip(shape)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.78f))
+            .combinedClickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onLongClick = {
+                    haptic()
+                    onLongClick()
+                },
+                onClick = {
+                    haptic()
+                    onClick()
+                }
+            )
+            .padding(horizontal = 6.dp, vertical = 10.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            MorphingShapeBox(
+                modifier = Modifier.size(36.dp),
+                color = MaterialTheme.colorScheme.primary,
+                lobes = 9,
+                wave = 0.13f
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(19.dp)
+                )
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

@@ -2,11 +2,15 @@
 
 A secure, offline-first Android vault for **Indian ID proofs, certificates and important family documents** — Aadhaar, PAN, Passport, Driving Licence, SSLC/Degree certificates, RC book, insurance papers, property documents and more.
 
-Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no document cloud upload: the vault is kept on the phone.
+Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no document cloud upload: the vault is kept on the phone. The only network feature is a **manual** update check that runs only when the user taps the button in Settings.
 
 ---
 
 ## ✨ What the app does
+
+## 📸 Screenshots
+
+Demo screenshots must use **fake/sample documents only**. Final public screenshots will be captured from the signed v1.1.0 build after installing it on a test device with sample data; no real family documents will ever be used in this repository.
 
 ### Premium family-first experience
 - Five-part bottom navigation: **Home • Docs • centre Add • Family • Settings**
@@ -15,7 +19,9 @@ Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no 
 - Owner and family members each get an ID-card-style profile with their own documents underneath
 - Lock screen greets the owner by **name only — never by photo**
 - English and Malayalam throughout the app; language can be changed later in Settings
-- Appearance settings for System/Light/Dark theme, Material You wallpaper colours on Android 12+, and professional Teal, Navy, Emerald, or Indigo accents when wallpaper colours are off
+- Dedicated Settings pages for Appearance, Motion & feel, Security, Language, and Storage & privacy
+- Appearance settings for System/Light/Dark/OLED theme, Material You wallpaper colours on Android 12+, and Orion, Teal, Navy, Emerald, Indigo, Ocean, Grape, Cocoa, or Slate palettes when wallpaper colours are off
+- A playful Creator Space with a flipping Creator Coin, orbiting badges and creator links
 
 ### Family profiles and groups
 - Personal documents belong to a selected family member
@@ -59,19 +65,22 @@ OCR results are suggestions only and can always be reviewed or edited before sav
 - Auto-lock after 1 minute in the background
 - Decrypted preview/share cache files are wiped when the vault locks
 - Cloud/device backup is disabled for the app data
-- No `INTERNET` permission is requested by the app
+- The vault itself is offline. `INTERNET` is used only for the user-initiated **Settings → Storage & privacy → App updates** check against GitHub Releases; My Vault never checks in the background and never uploads documents
+- A downloaded update APK is verified against its published SHA-256 checksum before Android's installer is opened, whenever the release includes a checksum file
 
 ---
 
 ## 📱 Getting the app
 
-### Download the CI-built debug APK
-Every push runs unit tests and builds a debug APK with GitHub Actions:
+### Download the signed release APK
+Public downloads live on the repository's **Releases** page:
 
-1. Open the repository's **Actions** tab.
-2. Open the latest successful **Build Debug APK** run.
-3. Download the **`my-vault-debug-apk`** artifact.
-4. Install it on an Android 8.0+ phone. Android may ask you to allow installation from that source.
+1. Open [**Releases**](https://github.com/ft-sinan/My-vault-android/releases).
+2. Download the latest **`MyVault-vX.Y.Z.apk`** and, if you want to verify it yourself, its `.sha256` file.
+3. Install it on an Android 8.0+ phone. Android may ask you to allow installation from your browser/file manager.
+4. Later versions can also be installed from **Settings → Storage & privacy → App updates → Check for updates**.
+
+> Release APKs must always use the same permanent signing key so Android can install them as updates. A CI debug APK has a different signature and cannot update a signed release installation in place.
 
 The ML Kit scanner experience requires Google Play services on the device. If the scanner cannot open, the app still lets you use **File** to select an image or PDF.
 
@@ -86,6 +95,12 @@ The ML Kit scanner experience requires Google Play services on the device. If th
 ./gradlew assembleDebug
 # APK: app/build/outputs/apk/debug/app-debug.apk
 ```
+
+### Publishing a release (maintainer)
+1. Create **one permanent Android release keystore**, back it up somewhere safe, and never commit it.
+2. Add these GitHub repository secrets: `MYVAULT_RELEASE_KEYSTORE_BASE64`, `MYVAULT_RELEASE_STORE_PASSWORD`, `MYVAULT_RELEASE_KEY_ALIAS`, and `MYVAULT_RELEASE_KEY_PASSWORD`.
+3. Bump `versionCode`/`versionName`, update `CHANGELOG.md`, and confirm the debug CI is green.
+4. Push a matching tag such as `v1.1.0`. The **Publish Release** workflow tests the app, builds the signed APK, generates its SHA-256 file, and publishes the GitHub Release automatically.
 
 ### First launch
 Choose **English** or **മലയാളം**, create and confirm a 4-digit PIN, then enter at least your name for the owner profile. Everything else can be completed later.
@@ -117,8 +132,8 @@ app/src/main/java/com/ftsinan/myvault/
 │       ├── addedit/            # ML Kit scanner/file import, OCR review, metadata
 │       ├── detail/             # Multi-page/PDF viewer and PDF/image sharing
 │       ├── profile/            # Family list, profile ID card, member editor
-│       └── settings/           # Language, members, appearance, security, storage
-└── util/                       # Formatting/masking, ML Kit OCR, profile-card PNG
+│       └── settings/           # Hub + dedicated Appearance/Motion/Security/Language/Storage pages
+└── util/                       # Formatting/masking, OCR, profile-card PNG, manual GitHub updater
 ```
 
 **Stack:** Kotlin 2.0 · Compose BOM 2024.12.01 · Material 3 · Navigation Compose · Room · DataStore · Biometric · Coil · ML Kit Document Scanner · ML Kit Text Recognition · Coroutines/Flow · minSdk 26 · targetSdk 35.
@@ -137,14 +152,30 @@ Room migrated non-destructively from v1 to v2: each legacy single document file 
 - Room metadata (titles, types, names and document numbers) is not currently encrypted, although all document/profile-photo files are.
 - OCR focuses on Aadhaar, PAN and Driving Licence numbers in images; imported PDFs are preserved/viewed but are not OCR-processed.
 - The ML Kit document scanner depends on Google Play services.
-- This repository builds a debug APK in CI; a signed production release/AAB pipeline is not configured yet.
+- Signed public releases require the maintainer's permanent keystore secrets in GitHub Actions; losing that keystore would prevent publishing in-place updates for existing installations.
 
 ## 🗺️ Future ideas
 - Password-protected encrypted export/import for phone changes
 - Encrypted Room metadata
 - Wider OCR coverage and OCR for imported PDFs
 - Custom categories/tags
-- Signed release build
+
+## 🙏 Acknowledgements
+
+Special thanks to **[RookieZ (RookieEnough)](https://github.com/RookieEnough)** and the **[Orion Store](https://github.com/RookieEnough/Orion-Store)** project for the expressive design inspiration behind My Vault's interface — especially its capsule headers, pastel bento Settings hub, floating dock and creator-coin energy.
+
+My Vault is an independent project. It is **not affiliated with or endorsed by Orion Store**.
+
+Other credits:
+- [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk), bundled for headings under the SIL Open Font License 1.1 (`app/src/main/assets/licenses/SpaceGrotesk-OFL.txt`)
+- AndroidX/Jetpack Compose, Room, Navigation, DataStore and Biometric libraries
+- Google ML Kit Document Scanner and Text Recognition
+- Coil image loading
 
 ## 📄 License
-Personal project — all rights reserved unless a license file is added.
+
+My Vault is free software licensed under the **GNU General Public License v3.0**. See [`LICENSE`](LICENSE) for the full text.
+
+---
+
+made with 🤍 by sinan

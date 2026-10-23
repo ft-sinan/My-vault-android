@@ -41,6 +41,60 @@ import com.ftsinan.myvault.ui.components.PinDots
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.PinPad
 import com.ftsinan.myvault.ui.components.VaultMark
+import com.ftsinan.myvault.ui.components.expressiveReveal
+
+
+/** Minimal cold-start moment shown only while the real entry state loads. */
+@Composable
+fun VaultStartupScreen() {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp, vertical = 28.dp)
+        ) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(122.dp)
+                        .expressiveReveal(0, "startup-emblem"),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MorphingShapeBox(
+                        modifier = Modifier.size(122.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
+                        lobes = 12,
+                        wave = 0.19f,
+                        spinMillis = 24_000
+                    )
+                    VaultMark(size = 88.dp)
+                }
+                Spacer(modifier = Modifier.height(18.dp))
+                Text(
+                    text = stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.displaySmall,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.expressiveReveal(1, "startup-title")
+                )
+            }
+            Text(
+                text = "made with 🤍 by sinan",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .expressiveReveal(2, "startup-signature")
+            )
+        }
+    }
+}
 
 @Composable
 fun LockScreen(viewModel: LockViewModel, ownerName: String? = null) {
@@ -173,7 +227,10 @@ private fun LockScaffold(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(36.dp))
-            Box(contentAlignment = Alignment.BottomEnd) {
+            Box(
+                modifier = Modifier.expressiveReveal(0, "lock-emblem"),
+                contentAlignment = Alignment.BottomEnd
+            ) {
                 Box(modifier = Modifier.size(122.dp), contentAlignment = Alignment.Center) {
                     MorphingShapeBox(
                         modifier = Modifier.size(122.dp),
@@ -204,18 +261,21 @@ private fun LockScaffold(
             Text(
                 text = title,
                 style = MaterialTheme.typography.displaySmall,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.expressiveReveal(1, "lock-title")
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.expressiveReveal(2, "lock-subtitle")
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(
                 modifier = Modifier
+                    .expressiveReveal(3, "lock-trust-pill")
                     .clip(RoundedCornerShape(50))
                     .background(MaterialTheme.colorScheme.secondaryContainer)
                     .padding(horizontal = 14.dp, vertical = 7.dp)
@@ -227,7 +287,11 @@ private fun LockScaffold(
                 )
             }
             Spacer(modifier = Modifier.height(30.dp))
-            PinDots(entered = pinLength, isError = error != null)
+            PinDots(
+                entered = pinLength,
+                isError = error != null,
+                modifier = Modifier.expressiveReveal(4, "lock-pin-dots")
+            )
             Spacer(modifier = Modifier.height(14.dp))
             Text(
                 text = error ?: " ",
@@ -239,7 +303,16 @@ private fun LockScaffold(
             PinPad(
                 onDigit = onDigit,
                 onBackspace = onBackspace,
+                modifier = Modifier.expressiveReveal(5, "lock-pin-pad"),
                 onBiometricClick = onBiometricClick
+            )
+            Spacer(modifier = Modifier.height(22.dp))
+            Text(
+                text = "made with 🤍 by sinan",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.expressiveReveal(6, "lock-signature")
             )
         }
     }

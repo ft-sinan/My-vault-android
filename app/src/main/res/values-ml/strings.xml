@@ -194,7 +194,7 @@
     <string name="settings_storage_one">നിങ്ങളുടെ വോൾട്ടിൽ 1 രേഖ</string>
     <string name="settings_storage_many">നിങ്ങളുടെ വോൾട്ടിൽ %1$d രേഖകൾ</string>
     <string name="settings_storage_using">ഈ ഫോണിൽ %1$s ഉപയോഗിക്കുന്നു</string>
-    <string name="settings_safety_body" formatted="false">• ഓരോ ഫയലും സേവ് ചെയ്യുന്നതിന് മുമ്പ് AES-256 ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യും.\n• എൻക്രിപ്ഷൻ കീ ഈ ഫോണിന്റെ സുരക്ഷിത കീസ്റ്റോറിൽ നിന്ന് പുറത്തുപോകില്ല.\n• ആപ്പ് പൂർണ്ണമായും ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു — ഒന്നും എവിടേക്കും അപ്‌ലോഡ് ചെയ്യില്ല.\n• സ്ക്രീൻഷോട്ടുകളും സമീപകാല ആപ്പുകളുടെ പ്രിവ്യൂവും തടഞ്ഞിരിക്കുന്നു.\n• പശ്ചാത്തലത്തിൽ 1 മിനിറ്റിന് ശേഷം വോൾട്ട് സ്വയം ലോക്ക് ചെയ്യും.\n\n⚠️ പ്രധാനം: PIN മറക്കുകയും ബയോമെട്രിക്സ് പ്രവർത്തിക്കാതിരിക്കുകയും ചെയ്താൽ രേഖകൾ വീണ്ടെടുക്കാൻ കഴിയില്ല. യഥാർത്ഥ രേഖകളും സുരക്ഷിതമായി സൂക്ഷിക്കുക.</string>
+    <string name="settings_safety_body" formatted="false">• ഓരോ ഫയലും സേവ് ചെയ്യുന്നതിന് മുമ്പ് AES-256 ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യും.\n• എൻക്രിപ്ഷൻ കീ ഈ ഫോണിന്റെ സുരക്ഷിത കീസ്റ്റോറിൽ നിന്ന് പുറത്തുപോകില്ല.\n• വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. ക്രമീകരണങ്ങളിൽ നിങ്ങൾ സ്വയം അപ്‌ഡേറ്റ് പരിശോധിക്കുമ്പോൾ മാത്രമേ ആപ്പ് ഇന്റർനെറ്റ് ഉപയോഗിക്കൂ; രേഖകൾ ഒരിക്കലും അപ്‌ലോഡ് ചെയ്യില്ല.\n• സ്ക്രീൻഷോട്ടുകളും സമീപകാല ആപ്പുകളുടെ പ്രിവ്യൂവും തടഞ്ഞിരിക്കുന്നു.\n• പശ്ചാത്തലത്തിൽ 1 മിനിറ്റിന് ശേഷം വോൾട്ട് സ്വയം ലോക്ക് ചെയ്യും.\n\n⚠️ പ്രധാനം: PIN മറക്കുകയും ബയോമെട്രിക്സ് പ്രവർത്തിക്കാതിരിക്കുകയും ചെയ്താൽ രേഖകൾ വീണ്ടെടുക്കാൻ കഴിയില്ല. യഥാർത്ഥ രേഖകളും സുരക്ഷിതമായി സൂക്ഷിക്കുക.</string>
     <string name="pin_wrong">PIN തെറ്റാണ്</string>
     <string name="biometric_title">My Vault അൺലോക്ക് ചെയ്യുക</string>
     <string name="biometric_subtitle">വോൾട്ട് തുറക്കാൻ ഫിംഗർപ്രിന്റോ ഫേസോ ഉപയോഗിക്കുക</string>
@@ -258,4 +258,60 @@
     <string name="creator_back_title">സ്വകാര്യതയാണ് അടിസ്ഥാനം</string>
     <string name="creator_back_subtitle">ഫോണിൽ തന്നെ · ഓഫ്‌ലൈൻ · എൻക്രിപ്റ്റ് ചെയ്തത്</string>
     <string name="creator_version">പതിപ്പ്</string>
+
+    <!-- Settings subpages / updates / acknowledgements -->
+    <string name="settings_page_appearance_subtitle">തീം, വാൾപേപ്പർ നിറങ്ങളും പാലറ്റും</string>
+    <string name="settings_page_motion_subtitle">സ്പർശം, അകലം, ഗ്ലാസും അനിമേഷനും</string>
+    <string name="settings_page_security_subtitle">PIN, ബയോമെട്രിക് അൺലോക്കും ലോക്കിംഗും</string>
+    <string name="settings_page_language_subtitle">ആപ്പിൽ എല്ലായിടത്തും ഉപയോഗിക്കുന്ന ഭാഷ തിരഞ്ഞെടുക്കുക</string>
+    <string name="settings_page_storage_subtitle">സ്റ്റോറേജ്, സ്വകാര്യതയും മാനുവൽ അപ്‌ഡേറ്റുകളും</string>
+    <string name="settings_page_continue">തുറക്കുക</string>
+    <string name="settings_language_selected_note">തിരഞ്ഞെടുത്ത ഭാഷയിൽ ആപ്പ് മുഴുവൻ വീണ്ടും ആരംഭിക്കും.</string>
+    <string name="settings_updates_title">ആപ്പ് അപ്‌ഡേറ്റുകൾ</string>
+    <string name="settings_updates_subtitle">മാനുവൽ പരിശോധന മാത്രം — My Vault പശ്ചാത്തലത്തിൽ പരിശോധിക്കില്ല.</string>
+    <string name="settings_updates_current">നിലവിലെ പതിപ്പ്: v%1$s</string>
+    <string name="settings_updates_check">അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുക</string>
+    <string name="settings_updates_checking">GitHub Releases പരിശോധിക്കുന്നു…</string>
+    <string name="settings_updates_up_to_date">നിങ്ങൾ ഏറ്റവും പുതിയ പതിപ്പിലാണ്.</string>
+    <string name="settings_updates_available">%1$s പതിപ്പ് ലഭ്യമാണ്.</string>
+    <string name="settings_updates_download">ഡൗൺലോഡ് ചെയ്ത് ഇൻസ്റ്റാൾ ചെയ്യുക</string>
+    <string name="settings_updates_downloading">ഡൗൺലോഡ് ചെയ്യുന്നു… %1$d%%</string>
+    <string name="settings_updates_downloading_unknown">അപ്‌ഡേറ്റ് ഡൗൺലോഡ് ചെയ്യുന്നു…</string>
+    <string name="settings_updates_verify">ഡൗൺലോഡ് പരിശോധിക്കുന്നു…</string>
+    <string name="settings_updates_failed">അപ്‌ഡേറ്റുകൾ പരിശോധിക്കാൻ കഴിഞ്ഞില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="settings_updates_download_failed">അപ്‌ഡേറ്റ് സുരക്ഷിതമായി ഡൗൺലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല.</string>
+    <string name="settings_updates_checksum_failed">ഡൗൺലോഡ് പരിശോധന പരാജയപ്പെട്ടതിനാൽ APK തുറന്നില്ല.</string>
+    <string name="settings_updates_allow_install">My Vault-ൽ നിന്ന് അപ്‌ഡേറ്റ് ഇൻസ്റ്റാൾ ചെയ്യാൻ Android അനുമതി ആവശ്യമാണ്. സെറ്റിംഗ് തുറന്ന് അനുമതി നൽകിയ ശേഷം ഇവിടെ മടങ്ങുക.</string>
+    <string name="settings_updates_allow_install_action">ഇൻസ്റ്റാൾ അനുവദിക്കുക</string>
+    <string name="settings_updates_release_notes">റിലീസ് കുറിപ്പുകൾ</string>
+    <string name="settings_updates_no_notes">റിലീസ് കുറിപ്പുകൾ നൽകിയിട്ടില്ല.</string>
+    <string name="settings_updates_file_size">ഡൗൺലോഡ് വലുപ്പം: %1$s</string>
+    <string name="settings_updates_open_installer_failed">Android ഇൻസ്റ്റാളർ തുറക്കാൻ കഴിഞ്ഞില്ല.</string>
+    <string name="settings_acknowledgements">കൃതജ്ഞതയും ലൈസൻസുകളും</string>
+    <string name="settings_acknowledgements_subtitle">ഈ ആപ്പിന്റെ പിന്നിലെ ആളുകൾക്കും ഓപ്പൺ സോഴ്‌സ് പ്രോജക്റ്റുകൾക്കും നന്ദി</string>
+    <string name="ack_orion_title">Orion Store — ഡിസൈൻ പ്രചോദനം</string>
+    <string name="ack_orion_body">My Vault-ന്റെ ഇന്റർഫേസിന് പിന്നിലെ എക്സ്പ്രസീവ് ഡിസൈൻ പ്രചോദനത്തിന് RookieZ (RookieEnough)-ക്കും Orion Store പ്രോജക്റ്റിനും പ്രത്യേക നന്ദി. My Vault ഒരു സ്വതന്ത്ര പ്രോജക്റ്റാണ്; Orion Store-മായി ഔദ്യോഗിക ബന്ധമോ അവരുടെ അംഗീകാരമോ ഇല്ല.</string>
+    <string name="ack_space_grotesk_title">Space Grotesk</string>
+    <string name="ack_space_grotesk_body">SIL Open Font License 1.1 പ്രകാരം തലക്കെട്ടുകൾക്കായി ഉൾപ്പെടുത്തിയിരിക്കുന്നു. പൂർണ്ണ ലൈസൻസ് ആപ്പിൽ ഉൾപ്പെടുത്തിയിട്ടുണ്ട്.</string>
+    <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
+    <string name="ack_androidx_body">Apache License 2.0 പ്രകാരം ഉപയോഗിക്കുന്ന Google-ന്റെ Compose, Material 3, Room, Navigation, DataStore, Biometric ലൈബ്രറികൾ.</string>
+    <string name="ack_mlkit_title">Google ML Kit</string>
+    <string name="ack_mlkit_body">ഡോക്യുമെന്റ് സ്കാനിംഗും ലാറ്റിൻ ടെക്സ്റ്റ് തിരിച്ചറിയലും Google ML Kit, Google Play services ഘടകങ്ങൾ ഉപയോഗിച്ച് ഫോണിൽ തന്നെ നടക്കുന്നു.</string>
+    <string name="ack_coil_title">Coil</string>
+    <string name="ack_coil_body">Apache License 2.0 പ്രകാരം ഡീക്രിപ്റ്റ് ചെയ്ത രേഖ പ്രിവ്യൂകൾ ലോഡ് ചെയ്യാൻ ഉപയോഗിക്കുന്നു.</string>
+    <string name="ack_my_vault_license">My Vault സോഴ്‌സ് കോഡ് GNU GPL-3.0 പ്രകാരം ലൈസൻസ് ചെയ്തിരിക്കുന്നു.</string>
+    <string name="ack_open_project">പ്രോജക്റ്റ് തുറക്കുക</string>
+    <string name="creator_email">ഇമെയിൽ</string>
+    <string name="creator_website">വെബ്‌സൈറ്റ്</string>
+    <string name="creator_visit_website">എന്റെ വെബ്‌സൈറ്റ് സന്ദർശിക്കുക</string>
+    <string name="creator_platform">പ്ലാറ്റ്‌ഫോം</string>
+    <string name="creator_built_with">നിർമ്മിച്ചത്</string>
+    <string name="creator_badge_offline">ഓഫ്‌ലൈൻ വോൾട്ട്</string>
+    <string name="creator_badge_creator_desc">പ്രോഡക്റ്റ്, UI, എൻക്രിപ്ഷനും ഓരോ ചെറിയ അനിമേഷനും ഉൾപ്പെടെ സിനാൻ തന്നെ രൂപകൽപ്പന ചെയ്ത് നിർമ്മിച്ചത്.</string>
+    <string name="creator_badge_privacy_desc">അക്കൗണ്ടും ക്ലൗഡ് സിങ്കും ട്രാക്കിംഗും ഇല്ല. നിങ്ങളുടെ രേഖകൾ ഫോണിൽ എൻക്രിപ്റ്റ് ചെയ്ത് തന്നെ ഇരിക്കും.</string>
+    <string name="creator_badge_offline_desc">വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. നിങ്ങൾ സ്വയം അപ്‌ഡേറ്റ് പരിശോധിക്കുമ്പോൾ മാത്രമാണ് ഇന്റർനെറ്റ് ഉപയോഗിക്കുന്നത്.</string>
+    <string name="creator_badge_code_desc">Jetpack Compose, Room, Android Keystore പിന്തുണയുള്ള AES-GCM എൻക്രിപ്ഷനോടുകൂടിയ നേറ്റീവ് Kotlin.</string>
+    <string name="creator_long_press_copy">പകർത്താൻ ടൈൽ അമർത്തിപ്പിടിക്കുക</string>
+    <string name="creator_acknowledgements">കൃതജ്ഞതയും ലൈസൻസുകളും</string>
+    <string name="settings_storage_privacy">സ്റ്റോറേജും സ്വകാര്യതയും</string>
 </resources>
