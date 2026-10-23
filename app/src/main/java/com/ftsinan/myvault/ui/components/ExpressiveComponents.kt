@@ -9,6 +9,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -49,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -172,6 +174,68 @@ fun VaultMark(
             tint = contentColor,
             modifier = Modifier.size(size * 0.48f)
         )
+    }
+}
+
+/**
+ * The selected M-Vault Monogram from the launcher icon, drawn as a quiet
+ * squircle tile for entry/lock moments. Colours follow the active theme:
+ * lavender container, indigo M and lime keyhole in the default Orion scheme.
+ */
+@Composable
+fun MVaultMark(
+    modifier: Modifier = Modifier,
+    size: Dp = 64.dp,
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    markColor: Color = MaterialTheme.colorScheme.primary,
+    accentColor: Color = MaterialTheme.colorScheme.tertiaryContainer
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(RoundedCornerShape(size * 0.30f))
+            .background(containerColor),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.size(size * 0.68f)) {
+            val width = this.size.width
+            val height = this.size.height * 0.86f
+            val top = (this.size.height - height) / 2f
+            fun point(x: Float, y: Float) = Offset(width * x, top + height * y)
+            val monogram = Path().apply {
+                val start = point(0f, 1f)
+                moveTo(start.x, start.y)
+                listOf(
+                    point(0f, 0f),
+                    point(0.5f, 0.514f),
+                    point(1f, 0f),
+                    point(1f, 1f),
+                    point(0.768f, 1f),
+                    point(0.768f, 0.421f),
+                    point(0.5f, 0.692f),
+                    point(0.232f, 0.421f),
+                    point(0.232f, 1f)
+                ).forEach { lineTo(it.x, it.y) }
+                close()
+            }
+            drawPath(monogram, markColor)
+            drawCircle(
+                color = accentColor,
+                radius = width * 0.075f,
+                center = point(0.5f, 0.575f)
+            )
+            val stem = Path().apply {
+                val topLeft = point(0.463f, 0.615f)
+                moveTo(topLeft.x, topLeft.y)
+                listOf(
+                    point(0.537f, 0.615f),
+                    point(0.555f, 0.72f),
+                    point(0.445f, 0.72f)
+                ).forEach { lineTo(it.x, it.y) }
+                close()
+            }
+            drawPath(stem, accentColor)
+        }
     }
 }
 

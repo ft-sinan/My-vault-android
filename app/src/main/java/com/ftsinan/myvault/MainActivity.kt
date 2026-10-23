@@ -22,6 +22,7 @@ import com.ftsinan.myvault.ui.screens.lock.LockScreen
 import com.ftsinan.myvault.ui.screens.lock.LockViewModel
 import com.ftsinan.myvault.ui.screens.lock.SetupPinScreen
 import com.ftsinan.myvault.ui.screens.lock.VaultStartupScreen
+import com.ftsinan.myvault.ui.screens.lock.VaultUnlockAnimationScreen
 import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
 import com.ftsinan.myvault.ui.theme.MyVaultTheme
 
@@ -89,6 +90,11 @@ class MainActivity : FragmentActivity() {
                     )
 
                     !lockState.isPinSet -> SetupPinScreen(lockViewModel)
+
+                    lockState.showUnlockAnimation -> VaultUnlockAnimationScreen(
+                        ownerName = lockState.ownerName,
+                        onFinished = lockViewModel::finishUnlockAnimation
+                    )
 
                     !lockState.isUnlocked -> LockScreen(
                         viewModel = lockViewModel,

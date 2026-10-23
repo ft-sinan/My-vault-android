@@ -23,6 +23,7 @@
     <string name="pin_confirm_subtitle">സ്ഥിരീകരിക്കാൻ അതേ PIN വീണ്ടും നൽകുക.</string>
     <string name="pin_mismatch">PIN-കൾ ഒത്തുപോകുന്നില്ല. വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="lock_trust_pill">ഓഫ്‌ലൈൻ  •  എൻക്രിപ്റ്റഡ്  •  സ്വകാര്യം</string>
+    <string name="lock_unlocked">വോൾട്ട് അൺലോക്ക് ചെയ്തു</string>
     <string name="profile_setup_title">നിങ്ങളുടെ പ്രൊഫൈൽ സജ്ജമാക്കുക</string>
     <string name="profile_setup_subtitle">പേര് മാത്രം നിർബന്ധമാണ്. മറ്റുള്ളവ പിന്നീട് ചേർക്കാം.</string>
     <string name="profile_edit_title">പ്രൊഫൈൽ തിരുത്തുക</string>

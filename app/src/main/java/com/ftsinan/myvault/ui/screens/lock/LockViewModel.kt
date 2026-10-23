@@ -27,6 +27,8 @@ data class LockUiState(
     val isLanguageLoaded: Boolean = false,
     val isPinSet: Boolean = false,
     val isUnlocked: Boolean = false,
+    /** Brief post-unlock moment shown after PIN/biometric success, not on cold start. */
+    val showUnlockAnimation: Boolean = false,
     val isBiometricEnabled: Boolean = true,
     val useDynamicColor: Boolean = false,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
@@ -129,7 +131,12 @@ class LockViewModel(
         viewModelScope.launch {
             pinManager.setPin(pin)
             _uiState.update {
-                it.copy(isPinSet = true, isUnlocked = true, error = null)
+                it.copy(
+                    isPinSet = true,
+                    isUnlocked = true,
+                    showUnlockAnimation = false,
+                    error = null
+                )
             }
         }
     }
@@ -138,7 +145,12 @@ class LockViewModel(
         viewModelScope.launch {
             if (pinManager.verifyPin(pin)) {
                 _uiState.update {
-                    it.copy(isUnlocked = true, error = null, failedAttempts = 0)
+                    it.copy(
+                        isUnlocked = true,
+                        showUnlockAnimation = !it.reduceAnimations,
+                        error = null,
+                        failedAttempts = 0
+                    )
                 }
             } else {
                 _uiState.update {
@@ -152,13 +164,26 @@ class LockViewModel(
     }
 
     fun unlockWithBiometric() {
-        _uiState.update { it.copy(isUnlocked = true, error = null, failedAttempts = 0) }
+        _uiState.update {
+            it.copy(
+                isUnlocked = true,
+                showUnlockAnimation = !it.reduceAnimations,
+                error = null,
+                failedAttempts = 0
+            )
+        }
+    }
+
+    fun finishUnlockAnimation() {
+        _uiState.update { it.copy(showUnlockAnimation = false) }
     }
 
     /** Locks the vault and wipes every decrypted preview/shared copy. */
     fun lock() {
         if (!_uiState.value.isUnlocked) return
-        _uiState.update { it.copy(isUnlocked = false, error = null) }
+        _uiState.update {
+            it.copy(isUnlocked = false, showUnlockAnimation = false, error = null)
+        }
         viewModelScope.launch(Dispatchers.IO) {
             fileManager.clearDecryptedCache()
         }

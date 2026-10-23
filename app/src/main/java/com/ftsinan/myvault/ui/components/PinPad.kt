@@ -43,21 +43,27 @@ fun PinDots(
     entered: Int,
     modifier: Modifier = Modifier,
     total: Int = PinManager.PIN_LENGTH,
-    isError: Boolean = false
+    isError: Boolean = false,
+    dotSize: androidx.compose.ui.unit.Dp = 18.dp,
+    spacing: androidx.compose.ui.unit.Dp = 18.dp
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(18.dp),
+        horizontalArrangement = Arrangement.spacedBy(spacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(total) { index ->
-            PinDot(filled = index < entered, isError = isError)
+            PinDot(filled = index < entered, isError = isError, size = dotSize)
         }
     }
 }
 
 @Composable
-private fun PinDot(filled: Boolean, isError: Boolean) {
+private fun PinDot(
+    filled: Boolean,
+    isError: Boolean,
+    size: androidx.compose.ui.unit.Dp = 18.dp
+) {
     val animationsEnabled = LocalAnimationsEnabled.current
     val scale by animateFloatAsState(
         targetValue = if (filled) 1.18f else 1f,
@@ -82,7 +88,7 @@ private fun PinDot(filled: Boolean, isError: Boolean) {
 
     Box(
         modifier = Modifier
-            .size(18.dp)
+            .size(size)
             .graphicsLayer(scaleX = scale, scaleY = scale)
             .clip(CircleShape)
             .background(animatedColor)
@@ -106,7 +112,10 @@ fun PinPad(
     onDigit: (String) -> Unit,
     onBackspace: () -> Unit,
     modifier: Modifier = Modifier,
-    onBiometricClick: (() -> Unit)? = null
+    onBiometricClick: (() -> Unit)? = null,
+    keySize: androidx.compose.ui.unit.Dp = 76.dp,
+    horizontalSpacing: androidx.compose.ui.unit.Dp = 26.dp,
+    verticalSpacing: androidx.compose.ui.unit.Dp = 10.dp
 ) {
     val rows = listOf(
         listOf("1", "2", "3"),
@@ -115,22 +124,22 @@ fun PinPad(
     )
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         rows.forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(26.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)) {
                 row.forEach { digit ->
-                    PinKey(label = digit, onClick = { onDigit(digit) })
+                    PinKey(label = digit, size = keySize, onClick = { onDigit(digit) })
                 }
             }
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(26.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)) {
             // Bottom-left: fingerprint shortcut (lock screen only)
             if (onBiometricClick != null) {
                 Box(
                     modifier = Modifier
-                        .size(76.dp)
+                        .size(keySize)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primaryContainer)
                         .springPress(CircleShape, onClick = onBiometricClick),
@@ -140,18 +149,18 @@ fun PinPad(
                         imageVector = Icons.Filled.Fingerprint,
                         contentDescription = stringResource(R.string.pin_biometric_content_description),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(34.dp)
+                        modifier = Modifier.size(keySize * 0.45f)
                     )
                 }
             } else {
-                Spacer(modifier = Modifier.size(76.dp))
+                Spacer(modifier = Modifier.size(keySize))
             }
-            PinKey(label = "0", onClick = { onDigit("0") })
-            IconButton(onClick = onBackspace, modifier = Modifier.size(76.dp)) {
+            PinKey(label = "0", size = keySize, onClick = { onDigit("0") })
+            IconButton(onClick = onBackspace, modifier = Modifier.size(keySize)) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Backspace,
                     contentDescription = stringResource(R.string.pin_delete_digit_content_description),
-                    modifier = Modifier.size(29.dp)
+                    modifier = Modifier.size(keySize * 0.38f)
                 )
             }
         }
@@ -159,10 +168,14 @@ fun PinPad(
 }
 
 @Composable
-private fun PinKey(label: String, onClick: () -> Unit) {
+private fun PinKey(
+    label: String,
+    size: androidx.compose.ui.unit.Dp = 76.dp,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
-            .size(76.dp)
+            .size(size)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .springPress(CircleShape, onClickLabel = label, onClick = onClick),

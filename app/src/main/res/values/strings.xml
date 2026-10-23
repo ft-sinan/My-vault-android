@@ -25,6 +25,7 @@
     <string name="pin_confirm_subtitle">Enter the same PIN once more to confirm.</string>
     <string name="pin_mismatch">PINs don\'t match. Please start again.</string>
     <string name="lock_trust_pill">Offline  •  Encrypted  •  Private</string>
+    <string name="lock_unlocked">Vault unlocked</string>
     <string name="profile_setup_title">Set up your profile</string>
     <string name="profile_setup_subtitle">Only your name is required. Everything else can be added later.</string>
     <string name="profile_edit_title">Edit profile</string>

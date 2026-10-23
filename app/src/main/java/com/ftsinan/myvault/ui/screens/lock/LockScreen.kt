@@ -1,20 +1,29 @@
 package com.ftsinan.myvault.ui.screens.lock
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
@@ -30,21 +39,27 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.ui.components.MVaultMark
 import com.ftsinan.myvault.ui.components.PinDots
-import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.PinPad
-import com.ftsinan.myvault.ui.components.VaultMark
-import com.ftsinan.myvault.ui.components.expressiveReveal
+import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
+import kotlinx.coroutines.delay
 
-
-/** Minimal cold-start moment shown only while the real entry state loads. */
+/**
+ * Quiet loading placeholder used only while the real entry state is read.
+ * The celebratory opening animation intentionally happens after unlocking,
+ * not as a fake cold-start splash.
+ */
 @Composable
 fun VaultStartupScreen() {
     Surface(
@@ -54,43 +69,220 @@ fun VaultStartupScreen() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
                 .padding(horizontal = 32.dp, vertical = 28.dp)
         ) {
             Column(
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(122.dp)
-                        .expressiveReveal(0, "startup-emblem"),
-                    contentAlignment = Alignment.Center
-                ) {
-                    MorphingShapeBox(
-                        modifier = Modifier.size(122.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
-                        lobes = 12,
-                        wave = 0.19f,
-                        spinMillis = 24_000
-                    )
-                    VaultMark(size = 88.dp)
-                }
-                Spacer(modifier = Modifier.height(18.dp))
+                MVaultMark(size = 76.dp)
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(R.string.app_name),
-                    style = MaterialTheme.typography.displaySmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.expressiveReveal(1, "startup-title")
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center
                 )
             }
             Text(
                 text = "made with 🤍 by sinan",
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+    }
+}
+
+/**
+ * A short, polished "vault is opening" moment after a successful PIN or
+ * biometric unlock. It lasts less than a second and is skipped entirely
+ * when Reduce animations is enabled.
+ */
+@Composable
+fun VaultUnlockAnimationScreen(
+    ownerName: String?,
+    onFinished: () -> Unit
+) {
+    val animationsEnabled = LocalAnimationsEnabled.current
+    var started by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!animationsEnabled) {
+            onFinished()
+            return@LaunchedEffect
+        }
+        started = true
+        delay(840)
+        onFinished()
+    }
+
+    val markScale by animateFloatAsState(
+        targetValue = if (started) 1f else 0.74f,
+        animationSpec = if (animationsEnabled) {
+            spring(dampingRatio = 0.58f, stiffness = 360f)
+        } else {
+            snap()
+        },
+        label = "unlockMarkScale"
+    )
+    val markAlpha by animateFloatAsState(
+        targetValue = if (started) 1f else 0f,
+        animationSpec = if (animationsEnabled) tween(260) else snap(),
+        label = "unlockMarkAlpha"
+    )
+    val ringScale by animateFloatAsState(
+        targetValue = if (started) 1.24f else 0.68f,
+        animationSpec = if (animationsEnabled) tween(760) else snap(),
+        label = "unlockRingScale"
+    )
+    val ringAlpha by animateFloatAsState(
+        targetValue = if (started) 0f else 0.52f,
+        animationSpec = if (animationsEnabled) tween(760) else snap(),
+        label = "unlockRingAlpha"
+    )
+    val badgeScale by animateFloatAsState(
+        targetValue = if (started) 1f else 0f,
+        animationSpec = if (animationsEnabled) {
+            tween(durationMillis = 340, delayMillis = 280)
+        } else {
+            snap()
+        },
+        label = "unlockBadgeScale"
+    )
+    val textAlpha by animateFloatAsState(
+        targetValue = if (started) 1f else 0f,
+        animationSpec = if (animationsEnabled) {
+            tween(durationMillis = 360, delayMillis = 180)
+        } else {
+            snap()
+        },
+        label = "unlockTextAlpha"
+    )
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(horizontal = 32.dp, vertical = 28.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset(x = 86.dp, y = (-96).dp)
+                    .size(210.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f))
+            )
+
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier.size(154.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(132.dp)
+                            .graphicsLayer {
+                                scaleX = ringScale
+                                scaleY = ringScale
+                                alpha = ringAlpha
+                            }
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shape = CircleShape
+                            )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(112.dp)
+                            .graphicsLayer {
+                                scaleX = markScale
+                                scaleY = markScale
+                                alpha = markAlpha
+                            }
+                            .clip(CircleShape)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.42f)
+                            )
+                    )
+                    MVaultMark(
+                        size = 88.dp,
+                        modifier = Modifier.graphicsLayer {
+                            scaleX = markScale
+                            scaleY = markScale
+                            alpha = markAlpha
+                        }
+                    )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(38.dp)
+                            .graphicsLayer {
+                                scaleX = badgeScale
+                                scaleY = badgeScale
+                                alpha = badgeScale
+                            }
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.tertiaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                            modifier = Modifier.size(21.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(22.dp))
+                Text(
+                    text = if (!ownerName.isNullOrBlank()) {
+                        stringResource(R.string.lock_welcome_back, ownerName)
+                    } else {
+                        stringResource(R.string.lock_my_vault)
+                    },
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.graphicsLayer {
+                        alpha = textAlpha
+                        translationY = (1f - textAlpha) * 12.dp.toPx()
+                    }
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = stringResource(R.string.lock_unlocked),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.graphicsLayer {
+                        alpha = textAlpha
+                        translationY = (1f - textAlpha) * 10.dp.toPx()
+                    }
+                )
+            }
+
+            Text(
+                text = "made with 🤍 by sinan",
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .expressiveReveal(2, "startup-signature")
+                    .graphicsLayer { alpha = textAlpha }
             )
         }
     }
@@ -205,6 +397,11 @@ fun SetupPinScreen(viewModel: LockViewModel) {
     )
 }
 
+/**
+ * Fixed, professional lock layout. It deliberately does not scroll: the
+ * emblem, typography, dots and PIN keys shrink with the available height,
+ * while weighted spacers absorb the remaining space on taller phones.
+ */
 @Composable
 private fun LockScaffold(
     title: String,
@@ -219,101 +416,177 @@ private fun LockScaffold(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 32.dp, vertical = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .statusBarsPadding()
+                .navigationBarsPadding()
         ) {
-            Spacer(modifier = Modifier.height(36.dp))
-            Box(
-                modifier = Modifier.expressiveReveal(0, "lock-emblem"),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                Box(modifier = Modifier.size(122.dp), contentAlignment = Alignment.Center) {
-                    MorphingShapeBox(
-                        modifier = Modifier.size(122.dp),
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
-                        lobes = 12,
-                        wave = 0.19f,
-                        spinMillis = 24_000
-                    )
-                    VaultMark(size = 88.dp)
-                }
-                Box(
-                    modifier = Modifier
-                        .offset(x = 5.dp, y = 5.dp)
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.tertiary),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Lock,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onTertiary,
-                        modifier = Modifier.size(19.dp)
-                    )
-                }
+            val veryCompact = maxHeight < 620.dp
+            val compact = maxHeight < 730.dp
+            val markSize = when {
+                veryCompact -> 60.dp
+                compact -> 68.dp
+                else -> 76.dp
             }
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.displaySmall,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.expressiveReveal(1, "lock-title")
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.expressiveReveal(2, "lock-subtitle")
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            val keySize = when {
+                veryCompact -> 54.dp
+                compact -> 62.dp
+                maxHeight < 840.dp -> 68.dp
+                else -> 72.dp
+            }
+            val keyHorizontalSpacing = when {
+                veryCompact -> 18.dp
+                compact -> 22.dp
+                else -> 26.dp
+            }
+            val keyVerticalSpacing = when {
+                veryCompact -> 8.dp
+                compact -> 9.dp
+                else -> 10.dp
+            }
+
             Box(
                 modifier = Modifier
-                    .expressiveReveal(3, "lock-trust-pill")
-                    .clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .padding(horizontal = 14.dp, vertical = 7.dp)
+                    .align(Alignment.TopEnd)
+                    .offset(x = 76.dp, y = (-92).dp)
+                    .size(198.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.05f))
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        horizontal = 24.dp,
+                        vertical = if (veryCompact) 10.dp else 16.dp
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = stringResource(R.string.lock_trust_pill),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                Spacer(modifier = Modifier.weight(if (veryCompact) 0.22f else 0.48f))
+
+                Box(
+                    modifier = Modifier.size(markSize + 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MVaultMark(size = markSize)
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .size(if (veryCompact) 24.dp else 28.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.tertiaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Lock,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                            modifier = Modifier.size(if (veryCompact) 14.dp else 16.dp)
+                        )
+                    }
+                }
+
+                Spacer(
+                    modifier = Modifier.height(
+                        when {
+                            tinyHeight -> 8.dp
+                            compact -> 16.dp
+                            else -> 20.dp
+                        }
+                    )
                 )
+                Text(
+                    text = title,
+                    style = when {
+                        tinyHeight -> MaterialTheme.typography.headlineSmall
+                        compact -> MaterialTheme.typography.headlineMedium
+                        else -> MaterialTheme.typography.headlineLarge
+                    },
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (maxHeight >= 410.dp) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                if (!veryCompact) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Shield,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = stringResource(R.string.lock_trust_pill),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(if (veryCompact) 0.28f else 0.36f))
+
+                PinDots(
+                    entered = pinLength,
+                    isError = error != null,
+                    dotSize = if (veryCompact) 13.dp else 15.dp,
+                    spacing = if (veryCompact) 13.dp else 15.dp
+                )
+                Box(
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .heightIn(min = 26.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (error != null) {
+                        Text(
+                            text = error,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                }
+
+                PinPad(
+                    onDigit = onDigit,
+                    onBackspace = onBackspace,
+                    onBiometricClick = onBiometricClick,
+                    keySize = keySize,
+                    horizontalSpacing = keyHorizontalSpacing,
+                    verticalSpacing = keyVerticalSpacing
+                )
+
+                Spacer(modifier = Modifier.weight(0.28f))
+                if (!veryCompact) {
+                    Text(
+                        text = "made with 🤍 by sinan",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.76f),
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
-            Spacer(modifier = Modifier.height(30.dp))
-            PinDots(
-                entered = pinLength,
-                isError = error != null,
-                modifier = Modifier.expressiveReveal(4, "lock-pin-dots")
-            )
-            Spacer(modifier = Modifier.height(14.dp))
-            Text(
-                text = error ?: " ",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            PinPad(
-                onDigit = onDigit,
-                onBackspace = onBackspace,
-                modifier = Modifier.expressiveReveal(5, "lock-pin-pad"),
-                onBiometricClick = onBiometricClick
-            )
-            Spacer(modifier = Modifier.height(22.dp))
-            Text(
-                text = "made with 🤍 by sinan",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.expressiveReveal(6, "lock-signature")
-            )
         }
     }
 }
