@@ -10,7 +10,14 @@ Built with **Kotlin + Jetpack Compose (Material 3)**. No account, no ads and no 
 
 ## 📸 Screenshots
 
-Demo screenshots must use **fake/sample documents only**. Final public screenshots will be captured from the signed v1.1.0 build after installing it on a test device with sample data; no real family documents will ever be used in this repository.
+These store-preview graphics use a fictional family and masked sample document numbers only. No real family documents will ever be used in this repository. Full-size assets and the Orion Store listing sheet live in [`docs/store/`](docs/store/).
+
+<p align="center">
+  <img src="docs/store/screenshots/01-home.png" width="180" alt="My Vault Home preview with sample data">
+  <img src="docs/store/screenshots/02-documents.png" width="180" alt="My Vault Documents preview with sample data">
+  <img src="docs/store/screenshots/03-family.png" width="180" alt="My Vault Family preview with sample data">
+  <img src="docs/store/screenshots/04-backup.png" width="180" alt="My Vault Backup and restore preview with sample data">
+</p>
 
 ### Premium family-first experience
 - Five-part bottom navigation: **Home • Docs • centre Add • Family • Settings**
