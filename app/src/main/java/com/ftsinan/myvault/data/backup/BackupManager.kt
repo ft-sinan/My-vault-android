@@ -502,8 +502,10 @@ class BackupManager(
             .digest(bytes)
             .joinToString("") { "%02x".format(it) }
 
-    private inline fun <reified T : Enum<T>> enumOrNull(value: String?): T? =
-        value?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
+    private inline fun <reified T : Enum<T>> enumOrNull(value: String?): T? {
+        if (value == null) return null
+        return enumValues<T>().firstOrNull { it.name == value }
+    }
 
     private inline fun <reified T : Enum<T>> enumOrDefault(value: String?, default: T): T =
         enumOrNull(value) ?: default
