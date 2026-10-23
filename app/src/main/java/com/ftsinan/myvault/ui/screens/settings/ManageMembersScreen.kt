@@ -58,6 +58,7 @@ import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.data.model.MemberProfile
 import com.ftsinan.myvault.ui.components.ExpressiveBackTopBar
 import com.ftsinan.myvault.ui.components.MemberAvatar
+import com.ftsinan.myvault.ui.components.memberIdentitySeed
 import com.ftsinan.myvault.ui.components.relationLabel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -279,7 +280,12 @@ private fun MemberManageRow(
                     )
                 }
             }
-            MemberAvatar(member.name, item.photoBytes, size = 52.dp)
+            MemberAvatar(
+                name = member.name,
+                photoBytes = item.photoBytes,
+                size = 52.dp,
+                seedColor = memberIdentitySeed(member.id, member.name)
+            )
             Spacer(Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(

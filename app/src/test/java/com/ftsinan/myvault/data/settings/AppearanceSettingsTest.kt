@@ -6,12 +6,13 @@ import org.junit.Test
 class AppearanceSettingsTest {
 
     @Test
-    fun `theme mode parses stored values with system fallback`() {
-        assertEquals(ThemeMode.SYSTEM, ThemeMode.fromName(null))
+    fun `theme mode parses stored values with light fallback`() {
+        assertEquals(ThemeMode.LIGHT, ThemeMode.fromName(null))
+        assertEquals(ThemeMode.SYSTEM, ThemeMode.fromName("SYSTEM"))
         assertEquals(ThemeMode.LIGHT, ThemeMode.fromName("LIGHT"))
         assertEquals(ThemeMode.DARK, ThemeMode.fromName("DARK"))
         assertEquals(ThemeMode.OLED, ThemeMode.fromName("OLED"))
-        assertEquals(ThemeMode.SYSTEM, ThemeMode.fromName("UNKNOWN"))
+        assertEquals(ThemeMode.LIGHT, ThemeMode.fromName("UNKNOWN"))
     }
 
     @Test

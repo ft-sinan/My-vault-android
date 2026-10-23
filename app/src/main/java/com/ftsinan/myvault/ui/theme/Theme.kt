@@ -18,6 +18,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -387,6 +388,29 @@ private fun brandDarkColorScheme(accent: AccentColor) = when (accent) {
     )
 }
 
+/**
+ * Gives every non-Orion brand palette its own softly tinted surfaces. Earlier
+ * palettes changed only the main roles while sharing the same teal surfaces,
+ * which made them feel like minor variations of one another.
+ */
+private fun ColorScheme.withTintedSurfaces(seed: Color, darkTheme: Boolean): ColorScheme {
+    val baseMix = if (darkTheme) 0.08f else 0.05f
+    val variantMix = if (darkTheme) 0.16f else 0.12f
+    return copy(
+        background = lerp(background, seed, baseMix),
+        surface = lerp(surface, seed, baseMix),
+        surfaceVariant = lerp(surfaceVariant, seed, variantMix),
+        surfaceBright = lerp(surfaceBright, seed, baseMix),
+        surfaceDim = lerp(surfaceDim, seed, variantMix),
+        surfaceContainerLowest = lerp(surfaceContainerLowest, seed, baseMix * 0.55f),
+        surfaceContainerLow = lerp(surfaceContainerLow, seed, baseMix),
+        surfaceContainer = lerp(surfaceContainer, seed, variantMix * 0.78f),
+        surfaceContainerHigh = lerp(surfaceContainerHigh, seed, variantMix),
+        surfaceContainerHighest = lerp(surfaceContainerHighest, seed, variantMix * 1.18f),
+        outlineVariant = lerp(outlineVariant, seed, variantMix * 0.72f)
+    )
+}
+
 /** True-black surfaces over any dark scheme, for OLED screens. */
 fun ColorScheme.asOled(): ColorScheme = copy(
     background = Color.Black,
@@ -416,13 +440,18 @@ fun vaultColorScheme(
     useDynamicColor: Boolean,
     accentColor: AccentColor
 ): ColorScheme {
-    val scheme = when {
+    val baseScheme = when {
         useDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             if (darkTheme) dynamicDarkColorScheme(context)
             else dynamicLightColorScheme(context)
         }
         darkTheme -> brandDarkColorScheme(accentColor)
         else -> brandLightColorScheme(accentColor)
+    }
+    val scheme = if (!useDynamicColor && accentColor != AccentColor.ORION) {
+        baseScheme.withTintedSurfaces(seed = baseScheme.primary, darkTheme = darkTheme)
+    } else {
+        baseScheme
     }
     return if (oled && darkTheme) scheme.asOled() else scheme
 }
@@ -495,9 +524,9 @@ private fun rememberAnimatedColorScheme(
  */
 @Composable
 fun MyVaultTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     oled: Boolean = false,
-    useDynamicColor: Boolean = false,
+    useDynamicColor: Boolean = true,
     accentColor: AccentColor = AccentColor.ORION,
     hapticsEnabled: Boolean = true,
     compactMode: Boolean = false,

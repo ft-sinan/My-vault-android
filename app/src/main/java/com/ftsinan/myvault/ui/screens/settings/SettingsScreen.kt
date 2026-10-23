@@ -149,6 +149,7 @@ import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.VaultMark
 import com.ftsinan.myvault.ui.components.expressivePastel
 import com.ftsinan.myvault.ui.components.expressiveReveal
+import com.ftsinan.myvault.ui.components.readableContentColor
 import com.ftsinan.myvault.ui.components.springPress
 import com.ftsinan.myvault.ui.screens.lock.canUseBiometric
 import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
@@ -1773,10 +1774,13 @@ private fun SettingsBentoCard(
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(28.dp)
+    val containerColor = expressivePastel(seed)
+    val contentColor = readableContentColor(containerColor)
+    val mutedContentColor = contentColor.copy(alpha = 0.72f)
     Box(
         modifier = modifier
             .clip(shape)
-            .background(expressivePastel(seed))
+            .background(containerColor)
             .springPress(shape, onClick = onClick)
     ) {
         MorphingShapeBox(
@@ -1805,7 +1809,7 @@ private fun SettingsBentoCard(
                 Icon(
                     icon,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = contentColor,
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -1813,6 +1817,7 @@ private fun SettingsBentoCard(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
+                    color = contentColor,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -1821,7 +1826,7 @@ private fun SettingsBentoCard(
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = mutedContentColor,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )

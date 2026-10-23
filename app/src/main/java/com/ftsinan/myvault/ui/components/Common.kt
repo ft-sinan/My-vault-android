@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Description
@@ -102,6 +104,10 @@ fun DocumentCard(
     val document = summary.document
     var titleExpanded by remember(document.id) { mutableStateOf(false) }
     var titleOverflows by remember(document.id, document.title) { mutableStateOf(false) }
+    val identitySeed = summary.member?.let { memberIdentitySeed(it.id, it.name) }
+        ?: categoryColor(document.category)
+    val iconContainerColor = expressivePastel(identitySeed)
+    val iconContentColor = readableContentColor(iconContainerColor)
 
     val cardShape = RoundedCornerShape(28.dp)
     Box(
@@ -117,9 +123,18 @@ fun DocumentCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.Top
         ) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .width(5.dp)
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(50))
+                    .background(identitySeed.copy(alpha = 0.78f))
+            )
+            Spacer(modifier = Modifier.width(10.dp))
             MorphingShapeBox(
                 modifier = Modifier.size(58.dp),
-                color = categoryColor(document.category).copy(alpha = 0.16f),
+                color = iconContainerColor,
                 lobes = 9,
                 wave = 0.13f,
                 spinMillis = 24_000
@@ -127,7 +142,7 @@ fun DocumentCard(
                 Icon(
                     imageVector = categoryIcon(document.category),
                     contentDescription = categoryLabel(document.category),
-                    tint = categoryColor(document.category),
+                    tint = iconContentColor,
                     modifier = Modifier.size(28.dp)
                 )
             }
@@ -179,13 +194,22 @@ fun DocumentCard(
 
                 val assignedLabel = document.assignedGroup?.let { assignedGroupLabel(it) }
                     ?: summary.assignedName
-                Text(
-                    text = "${document.docType} • $assignedLabel",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(identitySeed)
+                    )
+                    Spacer(modifier = Modifier.width(7.dp))
+                    Text(
+                        text = "${document.docType} • $assignedLabel",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),

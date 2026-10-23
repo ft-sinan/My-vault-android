@@ -30,8 +30,8 @@ data class LockUiState(
     /** Brief post-unlock moment shown after PIN/biometric success, not on cold start. */
     val showUnlockAnimation: Boolean = false,
     val isBiometricEnabled: Boolean = true,
-    val useDynamicColor: Boolean = false,
-    val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val useDynamicColor: Boolean = true,
+    val themeMode: ThemeMode = ThemeMode.LIGHT,
     val accentColor: AccentColor = AccentColor.ORION,
     val hapticsEnabled: Boolean = true,
     val compactMode: Boolean = false,

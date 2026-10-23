@@ -30,9 +30,9 @@ class PinManager(private val context: Context) {
         prefs[BIOMETRIC_ENABLED] ?: true
     }
 
-    /** Material You colours; off by default so the Orion palette is the app's signature look. */
+    /** Material You wallpaper colours are on until the user explicitly turns them off. */
     val useDynamicColor: Flow<Boolean> = context.dataStore.data.map { prefs ->
-        prefs[USE_DYNAMIC_COLOR] ?: false
+        prefs[USE_DYNAMIC_COLOR] ?: true
     }
 
     val themeMode: Flow<ThemeMode> = context.dataStore.data.map { prefs ->

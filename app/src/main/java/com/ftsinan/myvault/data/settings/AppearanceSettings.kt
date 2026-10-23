@@ -11,7 +11,7 @@ enum class ThemeMode {
 
     companion object {
         fun fromName(value: String?): ThemeMode =
-            entries.firstOrNull { it.name == value } ?: SYSTEM
+            entries.firstOrNull { it.name == value } ?: LIGHT
     }
 }
 

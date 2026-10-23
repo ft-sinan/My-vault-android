@@ -74,6 +74,10 @@ import com.ftsinan.myvault.ui.components.HeaderAvatarButton
 import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.ShieldKeyholeMark
+import com.ftsinan.myvault.ui.components.expressivePastel
+import com.ftsinan.myvault.ui.components.memberIdentitySeed
+import com.ftsinan.myvault.ui.components.readableContentColor
 import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.springPress
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
@@ -238,7 +242,11 @@ fun HomeScreen(
                                 MemberAvatar(
                                     name = item.member.name,
                                     photoBytes = item.photoBytes,
-                                    size = 56.dp
+                                    size = 56.dp,
+                                    seedColor = memberIdentitySeed(
+                                        item.member.id,
+                                        item.member.name
+                                    )
                                 )
                                 Spacer(Modifier.height(6.dp))
                                 Text(
@@ -320,27 +328,32 @@ private fun OwnerProfileCard(
     totalSize: Long,
     onClick: () -> Unit
 ) {
+    val identitySeed = memberIdentitySeed(owner.member.id, owner.member.name)
+    val containerColor = expressivePastel(identitySeed)
+    val contentColor = readableContentColor(containerColor)
+    val mutedContentColor = contentColor.copy(alpha = 0.74f)
+
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(22.dp),
+        shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)
+            color = identitySeed.copy(alpha = 0.34f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            // Soft decorative shapes keep the compact banner from feeling flat.
             MorphingShapeBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .offset(x = 30.dp, y = (-38).dp)
                     .size(104.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.14f),
+                color = identitySeed.copy(alpha = 0.16f),
                 lobes = 12,
                 wave = 0.18f,
                 spinMillis = 24_000
@@ -348,9 +361,9 @@ private fun OwnerProfileCard(
             MorphingShapeBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = (-24).dp, y = 34.dp)
+                    .offset(x = (-24).dp, y = 36.dp)
                     .size(40.dp),
-                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.34f),
+                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.30f),
                 lobes = 9,
                 wave = 0.14f,
                 spinMillis = 18_000
@@ -358,7 +371,7 @@ private fun OwnerProfileCard(
             Icon(
                 imageVector = Icons.Filled.Shield,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.05f),
+                tint = contentColor.copy(alpha = 0.05f),
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
                     .offset(x = 12.dp)
@@ -369,49 +382,47 @@ private fun OwnerProfileCard(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, top = 4.dp, end = 14.dp),
+                        .padding(start = 16.dp, top = 12.dp, end = 14.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
-                        modifier = Modifier
-                            .size(68.dp)
-                            .clip(CircleShape)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceContainerLowest
-                                    .copy(alpha = 0.52f)
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.surfaceContainerLowest
-                                    .copy(alpha = 0.75f),
-                                shape = CircleShape
-                            )
-                            .padding(3.dp),
+                        modifier = Modifier.size(74.dp),
                         contentAlignment = Alignment.Center
                     ) {
+                        MorphingShapeBox(
+                            modifier = Modifier.size(74.dp),
+                            color = identitySeed.copy(alpha = 0.28f),
+                            lobes = 12,
+                            wave = 0.17f,
+                            spinMillis = 22_000
+                        )
                         MemberAvatar(
                             name = owner.member.name,
                             photoBytes = owner.photoBytes,
-                            size = 62.dp
+                            size = 64.dp,
+                            seedColor = identitySeed
                         )
                     }
-                    Spacer(Modifier.width(12.dp))
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.Top)
-                            .weight(1f)
-                    ) {
+                    Spacer(Modifier.width(13.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Box(
+                            modifier = Modifier
+                                .size(width = 36.dp, height = 4.dp)
+                                .clip(RoundedCornerShape(50))
+                                .background(identitySeed.copy(alpha = 0.72f))
+                        )
+                        Spacer(Modifier.height(7.dp))
                         Text(
                             text = greetingText(),
                             style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.primary,
+                            color = mutedContentColor,
                             maxLines = 1
                         )
                         Text(
                             text = owner.member.name,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            color = contentColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -430,50 +441,48 @@ private fun OwnerProfileCard(
                                 stringResource(R.string.home_private_encrypted)
                             },
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                                .copy(alpha = 0.78f),
+                            color = mutedContentColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                    Box(
-                        modifier = Modifier
-                            .size(34.dp)
-                            .clip(CircleShape)
-                            .background(
-                                MaterialTheme.colorScheme.surfaceContainerLowest
-                                    .copy(alpha = 0.46f)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.ChevronRight,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(20.dp)
-                        )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        ShieldKeyholeMark(size = 38.dp)
+                        Spacer(Modifier.height(6.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(contentColor.copy(alpha = 0.10f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.ChevronRight,
+                                contentDescription = null,
+                                tint = contentColor,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
                     }
                 }
 
-                Spacer(Modifier.height(4.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(
-                            MaterialTheme.colorScheme.surfaceContainerLowest
-                                .copy(alpha = 0.24f)
-                        )
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                        .background(contentColor.copy(alpha = 0.07f))
+                        .padding(horizontal = 16.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     BannerStat(
                         icon = Icons.Filled.Description,
                         text = "$totalCount ${stringResource(R.string.stat_docs)}",
+                        contentColor = contentColor,
                         modifier = Modifier.weight(1f)
                     )
                     BannerStat(
                         icon = Icons.Filled.Groups,
                         text = "$peopleCount ${stringResource(R.string.stat_people)}",
+                        contentColor = contentColor,
                         modifier = Modifier.weight(1f)
                     )
                     BannerStat(
@@ -483,6 +492,7 @@ private fun OwnerProfileCard(
                         } else {
                             "0 B"
                         },
+                        contentColor = contentColor,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -495,6 +505,7 @@ private fun OwnerProfileCard(
 private fun BannerStat(
     icon: ImageVector,
     text: String,
+    contentColor: androidx.compose.ui.graphics.Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -505,7 +516,7 @@ private fun BannerStat(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = contentColor.copy(alpha = 0.82f),
             modifier = Modifier.size(15.dp)
         )
         Spacer(Modifier.width(5.dp))
@@ -513,7 +524,7 @@ private fun BannerStat(
             text = text,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = contentColor,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

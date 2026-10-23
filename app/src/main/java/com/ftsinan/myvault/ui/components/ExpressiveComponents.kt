@@ -59,6 +59,9 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -178,17 +181,17 @@ fun VaultMark(
 }
 
 /**
- * The selected M-Vault Monogram from the launcher icon, drawn as a quiet
- * squircle tile for entry/lock moments. Colours follow the active theme:
- * lavender container, indigo M and lime keyhole in the default Orion scheme.
+ * The Shield Keyhole launcher mark, drawn as a compact tile for entry and
+ * unlock moments. It intentionally mirrors the app icon instead of using a
+ * letter/monogram: deep vault green, cream shield and lime keyhole.
  */
 @Composable
-fun MVaultMark(
+fun ShieldKeyholeMark(
     modifier: Modifier = Modifier,
     size: Dp = 64.dp,
-    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    markColor: Color = MaterialTheme.colorScheme.primary,
-    accentColor: Color = MaterialTheme.colorScheme.tertiaryContainer
+    containerColor: Color = Color(0xFF173F35),
+    shieldColor: Color = Color(0xFFF2EFE3),
+    accentColor: Color = Color(0xFFC8F169)
 ) {
     Box(
         modifier = modifier
@@ -197,44 +200,57 @@ fun MVaultMark(
             .background(containerColor),
         contentAlignment = Alignment.Center
     ) {
-        Canvas(modifier = Modifier.size(size * 0.68f)) {
-            val width = this.size.width
-            val height = this.size.height * 0.86f
-            val top = (this.size.height - height) / 2f
-            fun point(x: Float, y: Float) = Offset(width * x, top + height * y)
-            val monogram = Path().apply {
-                val start = point(0f, 1f)
-                moveTo(start.x, start.y)
-                listOf(
-                    point(0f, 0f),
-                    point(0.5f, 0.514f),
-                    point(1f, 0f),
-                    point(1f, 1f),
-                    point(0.768f, 1f),
-                    point(0.768f, 0.421f),
-                    point(0.5f, 0.692f),
-                    point(0.232f, 0.421f),
-                    point(0.232f, 1f)
-                ).forEach { lineTo(it.x, it.y) }
-                close()
-            }
-            drawPath(monogram, markColor)
+        Canvas(modifier = Modifier.size(size)) {
+            val sx = this.size.width / 108f
+            val sy = this.size.height / 108f
+            fun point(x: Float, y: Float) = Offset(x * sx, y * sy)
+
             drawCircle(
-                color = accentColor,
-                radius = width * 0.075f,
-                center = point(0.5f, 0.575f)
+                color = accentColor.copy(alpha = 0.14f),
+                radius = 26f * sx,
+                center = point(88f, 15f)
             )
-            val stem = Path().apply {
-                val topLeft = point(0.463f, 0.615f)
-                moveTo(topLeft.x, topLeft.y)
-                listOf(
-                    point(0.537f, 0.615f),
-                    point(0.555f, 0.72f),
-                    point(0.445f, 0.72f)
-                ).forEach { lineTo(it.x, it.y) }
+
+            val shield = Path().apply {
+                var pt = point(54f, 22.2f); moveTo(pt.x, pt.y)
+                pt = point(78.5f, 29.1f); lineTo(pt.x, pt.y)
+                pt = point(78.5f, 48.8f); lineTo(pt.x, pt.y)
+                var c1 = point(78.5f, 64.3f); var c2 = point(68.7f, 75.5f); var e = point(54f, 83.2f)
+                cubicTo(c1.x, c1.y, c2.x, c2.y, e.x, e.y)
+                c1 = point(39.3f, 75.5f); c2 = point(29.5f, 64.3f); e = point(29.5f, 48.8f)
+                cubicTo(c1.x, c1.y, c2.x, c2.y, e.x, e.y)
+                pt = point(29.5f, 29.1f); lineTo(pt.x, pt.y)
                 close()
             }
-            drawPath(stem, accentColor)
+            drawPath(shield, shieldColor)
+
+            val inner = Path().apply {
+                var pt = point(54f, 29.9f); moveTo(pt.x, pt.y)
+                pt = point(70.7f, 35.1f); lineTo(pt.x, pt.y)
+                pt = point(70.7f, 48.8f); lineTo(pt.x, pt.y)
+                var c1 = point(70.7f, 60f); var c2 = point(63.8f, 68.6f); var e = point(54f, 73.8f)
+                cubicTo(c1.x, c1.y, c2.x, c2.y, e.x, e.y)
+                c1 = point(44.2f, 68.6f); c2 = point(37.3f, 60f); e = point(37.3f, 48.8f)
+                cubicTo(c1.x, c1.y, c2.x, c2.y, e.x, e.y)
+                pt = point(37.3f, 35.1f); lineTo(pt.x, pt.y)
+                close()
+            }
+            drawPath(
+                path = inner,
+                color = containerColor,
+                style = Stroke(width = 3.6f * sx, join = StrokeJoin.Round)
+            )
+
+            drawCircle(accentColor, radius = 12.8f * sx, center = point(54f, 53f))
+            drawCircle(containerColor, radius = 4f * sx, center = point(54f, 49.7f))
+            val stem = Path().apply {
+                var pt = point(50.9f, 52.3f); moveTo(pt.x, pt.y)
+                pt = point(57.1f, 52.3f); lineTo(pt.x, pt.y)
+                pt = point(58.8f, 61.4f); lineTo(pt.x, pt.y)
+                pt = point(49.2f, 61.4f); lineTo(pt.x, pt.y)
+                close()
+            }
+            drawPath(stem, containerColor)
         }
     }
 }
@@ -646,4 +662,27 @@ fun expressivePastel(seed: Color): Color {
     } else {
         lerp(Color.White, seed, 0.22f)
     }
+}
+
+/** Chooses black/white content that stays readable on any expressive block. */
+fun readableContentColor(background: Color): Color =
+    if (background.luminance() > 0.42f) Color(0xFF17171D) else Color(0xFFF8F7FF)
+
+/**
+ * Stable identity colour for a family member. The colour follows the member
+ * across Family, Home and document-owner chips instead of changing by row.
+ */
+fun memberIdentitySeed(memberId: Long, name: String = ""): Color {
+    val palette = listOf(
+        Color(0xFF4C4ECD),
+        Color(0xFF008080),
+        Color(0xFF12805C),
+        Color(0xFF0077A8),
+        Color(0xFF7B61B8),
+        Color(0xFFC04575),
+        Color(0xFFB96A00),
+        Color(0xFFC75B39)
+    )
+    val raw = if (memberId > 0) memberId.hashCode() else name.trim().lowercase().hashCode()
+    return palette[((raw % palette.size) + palette.size) % palette.size]
 }

@@ -53,7 +53,10 @@ import com.ftsinan.myvault.ui.components.CapsuleTopBar
 import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.expressivePastel
 import com.ftsinan.myvault.ui.components.expressiveReveal
+import com.ftsinan.myvault.ui.components.memberIdentitySeed
+import com.ftsinan.myvault.ui.components.readableContentColor
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.components.relationLabel
 
@@ -149,11 +152,17 @@ fun FamilyScreen(
 @Composable
 private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifier = Modifier) {
     val totalDocs = members.sumOf { it.documentCount }
+    val headerSeed = members.firstOrNull { it.member.isOwner }?.let {
+        memberIdentitySeed(it.member.id, it.member.name)
+    } ?: MaterialTheme.colorScheme.primary
+    val containerColor = expressivePastel(headerSeed)
+    val contentColor = readableContentColor(containerColor)
+    val mutedContentColor = contentColor.copy(alpha = 0.76f)
     Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(28.dp))
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .background(containerColor)
             .padding(16.dp)
     ) {
         MorphingShapeBox(
@@ -161,7 +170,7 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
                 .align(Alignment.TopEnd)
                 .offset(x = 30.dp, y = (-34).dp)
                 .size(96.dp),
-            color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.16f),
+            color = headerSeed.copy(alpha = 0.18f),
             lobes = 12,
             wave = 0.18f,
             spinMillis = 24_000
@@ -169,14 +178,14 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
         Row(verticalAlignment = Alignment.CenterVertically) {
             MorphingShapeBox(
                 modifier = Modifier.size(54.dp),
-                color = MaterialTheme.colorScheme.primary,
+                color = headerSeed.copy(alpha = 0.28f),
                 lobes = 9,
                 wave = 0.14f
             ) {
                 Icon(
                     Icons.Filled.Groups,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = contentColor,
                     modifier = Modifier.size(27.dp)
                 )
             }
@@ -185,7 +194,7 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
                 Text(
                     text = "${members.size} ${stringResource(R.string.stat_people)}",
                     style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = contentColor
                 )
                 Text(
                     text = if (totalDocs == 1) {
@@ -194,8 +203,24 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
                         stringResource(R.string.documents_count_many, totalDocs)
                     },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
+                    color = mutedContentColor
                 )
+                Spacer(Modifier.height(7.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                    members.take(8).forEach { memberItem ->
+                        Box(
+                            modifier = Modifier
+                                .size(9.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    memberIdentitySeed(
+                                        memberItem.member.id,
+                                        memberItem.member.name
+                                    )
+                                )
+                        )
+                    }
+                }
             }
             val shown = members.take(4)
             Box(
@@ -209,13 +234,17 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
                             .offset(x = (index * 29).dp)
                             .size(44.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .background(containerColor)
                             .padding(2.dp)
                     ) {
                         MemberAvatar(
                             name = memberItem.member.name,
                             photoBytes = memberItem.photoBytes,
-                            size = 40.dp
+                            size = 40.dp,
+                            seedColor = memberIdentitySeed(
+                                memberItem.member.id,
+                                memberItem.member.name
+                            )
                         )
                     }
                 }
@@ -227,15 +256,16 @@ private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifie
 @Composable
 private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val member = item.member
+    val seed = memberIdentitySeed(member.id, member.name)
+    val containerColor = expressivePastel(seed)
+    val contentColor = readableContentColor(containerColor)
+    val mutedContentColor = contentColor.copy(alpha = 0.74f)
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (member.isOwner) {
-                MaterialTheme.colorScheme.primaryContainer
-            } else {
-                MaterialTheme.colorScheme.surfaceContainerLow
-            }
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier.fillMaxWidth()
@@ -244,19 +274,20 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (member.isOwner) {
-                Box(modifier = Modifier.size(68.dp), contentAlignment = Alignment.Center) {
-                    MorphingShapeBox(
-                        modifier = Modifier.size(68.dp),
-                        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.55f),
-                        lobes = 12,
-                        wave = 0.18f,
-                        spinMillis = 22_000
-                    )
-                    MemberAvatar(name = member.name, photoBytes = item.photoBytes, size = 58.dp)
-                }
-            } else {
-                MemberAvatar(name = member.name, photoBytes = item.photoBytes, size = 62.dp)
+            Box(modifier = Modifier.size(68.dp), contentAlignment = Alignment.Center) {
+                MorphingShapeBox(
+                    modifier = Modifier.size(68.dp),
+                    color = seed.copy(alpha = 0.30f),
+                    lobes = 12,
+                    wave = 0.18f,
+                    spinMillis = 22_000
+                )
+                MemberAvatar(
+                    name = member.name,
+                    photoBytes = item.photoBytes,
+                    size = 58.dp,
+                    seedColor = seed
+                )
             }
             Spacer(Modifier.width(14.dp))
             Column(
@@ -267,13 +298,14 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                 Text(
                     text = member.name,
                     style = MaterialTheme.typography.titleLarge,
+                    color = contentColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = relationLabel(member.relation),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = mutedContentColor
                 )
                 Text(
                     text = if (item.documentCount == 1) {
@@ -282,7 +314,7 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                         stringResource(R.string.documents_count_many, item.documentCount)
                     },
                     style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = mutedContentColor
                 )
             }
             member.bloodGroup?.takeIf { it.isNotBlank() }?.let { blood ->
@@ -300,7 +332,11 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                 }
                 Spacer(Modifier.width(4.dp))
             }
-            Icon(Icons.Filled.ChevronRight, contentDescription = null)
+            Icon(
+                Icons.Filled.ChevronRight,
+                contentDescription = null,
+                tint = mutedContentColor
+            )
         }
     }
 }

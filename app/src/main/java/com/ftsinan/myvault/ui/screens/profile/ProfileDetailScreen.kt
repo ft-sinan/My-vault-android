@@ -60,6 +60,7 @@ import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.EmptyState
 import com.ftsinan.myvault.ui.components.MemberAvatar
+import com.ftsinan.myvault.ui.components.memberIdentitySeed
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.components.genderLabel
 import com.ftsinan.myvault.ui.components.relationLabel
@@ -224,7 +225,8 @@ private fun ProfileIdCard(
                 MemberAvatar(
                     name = member.name,
                     photoBytes = item.photoBytes,
-                    size = 104.dp
+                    size = 104.dp,
+                    seedColor = memberIdentitySeed(member.id, member.name)
                 )
                 Box(
                     modifier = Modifier

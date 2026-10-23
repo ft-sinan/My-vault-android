@@ -62,6 +62,7 @@ import com.ftsinan.myvault.data.model.ProfileOptions
 import com.ftsinan.myvault.data.model.Relation
 import com.ftsinan.myvault.ui.components.ExpressiveBackTopBar
 import com.ftsinan.myvault.ui.components.MemberAvatar
+import com.ftsinan.myvault.ui.components.memberIdentitySeed
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.components.genderLabel
 import com.ftsinan.myvault.ui.components.relationLabel
@@ -163,7 +164,11 @@ fun MemberEditScreen(
                     MemberAvatar(
                         name = uiState.name.ifBlank { "?" },
                         photoBytes = uiState.existingPhotoBytes,
-                        size = 104.dp
+                        size = 104.dp,
+                        seedColor = memberIdentitySeed(
+                            uiState.existing?.id ?: 0L,
+                            uiState.name
+                        )
                     )
                 }
                 Spacer(Modifier.height(10.dp))

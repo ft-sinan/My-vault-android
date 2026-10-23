@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
-import com.ftsinan.myvault.ui.components.MVaultMark
+import com.ftsinan.myvault.ui.components.ShieldKeyholeMark
 import com.ftsinan.myvault.ui.components.PinDots
 import com.ftsinan.myvault.ui.components.PinPad
 import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
@@ -77,7 +77,7 @@ fun VaultStartupScreen() {
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                MVaultMark(size = 76.dp)
+                ShieldKeyholeMark(size = 76.dp)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(R.string.app_name),
@@ -217,7 +217,7 @@ fun VaultUnlockAnimationScreen(
                                 MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.42f)
                             )
                     )
-                    MVaultMark(
+                    ShieldKeyholeMark(
                         size = 88.dp,
                         modifier = Modifier.graphicsLayer {
                             scaleX = markScale
@@ -481,7 +481,7 @@ private fun LockScaffold(
                     modifier = Modifier.size(markSize + 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    MVaultMark(size = markSize)
+                    ShieldKeyholeMark(size = markSize)
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
