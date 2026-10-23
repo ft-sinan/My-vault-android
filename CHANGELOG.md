@@ -11,12 +11,14 @@ All notable changes to My Vault are documented here.
 - A short, minimal startup animation on the loading and lock screens.
 - An in-app **Acknowledgements & licences** page.
 - GPL-3.0 licensing, public issue templates, and automatic signed GitHub Releases from version tags.
+- Portable `.mvbackup` backup & restore with either PBKDF2/AES-256-GCM password protection or an explicitly warned no-password file; restores are checksum-verified and replace the vault only after PIN confirmation.
 
 ### Changed
 - Settings is now a focused hub: quick toggles and bento blocks first, followed immediately by Creator Space.
 - The manual **Lock vault now** action now lives inside the Security page instead of below Creator Space.
 - Creator build information now shows app version, platform, and technology instead of personal vault statistics.
 - Privacy copy now accurately explains the manual-only update check while keeping the vault itself offline.
+- Refreshed Home and Family visuals with richer palette-tinted containers, readable on-block text, per-member identity colours, and actual member photos wherever supplied.
 
 ### Security
 - Downloaded update APKs are verified against the published SHA-256 checksum before Android's installer is opened, whenever a checksum asset is included with the release.

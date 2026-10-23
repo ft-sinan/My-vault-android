@@ -8,6 +8,8 @@ import com.ftsinan.myvault.data.security.CryptoManager
 import com.ftsinan.myvault.util.MimeTypeDetector
 import java.io.BufferedInputStream
 import java.io.File
+import java.io.ByteArrayInputStream
+import java.security.MessageDigest
 import java.util.UUID
 
 data class ImportedFile(
@@ -15,6 +17,12 @@ data class ImportedFile(
     val mimeType: String,
     val originalFileName: String,
     val fileSize: Long
+)
+
+data class BackupStagedFile(
+    val encryptedFileName: String,
+    val fileSize: Long,
+    val sha256: String
 )
 
 private const val MIME_HEADER_SIZE = 16
@@ -88,6 +96,25 @@ class VaultFileManager(
             originalFileName = originalFileName,
             fileSize = size
         )
+    }
+
+    /**
+     * Encrypts one already-validated backup entry with this device's vault
+     * key. The file stays unreferenced until a restore transaction commits.
+     */
+    fun importBytesForRestore(bytes: ByteArray): BackupStagedFile {
+        val encryptedName = "${UUID.randomUUID()}.enc"
+        cryptoManager.encrypt(ByteArrayInputStream(bytes), File(vaultDir, encryptedName))
+        val digest = MessageDigest.getInstance("SHA-256").digest(bytes)
+        return BackupStagedFile(
+            encryptedFileName = encryptedName,
+            fileSize = bytes.size.toLong(),
+            sha256 = digest.joinToString("") { "%02x".format(it) }
+        )
+    }
+
+    fun deleteEncryptedFiles(fileNames: Collection<String>) {
+        fileNames.distinct().forEach { deleteEncrypted(it) }
     }
 
     fun encryptedFile(document: VaultDocument): File =

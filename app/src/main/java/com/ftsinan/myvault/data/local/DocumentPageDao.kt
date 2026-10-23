@@ -21,6 +21,12 @@ interface DocumentPageDao {
     @Insert
     suspend fun insertAll(pages: List<DocumentPage>)
 
+    @Query("SELECT * FROM document_pages ORDER BY documentId ASC, sortOrder ASC, id ASC")
+    suspend fun getAllSnapshot(): List<DocumentPage>
+
+    @Query("DELETE FROM document_pages")
+    suspend fun deleteAll()
+
     @Query("UPDATE document_pages SET mimeType = :mimeType WHERE id = :pageId")
     suspend fun updateMimeType(pageId: Long, mimeType: String)
 

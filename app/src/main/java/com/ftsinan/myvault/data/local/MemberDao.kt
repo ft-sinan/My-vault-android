@@ -32,6 +32,12 @@ interface MemberDao {
     @Delete
     suspend fun delete(member: MemberProfile)
 
+    @Query("SELECT * FROM member_profiles ORDER BY isOwner DESC, sortOrder ASC, id ASC")
+    suspend fun getAllSnapshot(): List<MemberProfile>
+
+    @Query("DELETE FROM member_profiles")
+    suspend fun deleteAll()
+
     @Query("SELECT COALESCE(MAX(sortOrder), -1) FROM member_profiles")
     suspend fun maxSortOrder(): Int
 }

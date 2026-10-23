@@ -38,6 +38,12 @@ interface DocumentDao {
     )
     suspend fun updateMimeType(id: Long, mimeType: String, encryptedFileName: String)
 
+    @Query("SELECT * FROM documents ORDER BY id ASC")
+    suspend fun getAllSnapshot(): List<VaultDocument>
+
+    @Query("DELETE FROM documents")
+    suspend fun deleteAll()
+
     @Query("SELECT COUNT(*) FROM documents")
     fun observeCount(): Flow<Int>
 

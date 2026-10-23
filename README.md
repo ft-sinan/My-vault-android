@@ -57,6 +57,13 @@ OCR results are suggestions only and can always be reviewed or edited before sav
 
 > Expiry dates, expiry alerts and reminders are intentionally not part of this app.
 
+### Backup & restore
+- Create one portable `.mvbackup` from **Settings → Storage & privacy → Backup & restore**
+- Choose protection for each file: a backup password using PBKDF2-HMAC-SHA256 + AES-256-GCM, or explicitly no password after a warning
+- Backups contain profiles, profile photos, documents, every page/original PDF, assignments and metadata; the device PIN and Android Keystore key are never included
+- Restore verifies the password and file checksums, shows what is inside, then replaces the current vault only after the current PIN is confirmed
+- A forgotten backup password cannot be recovered, and anyone with an unprotected backup can read its documents
+
 ### Security
 - 4-digit PIN stored only as a salted, iterated SHA-256 hash
 - Optional fingerprint/face unlock with PIN fallback
@@ -64,7 +71,7 @@ OCR results are suggestions only and can always be reviewed or edited before sav
 - `FLAG_SECURE` blocks screenshots, screen recording and recent-apps previews
 - Auto-lock after 1 minute in the background
 - Decrypted preview/share cache files are wiped when the vault locks
-- Cloud/device backup is disabled for the app data
+- Android cloud/device backup is disabled for app data; portable `.mvbackup` files are created only when the user asks
 - The vault itself is offline. `INTERNET` is used only for the user-initiated **Settings → Storage & privacy → App updates** check against GitHub Releases; My Vault never checks in the background and never uploads documents
 - A downloaded update APK is verified against its published SHA-256 checksum before Android's installer is opened, whenever the release includes a checksum file
 
@@ -116,6 +123,7 @@ app/src/main/java/com/ftsinan/myvault/
 ├── MainActivity.kt             # Language/PIN/profile gates, FLAG_SECURE, auto-lock
 ├── MyVaultApplication.kt       # Manual dependency container
 ├── data/
+│   ├── backup/                 # Portable .mvbackup format, password encryption and restore staging
 │   ├── local/                  # Room v2 DB, migration, document/member/page DAOs
 │   ├── model/                  # Documents, pages, member profiles, groups, summaries
 │   ├── repository/             # Documents + pages + members + encrypted photos
@@ -148,14 +156,14 @@ Room migrated non-destructively from v1 to v2: each legacy single document file 
 
 ## ⚠️ Current limitations
 
-- Encrypted files are bound to the Android Keystore key on the current phone; encrypted backup/export for changing phones is not built yet.
+- On-device encrypted files are bound to the current phone's Android Keystore key. A portable `.mvbackup` is the supported way to move the vault to another phone; test restore with sample documents before relying on it for a real phone change.
 - Room metadata (titles, types, names and document numbers) is not currently encrypted, although all document/profile-photo files are.
 - OCR focuses on Aadhaar, PAN and Driving Licence numbers in images; imported PDFs are preserved/viewed but are not OCR-processed.
 - The ML Kit document scanner depends on Google Play services.
 - Signed public releases require the maintainer's permanent keystore secrets in GitHub Actions; losing that keystore would prevent publishing in-place updates for existing installations.
 
 ## 🗺️ Future ideas
-- Password-protected encrypted export/import for phone changes
+- Recovery-key backup as a passwordless alternative to an unprotected backup
 - Encrypted Room metadata
 - Wider OCR coverage and OCR for imported PDFs
 - Custom categories/tags

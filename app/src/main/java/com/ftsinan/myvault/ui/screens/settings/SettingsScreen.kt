@@ -5,6 +5,8 @@ import android.net.Uri
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
@@ -80,7 +82,9 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
@@ -97,6 +101,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -136,6 +141,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.BuildConfig
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.data.backup.BackupProtection
 import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
@@ -161,6 +167,9 @@ import com.ftsinan.myvault.util.FormatUtils
 import com.ftsinan.myvault.util.UpdateRelease
 import com.ftsinan.myvault.util.UpdateVersion
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -211,6 +220,7 @@ fun SettingsScreen(
     val documentCount by viewModel.documentCount.collectAsStateWithLifecycle()
     val totalSize by viewModel.totalSize.collectAsStateWithLifecycle()
     val message by viewModel.message.collectAsStateWithLifecycle()
+    val backupState by viewModel.backupState.collectAsStateWithLifecycle()
     val biometricAvailable = remember { canUseBiometric(context) }
     val dynamicColorAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
@@ -259,6 +269,215 @@ fun SettingsScreen(
 
     var updateStatus by remember { mutableStateOf<UpdateStatus>(UpdateStatus.Idle) }
     var downloadedUpdate by remember { mutableStateOf<File?>(null) }
+
+    var showCreateBackupDialog by remember { mutableStateOf(false) }
+    var pendingBackupProtection by remember { mutableStateOf(BackupProtection.PASSWORD) }
+    var pendingBackupPassword by remember { mutableStateOf<String?>(null) }
+    var restorePassword by remember { mutableStateOf("") }
+    var restoreCurrentPin by remember { mutableStateOf("") }
+    val createBackupLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/octet-stream")
+    ) { uri ->
+        if (uri != null) {
+            viewModel.createBackup(
+                destination = uri,
+                protection = pendingBackupProtection,
+                password = pendingBackupPassword
+            )
+        }
+        pendingBackupPassword = null
+    }
+    val restoreBackupLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) viewModel.onRestoreFileSelected(uri)
+    }
+
+    fun suggestedBackupFileName(): String {
+        val stamp = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+        return "My-Vault-Backup-$stamp.mvbackup"
+    }
+
+    if (showCreateBackupDialog) {
+        CreateBackupDialog(
+            onDismiss = { showCreateBackupDialog = false },
+            onVerifyPin = { pin -> viewModel.verifyCurrentPin(pin) },
+            onChooseLocation = { protection, password ->
+                pendingBackupProtection = protection
+                pendingBackupPassword = password
+                showCreateBackupDialog = false
+                createBackupLauncher.launch(suggestedBackupFileName())
+            }
+        )
+    }
+
+    if (backupState.phase == BackupPhase.PASSWORD_REQUIRED) {
+        AlertDialog(
+            onDismissRequest = {
+                restorePassword = ""
+                viewModel.cancelRestore()
+            },
+            title = { Text(stringResource(R.string.backup_restore_title)) },
+            text = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.backup_restore_password_body),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(14.dp))
+                    BackupPasswordField(
+                        value = restorePassword,
+                        onValueChange = {
+                            restorePassword = it
+                            viewModel.clearBackupMessage()
+                        },
+                        label = stringResource(R.string.backup_password)
+                    )
+                    backupState.messageRes?.let { messageRes ->
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(messageRes),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val entered = restorePassword
+                        restorePassword = ""
+                        viewModel.prepareProtectedRestore(entered)
+                    },
+                    enabled = restorePassword.isNotEmpty()
+                ) {
+                    Text(stringResource(R.string.backup_check))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        restorePassword = ""
+                        viewModel.cancelRestore()
+                    }
+                ) {
+                    Text(stringResource(R.string.action_cancel))
+                }
+            }
+        )
+    }
+
+    if (backupState.phase == BackupPhase.READY || backupState.phase == BackupPhase.RESTORING) {
+        val summary = backupState.summary
+        if (summary != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    if (backupState.phase != BackupPhase.RESTORING) {
+                        restoreCurrentPin = ""
+                        viewModel.cancelRestore()
+                    }
+                },
+                title = { Text(stringResource(R.string.backup_ready_title)) },
+                text = {
+                    Column {
+                        Text(
+                            text = stringResource(
+                                R.string.backup_summary,
+                                summary.memberCount,
+                                summary.documentCount,
+                                summary.pageCount
+                            ),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (summary.createdAt > 0L) {
+                            Text(
+                                text = stringResource(
+                                    R.string.backup_created_on,
+                                    FormatUtils.formatDate(summary.createdAt)
+                                ),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Text(
+                            text = stringResource(
+                                if (summary.protection == BackupProtection.PASSWORD) {
+                                    R.string.backup_password_protected
+                                } else {
+                                    R.string.backup_unprotected
+                                }
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(12.dp))
+                        Text(
+                            text = stringResource(R.string.backup_ready_body),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(Modifier.height(14.dp))
+                        Text(
+                            text = stringResource(R.string.backup_current_pin_body),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        PinField(
+                            value = restoreCurrentPin,
+                            onValueChange = {
+                                restoreCurrentPin = it
+                                viewModel.clearBackupMessage()
+                            },
+                            label = stringResource(R.string.settings_current_pin)
+                        )
+                        backupState.messageRes?.let { messageRes ->
+                            Spacer(Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(messageRes),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        if (backupState.phase == BackupPhase.RESTORING) {
+                            Spacer(Modifier.height(12.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                                Spacer(Modifier.width(10.dp))
+                                Text(stringResource(R.string.backup_restoring))
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            val enteredPin = restoreCurrentPin
+                            restoreCurrentPin = ""
+                            viewModel.commitRestore(enteredPin)
+                        },
+                        enabled = restoreCurrentPin.length == PinManager.PIN_LENGTH &&
+                            backupState.phase == BackupPhase.READY
+                    ) {
+                        Text(stringResource(R.string.backup_replace))
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            restoreCurrentPin = ""
+                            viewModel.cancelRestore()
+                        },
+                        enabled = backupState.phase == BackupPhase.READY
+                    ) {
+                        Text(stringResource(R.string.action_cancel))
+                    }
+                }
+            )
+        }
+    }
 
     fun checkForUpdates() {
         if (updateStatus is UpdateStatus.Checking ||
@@ -680,6 +899,69 @@ fun SettingsScreen(
                 )
             }
 
+            SettingsCard(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                title = stringResource(R.string.backup_title),
+                icon = { Icon(Icons.Filled.Shield, null) }
+            ) {
+                Text(
+                    text = stringResource(R.string.backup_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                backupState.messageRes?.let { messageRes ->
+                    if (backupState.phase == BackupPhase.IDLE) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = stringResource(messageRes),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (backupState.messageIsError) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.primary
+                            }
+                        )
+                    }
+                }
+                if (backupState.isBusy) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(
+                                when (backupState.phase) {
+                                    BackupPhase.CREATING -> R.string.backup_creating
+                                    BackupPhase.RESTORING -> R.string.backup_restoring
+                                    else -> R.string.backup_preparing
+                                }
+                            ),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(14.dp))
+                Button(
+                    onClick = { showCreateBackupDialog = true },
+                    enabled = backupState.phase == BackupPhase.IDLE,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Filled.Download, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.backup_create))
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                OutlinedButton(
+                    onClick = { restoreBackupLauncher.launch(arrayOf("*/*")) },
+                    enabled = backupState.phase == BackupPhase.IDLE,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Filled.Restore, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.backup_restore))
+                }
+            }
+
             // ---- Privacy info ---------------------------------------------
             SettingsCard(modifier = Modifier.padding(horizontal = 16.dp), title = stringResource(R.string.settings_how_safe), icon = { Icon(Icons.Filled.Info, null) }) {
                 Text(
@@ -817,6 +1099,212 @@ private fun AppearancePreview() {
                 .clip(RoundedCornerShape(50))
                 .background(MaterialTheme.colorScheme.secondaryContainer)
         )
+    }
+}
+
+@Composable
+private fun BackupPasswordField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        singleLine = true,
+        shape = RoundedCornerShape(18.dp),
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun CreateBackupDialog(
+    onDismiss: () -> Unit,
+    onVerifyPin: suspend (String) -> Boolean,
+    onChooseLocation: (BackupProtection, String?) -> Unit
+) {
+    var currentPin by remember { mutableStateOf("") }
+    var protection by remember { mutableStateOf(BackupProtection.PASSWORD) }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var errorText by remember { mutableStateOf<String?>(null) }
+    var checkingPin by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val wrongPinText = stringResource(R.string.settings_current_pin_wrong)
+    val passwordMinText = stringResource(R.string.backup_password_min, 8)
+    val passwordMismatchText = stringResource(R.string.backup_password_mismatch)
+
+    AlertDialog(
+        onDismissRequest = { if (!checkingPin) onDismiss() },
+        title = { Text(stringResource(R.string.backup_create_title)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.backup_create_body),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = stringResource(R.string.backup_current_pin_body),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                PinField(
+                    value = currentPin,
+                    onValueChange = {
+                        currentPin = it
+                        errorText = null
+                    },
+                    label = stringResource(R.string.settings_current_pin)
+                )
+
+                BackupProtectionOption(
+                    selected = protection == BackupProtection.PASSWORD,
+                    title = stringResource(R.string.backup_use_password),
+                    subtitle = stringResource(R.string.backup_use_password_subtitle),
+                    onClick = {
+                        protection = BackupProtection.PASSWORD
+                        errorText = null
+                    }
+                )
+                if (protection == BackupProtection.PASSWORD) {
+                    BackupPasswordField(
+                        value = password,
+                        onValueChange = {
+                            password = it
+                            errorText = null
+                        },
+                        label = stringResource(R.string.backup_password)
+                    )
+                    BackupPasswordField(
+                        value = confirmPassword,
+                        onValueChange = {
+                            confirmPassword = it
+                            errorText = null
+                        },
+                        label = stringResource(R.string.backup_confirm_password)
+                    )
+                }
+
+                BackupProtectionOption(
+                    selected = protection == BackupProtection.NONE,
+                    title = stringResource(R.string.backup_no_password),
+                    subtitle = stringResource(R.string.backup_no_password_warning),
+                    warning = true,
+                    onClick = {
+                        protection = BackupProtection.NONE
+                        errorText = null
+                    }
+                )
+
+                errorText?.let { message ->
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+                if (checkingPin) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(10.dp))
+                        Text(stringResource(R.string.backup_preparing))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    if (protection == BackupProtection.PASSWORD) {
+                        if (password.length < 8) {
+                            errorText = passwordMinText
+                            return@Button
+                        }
+                        if (password != confirmPassword) {
+                            errorText = passwordMismatchText
+                            return@Button
+                        }
+                    }
+                    checkingPin = true
+                    scope.launch {
+                        val verified = onVerifyPin(currentPin)
+                        checkingPin = false
+                        if (!verified) {
+                            errorText = wrongPinText
+                        } else {
+                            onChooseLocation(
+                                protection,
+                                if (protection == BackupProtection.PASSWORD) password else null
+                            )
+                        }
+                    }
+                },
+                enabled = !checkingPin && currentPin.length == PinManager.PIN_LENGTH
+            ) {
+                Text(stringResource(R.string.backup_choose_location))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                enabled = !checkingPin
+            ) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        }
+    )
+}
+
+@Composable
+private fun BackupProtectionOption(
+    selected: Boolean,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+    warning: Boolean = false
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(18.dp))
+            .background(
+                if (selected) MaterialTheme.colorScheme.primaryContainer
+                else MaterialTheme.colorScheme.surfaceContainerHigh
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(selected = selected, onClick = onClick)
+        Spacer(Modifier.width(8.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color = if (selected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface
+                }
+            )
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = when {
+                    warning && selected -> MaterialTheme.colorScheme.error
+                    selected -> MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+        }
     }
 }
 

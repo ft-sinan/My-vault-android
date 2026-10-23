@@ -3,6 +3,7 @@ package com.ftsinan.myvault
 import android.app.Application
 import android.content.Context
 import com.ftsinan.myvault.data.local.AppDatabase
+import com.ftsinan.myvault.data.backup.BackupManager
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.CryptoManager
 import com.ftsinan.myvault.data.security.PinManager
@@ -21,9 +22,15 @@ class AppContainer(context: Context) {
     val languageManager = LanguageManager(context)
     val fileManager = VaultFileManager(context, cryptoManager)
     val documentRepository = DocumentRepository(
+        database = database,
         documentDao = database.documentDao(),
         memberDao = database.memberDao(),
         pageDao = database.documentPageDao(),
+        fileManager = fileManager
+    )
+    val backupManager = BackupManager(
+        context = context,
+        repository = documentRepository,
         fileManager = fileManager
     )
     val ocrManager = OcrManager(context)

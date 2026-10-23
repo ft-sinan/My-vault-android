@@ -1,6 +1,8 @@
 package com.ftsinan.myvault.data.repository
 
 import android.net.Uri
+import androidx.room.withTransaction
+import com.ftsinan.myvault.data.local.AppDatabase
 import com.ftsinan.myvault.data.local.DocumentDao
 import com.ftsinan.myvault.data.local.DocumentPageDao
 import com.ftsinan.myvault.data.local.MemberDao
@@ -21,7 +23,24 @@ import kotlinx.coroutines.withContext
  * Single entry point for vault data: documents, their encrypted pages
  * and family member profiles.
  */
+data class VaultBackupSnapshot(
+    val members: List<MemberProfile>,
+    val documents: List<VaultDocument>,
+    val pages: List<DocumentPage>
+)
+
+/**
+ * Restore input whose `id`, `memberId` and `documentId` fields still contain
+ * backup-local IDs. [DocumentRepository.restoreVault] remaps them atomically.
+ */
+data class VaultRestoreData(
+    val members: List<MemberProfile>,
+    val documents: List<VaultDocument>,
+    val pages: List<DocumentPage>
+)
+
 class DocumentRepository(
+    private val database: AppDatabase,
     private val documentDao: DocumentDao,
     private val memberDao: MemberDao,
     private val pageDao: DocumentPageDao,
@@ -85,6 +104,69 @@ class DocumentRepository(
 
     fun observePages(documentId: Long): Flow<List<DocumentPage>> =
         pageDao.observeForDocument(documentId)
+
+    /** Consistent database view used as the source of an encrypted backup. */
+    suspend fun backupSnapshot(): VaultBackupSnapshot = database.withTransaction {
+        VaultBackupSnapshot(
+            members = memberDao.getAllSnapshot(),
+            documents = documentDao.getAllSnapshot(),
+            pages = pageDao.getAllSnapshot()
+        )
+    }
+
+    /**
+     * Replaces the whole metadata vault in one Room transaction. Restored
+     * encrypted files must already be staged; the returned old file names can
+     * be deleted only after this function succeeds.
+     */
+    suspend fun restoreVault(data: VaultRestoreData): List<String> {
+        val oldFileNames = database.withTransaction {
+            val oldMembers = memberDao.getAllSnapshot()
+            val oldDocuments = documentDao.getAllSnapshot()
+            val oldPages = pageDao.getAllSnapshot()
+            val oldNames = buildSet {
+                oldMembers.mapNotNull { it.photoEncryptedFileName }.forEach(::add)
+                oldDocuments.forEach { add(it.encryptedFileName) }
+                oldPages.forEach { add(it.encryptedFileName) }
+            }
+
+            pageDao.deleteAll()
+            documentDao.deleteAll()
+            memberDao.deleteAll()
+
+            val memberIds = mutableMapOf<Long, Long>()
+            data.members.forEach { member ->
+                val backupId = member.id
+                val newId = memberDao.insert(member.copy(id = 0))
+                if (backupId != 0L) memberIds[backupId] = newId
+            }
+
+            val documentIds = mutableMapOf<Long, Long>()
+            data.documents.forEach { document ->
+                val backupId = document.id
+                val mappedMemberId = document.memberId?.let { oldMemberId ->
+                    memberIds[oldMemberId]
+                        ?: error("Backup document references a missing member")
+                }
+                val newId = documentDao.insert(
+                    document.copy(id = 0, memberId = mappedMemberId)
+                )
+                if (backupId != 0L) documentIds[backupId] = newId
+            }
+
+            val restoredPages = data.pages.map { page ->
+                page.copy(
+                    id = 0,
+                    documentId = documentIds[page.documentId]
+                        ?: error("Backup page references a missing document")
+                )
+            }
+            if (restoredPages.isNotEmpty()) pageDao.insertAll(restoredPages)
+            oldNames.toList()
+        }
+        withContext(Dispatchers.IO) { fileManager.clearDecryptedCache() }
+        return oldFileNames
+    }
 
     suspend fun getById(id: Long): VaultDocument? = documentDao.getById(id)
 
