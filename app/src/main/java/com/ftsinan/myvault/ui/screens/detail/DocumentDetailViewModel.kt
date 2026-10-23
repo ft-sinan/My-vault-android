@@ -18,6 +18,7 @@ import com.ftsinan.myvault.MyVaultApplication
 import com.ftsinan.myvault.data.model.DocumentPage
 import com.ftsinan.myvault.data.model.VaultDocument
 import com.ftsinan.myvault.data.repository.DocumentRepository
+import com.ftsinan.myvault.util.MimeTypeDetector
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -74,18 +75,46 @@ class DocumentDetailViewModel(
 
     private suspend fun loadPagesOrLegacy(document: VaultDocument): List<DocumentPage> {
         val stored = repository.getPages(document.id)
-        if (stored.isNotEmpty()) return stored
-        return listOf(
-            DocumentPage(
-                id = 0,
-                documentId = document.id,
-                encryptedFileName = document.encryptedFileName,
-                mimeType = document.mimeType,
-                originalFileName = document.originalFileName,
-                fileSize = document.fileSize,
-                sortOrder = 0
+        val pages = if (stored.isNotEmpty()) {
+            stored
+        } else {
+            listOf(
+                DocumentPage(
+                    id = 0,
+                    documentId = document.id,
+                    encryptedFileName = document.encryptedFileName,
+                    mimeType = document.mimeType,
+                    originalFileName = document.originalFileName,
+                    fileSize = document.fileSize,
+                    sortOrder = 0
+                )
             )
-        )
+        }
+        return pages.map { page -> resolveStoredMimeType(document, page) }
+    }
+
+    /**
+     * Older scanned pages may have been saved as application/octet-stream
+     * when the scanner provider exposed no MIME metadata. Detect the real
+     * type from the decrypted header and persist the correction so preview,
+     * sharing and PDF generation all work without rescanning the document.
+     */
+    private suspend fun resolveStoredMimeType(
+        document: VaultDocument,
+        page: DocumentPage
+    ): DocumentPage {
+        if (page.isImage || page.isPdf) return page
+
+        val header = runCatching {
+            val bytes = repository.fileManager.decryptToBytes(page.encryptedFileName)
+            bytes.copyOf(minOf(16, bytes.size))
+        }.getOrNull() ?: return page
+
+        val detected = MimeTypeDetector.detect(header) ?: return page
+        runCatching {
+            repository.repairPageMimeType(document, page, detected)
+        }
+        return page.copy(mimeType = detected)
     }
 
     private fun loadPreviews() {

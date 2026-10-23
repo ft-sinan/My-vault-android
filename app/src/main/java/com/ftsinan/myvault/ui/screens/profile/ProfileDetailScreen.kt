@@ -177,7 +177,7 @@ private fun ProfileIdCard(
         )
     )
     Card(
-        shape = RoundedCornerShape(36.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = Modifier.fillMaxWidth()
@@ -186,7 +186,7 @@ private fun ProfileIdCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(gradient)
-                .padding(start = 20.dp, top = 12.dp, end = 20.dp, bottom = 18.dp)
+                .padding(start = 18.dp, top = 10.dp, end = 18.dp, bottom = 14.dp)
         ) {
             Column {
                 Row(verticalAlignment = Alignment.Top) {
@@ -210,7 +210,7 @@ private fun ProfileIdCard(
                         )
                     }
                 }
-                Spacer(Modifier.height(18.dp))
+                Spacer(Modifier.height(14.dp))
                 member.dateOfBirth?.let { dob ->
                     ProfileFieldRow(
                         label = stringResource(R.string.field_dob),

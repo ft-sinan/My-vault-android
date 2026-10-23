@@ -32,6 +32,12 @@ interface DocumentDao {
     @Query("UPDATE documents SET isFavourite = :favourite, updatedAt = :updatedAt WHERE id = :id")
     suspend fun setFavourite(id: Long, favourite: Boolean, updatedAt: Long)
 
+    @Query(
+        "UPDATE documents SET mimeType = :mimeType " +
+            "WHERE id = :id AND encryptedFileName = :encryptedFileName"
+    )
+    suspend fun updateMimeType(id: Long, mimeType: String, encryptedFileName: String)
+
     @Query("SELECT COUNT(*) FROM documents")
     fun observeCount(): Flow<Int>
 

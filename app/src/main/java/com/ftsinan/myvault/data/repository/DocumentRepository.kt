@@ -122,6 +122,27 @@ class DocumentRepository(
         return documentId
     }
 
+    /**
+     * Repairs a page stored with an unknown MIME type (common for ML Kit
+     * scanner URIs) after its decrypted header has been identified.
+     */
+    suspend fun repairPageMimeType(
+        document: VaultDocument,
+        page: DocumentPage,
+        detectedMimeType: String
+    ) {
+        if (page.id != 0L) {
+            pageDao.updateMimeType(page.id, detectedMimeType)
+        }
+        if (page.encryptedFileName == document.encryptedFileName) {
+            documentDao.updateMimeType(
+                id = document.id,
+                mimeType = detectedMimeType,
+                encryptedFileName = document.encryptedFileName
+            )
+        }
+    }
+
     suspend fun update(document: VaultDocument) =
         documentDao.update(document.copy(updatedAt = System.currentTimeMillis()))
 

@@ -5,6 +5,8 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import com.ftsinan.myvault.data.model.VaultDocument
 import com.ftsinan.myvault.data.security.CryptoManager
+import com.ftsinan.myvault.util.MimeTypeDetector
+import java.io.BufferedInputStream
 import java.io.File
 import java.util.UUID
 
@@ -14,6 +16,8 @@ data class ImportedFile(
     val originalFileName: String,
     val fileSize: Long
 )
+
+private const val MIME_HEADER_SIZE = 16
 
 /**
  * Owns everything file-related:
@@ -35,14 +39,41 @@ class VaultFileManager(
     fun importFile(uri: Uri): ImportedFile {
         val resolver = context.contentResolver
         val info = queryFileInfo(uri)
-        val mimeType = resolver.getType(uri) ?: guessMimeType(info.first)
         val encryptedName = "${UUID.randomUUID()}.enc"
 
         val input = resolver.openInputStream(uri)
             ?: error("Could not open the selected file")
-        input.use { stream ->
+
+        // Scanner providers may not report a MIME type or a useful file
+        // extension. Sniff the actual file header before encrypting so a
+        // scanned JPEG is never saved as application/octet-stream.
+        var detectedMimeType: String? = null
+        BufferedInputStream(input).use { stream ->
+            stream.mark(MIME_HEADER_SIZE)
+            val headerBuffer = ByteArray(MIME_HEADER_SIZE)
+            var offset = 0
+            while (offset < headerBuffer.size) {
+                val read = stream.read(headerBuffer, offset, headerBuffer.size - offset)
+                if (read <= 0) break
+                offset += read
+            }
+            if (offset > 0) {
+                detectedMimeType = MimeTypeDetector.detect(headerBuffer.copyOf(offset))
+            }
+            stream.reset()
             cryptoManager.encrypt(stream, File(vaultDir, encryptedName))
         }
+
+        val reportedMimeType = resolver.getType(uri)
+            ?.lowercase()
+            ?.takeUnless { it == "application/octet-stream" }
+        val guessedMimeType = guessMimeType(info.first)
+            .takeUnless { it == "application/octet-stream" }
+        val mimeType = detectedMimeType
+            ?: reportedMimeType
+            ?: guessedMimeType
+            ?: "application/octet-stream"
+        val originalFileName = MimeTypeDetector.fileNameWithExtension(info.first, mimeType)
 
         val size = when {
             info.second > 0 -> info.second
@@ -54,7 +85,7 @@ class VaultFileManager(
         return ImportedFile(
             encryptedFileName = encryptedName,
             mimeType = mimeType,
-            originalFileName = info.first,
+            originalFileName = originalFileName,
             fileSize = size
         )
     }
@@ -125,7 +156,9 @@ class VaultFileManager(
     private fun queryFileInfo(uri: Uri): Pair<String, Long> {
         var name = "document_${System.currentTimeMillis()}"
         var size = 0L
-        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+        runCatching {
+            context.contentResolver.query(uri, null, null, null, null)
+        }.getOrNull()?.use { cursor ->
             if (cursor.moveToFirst()) {
                 val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 if (nameIndex >= 0) {
@@ -144,7 +177,10 @@ class VaultFileManager(
         when (fileName.substringAfterLast('.', "").lowercase()) {
             "jpg", "jpeg" -> "image/jpeg"
             "png" -> "image/png"
+            "gif" -> "image/gif"
             "webp" -> "image/webp"
+            "heic", "heif" -> "image/heic"
+            "avif" -> "image/avif"
             "pdf" -> "application/pdf"
             else -> "application/octet-stream"
         }

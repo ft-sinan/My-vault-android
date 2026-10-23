@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -189,6 +190,10 @@ fun MyVaultNavGraph(
     }
 
     Scaffold(
+        // Every destination provides its own top bar. Zero insets here stop
+        // Scaffold from applying the status-bar height a second time above
+        // those top bars, which made every header look oversized.
+        contentWindowInsets = WindowInsets(0.dp),
         bottomBar = {
             if (showBottomBar) {
                 Column {

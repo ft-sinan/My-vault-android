@@ -21,6 +21,9 @@ interface DocumentPageDao {
     @Insert
     suspend fun insertAll(pages: List<DocumentPage>)
 
+    @Query("UPDATE document_pages SET mimeType = :mimeType WHERE id = :pageId")
+    suspend fun updateMimeType(pageId: Long, mimeType: String)
+
     @Query("DELETE FROM document_pages WHERE documentId = :documentId")
     suspend fun deleteForDocument(documentId: Long)
 }
