@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shield with a transparent keyhole cut-out for Android themed icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#000000"
+        android:fillType="evenOdd"
+        android:pathData="M54,22.2 L78.5,29.1 L78.5,48.8 C78.5,64.3 68.7,75.5 54,83.2 C39.3,75.5 29.5,64.3 29.5,48.8 L29.5,29.1 Z M50.2,51.2 A4,4 0 1,1 57.8,51.2 L58.8,61.4 L49.2,61.4 Z" />
+</vector>

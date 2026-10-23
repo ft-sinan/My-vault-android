@@ -1,0 +1,66 @@
+package com.ftsinan.myvault.data.local
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.ftsinan.myvault.data.model.VaultDocument
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface DocumentDao {
+
+    @Query("SELECT * FROM documents ORDER BY isFavourite DESC, updatedAt DESC")
+    fun observeAll(): Flow<List<VaultDocument>>
+
+    @Query("SELECT * FROM documents WHERE id = :id")
+    fun observeById(id: Long): Flow<VaultDocument?>
+
+    @Query("SELECT * FROM documents WHERE id = :id")
+    suspend fun getById(id: Long): VaultDocument?
+
+    @Insert
+    suspend fun insert(document: VaultDocument): Long
+
+    @Update
+    suspend fun update(document: VaultDocument)
+
+    @Delete
+    suspend fun delete(document: VaultDocument)
+
+    @Query("UPDATE documents SET isFavourite = :favourite, updatedAt = :updatedAt WHERE id = :id")
+    suspend fun setFavourite(id: Long, favourite: Boolean, updatedAt: Long)
+
+    @Query(
+        "UPDATE documents SET mimeType = :mimeType " +
+            "WHERE id = :id AND encryptedFileName = :encryptedFileName"
+    )
+    suspend fun updateMimeType(id: Long, mimeType: String, encryptedFileName: String)
+
+    @Query("SELECT * FROM documents ORDER BY id ASC")
+    suspend fun getAllSnapshot(): List<VaultDocument>
+
+    @Query("DELETE FROM documents")
+    suspend fun deleteAll()
+
+    @Query("SELECT COUNT(*) FROM documents")
+    fun observeCount(): Flow<Int>
+
+    @Query("SELECT COALESCE(SUM(fileSize), 0) FROM document_pages")
+    fun observeTotalSize(): Flow<Long>
+
+    /** When a member is renamed, keep document display names in sync. */
+    @Query(
+        "UPDATE documents SET holderName = :name, relation = :relation, " +
+            "updatedAt = :updatedAt WHERE memberId = :memberId"
+    )
+    suspend fun syncMemberDisplay(memberId: Long, name: String, relation: String, updatedAt: Long)
+
+    /** Deleted members' documents move to the Family group, never deleted. */
+    @Query(
+        "UPDATE documents SET memberId = NULL, assignedGroup = 'FAMILY', " +
+            "updatedAt = :updatedAt WHERE memberId = :memberId"
+    )
+    suspend fun reassignMemberDocumentsToFamily(memberId: Long, updatedAt: Long)
+}

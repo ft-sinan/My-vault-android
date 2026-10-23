@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest an improvement for My Vault
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ⚠️ Privacy warning
+        Please do not attach real documents, ID numbers, names, photos, or screenshots containing personal information. Use fake/sample examples only.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Explain the situation without using real personal documents as examples.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like My Vault to do?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or examples
+      description: Optional. Mockups are welcome if they use fake/sample data only.
+  - type: checkboxes
+    id: privacy-check
+    attributes:
+      label: Privacy check
+      options:
+        - label: I confirm this request contains no real documents, ID numbers, or personal information.
+          required: true
