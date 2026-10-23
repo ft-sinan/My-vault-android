@@ -216,11 +216,26 @@
     <string name="settings_theme_system">സിസ്റ്റം</string>
     <string name="settings_theme_light">ലൈറ്റ്</string>
     <string name="settings_theme_dark">ഡാർക്ക്</string>
+    <string name="settings_theme_oled">OLED</string>
+    <string name="settings_colour_palette">കളർ പാലറ്റ്</string>
+    <string name="settings_motion_feel">ചലനവും അനുഭവവും</string>
+    <string name="settings_glass_bottom_bar">ഗ്ലാസ് ബോട്ടം ബാർ</string>
+    <string name="settings_glass_bottom_bar_subtitle">പൊങ്ങിക്കിടക്കുന്ന, അൽപ്പം സുതാര്യമായ നാവിഗേഷൻ ബാർ</string>
+    <string name="settings_haptics">ഹാപ്റ്റിക് ഫീഡ്‌ബാക്ക്</string>
+    <string name="settings_haptics_subtitle">കീകളിലും തിരഞ്ഞെടുപ്പുകളിലും വൈബ്രേഷൻ സ്പർശം</string>
+    <string name="settings_compact_mode">കോംപാക്റ്റ് മോഡ്</string>
+    <string name="settings_compact_mode_subtitle">അൽപ്പം ചെറുതും ഇടതൂർന്നതുമായ ലേഔട്ട്</string>
+    <string name="settings_reduce_animations">ആനിമേഷനുകൾ കുറയ്ക്കുക</string>
+    <string name="settings_reduce_animations_subtitle">സ്ക്രീനുകളും ലിസ്റ്റുകളും തൽക്ഷണം മാറും</string>
     <string name="settings_accent_color">ആക്സന്റ് നിറം</string>
     <string name="settings_accent_subtitle">വാൾപേപ്പർ നിറങ്ങൾ ഓഫ് ആയിരിക്കുമ്പോൾ ഉപയോഗിക്കുന്നു</string>
     <string name="accent_teal">ടീൽ</string>
     <string name="accent_navy">നേവി</string>
     <string name="accent_emerald">എമറാൾഡ്</string>
     <string name="accent_indigo">ഇൻഡിഗോ</string>
+    <string name="accent_ocean">ഓഷ്യൻ</string>
+    <string name="accent_grape">ഗ്രേപ്പ്</string>
+    <string name="accent_cocoa">കൊക്കോ</string>
+    <string name="accent_slate">സ്ലേറ്റ്</string>
     <string name="settings_appearance_preview">പ്രിവ്യൂ</string>
 </resources>

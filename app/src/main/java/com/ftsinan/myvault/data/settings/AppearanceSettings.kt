@@ -4,7 +4,10 @@ package com.ftsinan.myvault.data.settings
 enum class ThemeMode {
     SYSTEM,
     LIGHT,
-    DARK;
+    DARK,
+
+    /** Dark scheme with true-black surfaces for OLED screens. */
+    OLED;
 
     companion object {
         fun fromName(value: String?): ThemeMode =
@@ -20,7 +23,11 @@ enum class AccentColor {
     TEAL,
     NAVY,
     EMERALD,
-    INDIGO;
+    INDIGO,
+    OCEAN,
+    GRAPE,
+    COCOA,
+    SLATE;
 
     companion object {
         fun fromName(value: String?): AccentColor =

@@ -31,6 +31,10 @@ data class LockUiState(
     val useDynamicColor: Boolean = true,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val accentColor: AccentColor = AccentColor.TEAL,
+    val hapticsEnabled: Boolean = true,
+    val compactMode: Boolean = false,
+    val reduceAnimations: Boolean = false,
+    val glassBottomBar: Boolean = true,
     val isProfileLoaded: Boolean = false,
     val hasOwnerProfile: Boolean = false,
     /** Name only is shown on the lock screen (never the photo). */
@@ -77,6 +81,26 @@ class LockViewModel(
         viewModelScope.launch {
             pinManager.accentColor.collect { accent ->
                 _uiState.update { it.copy(accentColor = accent) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.hapticsEnabled.collect { enabled ->
+                _uiState.update { it.copy(hapticsEnabled = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.compactMode.collect { enabled ->
+                _uiState.update { it.copy(compactMode = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.reduceAnimations.collect { enabled ->
+                _uiState.update { it.copy(reduceAnimations = enabled) }
+            }
+        }
+        viewModelScope.launch {
+            pinManager.glassBottomBar.collect { enabled ->
+                _uiState.update { it.copy(glassBottomBar = enabled) }
             }
         }
         viewModelScope.launch {

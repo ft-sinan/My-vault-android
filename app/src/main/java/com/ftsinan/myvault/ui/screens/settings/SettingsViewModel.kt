@@ -49,6 +49,18 @@ class SettingsViewModel(
     val accentColor: StateFlow<AccentColor> = pinManager.accentColor
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccentColor.TEAL)
 
+    val hapticsEnabled: StateFlow<Boolean> = pinManager.hapticsEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
+    val compactMode: StateFlow<Boolean> = pinManager.compactMode
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    val reduceAnimations: StateFlow<Boolean> = pinManager.reduceAnimations
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    val glassBottomBar: StateFlow<Boolean> = pinManager.glassBottomBar
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
     val documentCount: StateFlow<Int> = repository.documentCount
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
@@ -72,6 +84,30 @@ class SettingsViewModel(
 
     fun setAccentColor(accent: AccentColor) {
         viewModelScope.launch { pinManager.setAccentColor(accent) }
+    }
+
+    /** Picking a palette turns wallpaper colours off so the choice shows at once. */
+    fun selectAccentColor(accent: AccentColor) {
+        viewModelScope.launch {
+            pinManager.setAccentColor(accent)
+            pinManager.setUseDynamicColor(false)
+        }
+    }
+
+    fun setHapticsEnabled(enabled: Boolean) {
+        viewModelScope.launch { pinManager.setHapticsEnabled(enabled) }
+    }
+
+    fun setCompactMode(enabled: Boolean) {
+        viewModelScope.launch { pinManager.setCompactMode(enabled) }
+    }
+
+    fun setReduceAnimations(enabled: Boolean) {
+        viewModelScope.launch { pinManager.setReduceAnimations(enabled) }
+    }
+
+    fun setGlassBottomBar(enabled: Boolean) {
+        viewModelScope.launch { pinManager.setGlassBottomBar(enabled) }
     }
 
     fun changePin(currentPin: String, newPin: String, confirmPin: String) {

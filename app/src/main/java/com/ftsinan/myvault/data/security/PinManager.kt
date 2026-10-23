@@ -43,6 +43,26 @@ class PinManager(private val context: Context) {
         AccentColor.fromName(prefs[ACCENT_COLOR])
     }
 
+    /** Look & feel: tactile taps on keys and choices. */
+    val hapticsEnabled: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[HAPTICS_ENABLED] ?: true
+    }
+
+    /** Look & feel: slightly smaller, denser layout. */
+    val compactMode: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[COMPACT_MODE] ?: false
+    }
+
+    /** Look & feel: screens and lists change instantly instead of animating. */
+    val reduceAnimations: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[REDUCE_ANIMATIONS] ?: false
+    }
+
+    /** Look & feel: floating, slightly translucent bottom bar. */
+    val glassBottomBar: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[GLASS_BOTTOM_BAR] ?: true
+    }
+
     suspend fun setPin(pin: String) {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
         val hash = hashPin(pin, salt)
@@ -81,6 +101,22 @@ class PinManager(private val context: Context) {
         context.dataStore.edit { it[ACCENT_COLOR] = accent.name }
     }
 
+    suspend fun setHapticsEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[HAPTICS_ENABLED] = enabled }
+    }
+
+    suspend fun setCompactMode(enabled: Boolean) {
+        context.dataStore.edit { it[COMPACT_MODE] = enabled }
+    }
+
+    suspend fun setReduceAnimations(enabled: Boolean) {
+        context.dataStore.edit { it[REDUCE_ANIMATIONS] = enabled }
+    }
+
+    suspend fun setGlassBottomBar(enabled: Boolean) {
+        context.dataStore.edit { it[GLASS_BOTTOM_BAR] = enabled }
+    }
+
     private fun hashPin(pin: String, salt: ByteArray): ByteArray {
         val digest = MessageDigest.getInstance("SHA-256")
         digest.update(salt)
@@ -102,5 +138,9 @@ class PinManager(private val context: Context) {
         private val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
         private val THEME_MODE = stringPreferencesKey("theme_mode")
         private val ACCENT_COLOR = stringPreferencesKey("accent_color")
+        private val HAPTICS_ENABLED = booleanPreferencesKey("haptics_enabled")
+        private val COMPACT_MODE = booleanPreferencesKey("compact_mode")
+        private val REDUCE_ANIMATIONS = booleanPreferencesKey("reduce_animations")
+        private val GLASS_BOTTOM_BAR = booleanPreferencesKey("glass_bottom_bar")
     }
 }

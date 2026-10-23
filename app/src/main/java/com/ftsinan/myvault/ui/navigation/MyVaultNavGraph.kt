@@ -1,5 +1,10 @@
 package com.ftsinan.myvault.ui.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Description
@@ -28,6 +34,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,6 +45,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,6 +62,8 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.ui.screens.addedit.AddEditDocumentScreen
+import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
+import com.ftsinan.myvault.ui.theme.LocalGlassBottomBar
 import com.ftsinan.myvault.ui.screens.addedit.ImportSource
 import com.ftsinan.myvault.ui.screens.detail.DocumentDetailScreen
 import com.ftsinan.myvault.ui.screens.documents.DocumentsScreen
@@ -104,6 +115,8 @@ fun MyVaultNavGraph(
     onLanguageSelected: (AppLanguage) -> Unit
 ) {
     val navController = rememberNavController()
+    val glassBottomBar = LocalGlassBottomBar.current
+    val animationsEnabled = LocalAnimationsEnabled.current
     var showAddSheet by remember { mutableStateOf(false) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -197,8 +210,42 @@ fun MyVaultNavGraph(
         bottomBar = {
             if (showBottomBar) {
                 Column {
-                    HorizontalDivider()
-                    NavigationBar {
+                    if (!glassBottomBar) {
+                        HorizontalDivider()
+                    }
+                    Box(
+                        modifier = if (glassBottomBar) {
+                            Modifier
+                                .navigationBarsPadding()
+                                .padding(horizontal = 16.dp, vertical = 10.dp)
+                        } else {
+                            Modifier
+                        }
+                    ) {
+                    NavigationBar(
+                        modifier = if (glassBottomBar) {
+                            Modifier
+                                .shadow(10.dp, RoundedCornerShape(28.dp))
+                                .clip(RoundedCornerShape(28.dp))
+                        } else {
+                            Modifier
+                        },
+                        containerColor = if (glassBottomBar) {
+                            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.88f)
+                        } else {
+                            NavigationBarDefaults.containerColor
+                        },
+                        tonalElevation = if (glassBottomBar) {
+                            0.dp
+                        } else {
+                            NavigationBarDefaults.Elevation
+                        },
+                        windowInsets = if (glassBottomBar) {
+                            WindowInsets(0.dp)
+                        } else {
+                            NavigationBarDefaults.windowInsets
+                        }
+                    ) {
                         NavigationBarItem(
                             selected = isSelected(Routes.HOME),
                             onClick = { navigateTopLevel(Routes.HOME) },
@@ -267,6 +314,7 @@ fun MyVaultNavGraph(
                             label = { Text(stringResource(R.string.tab_settings)) }
                         )
                     }
+                    }
                 }
             }
         }
@@ -274,7 +322,19 @@ fun MyVaultNavGraph(
         NavHost(
             navController = navController,
             startDestination = Routes.HOME,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = {
+                if (animationsEnabled) fadeIn(tween(220)) else EnterTransition.None
+            },
+            exitTransition = {
+                if (animationsEnabled) fadeOut(tween(220)) else ExitTransition.None
+            },
+            popEnterTransition = {
+                if (animationsEnabled) fadeIn(tween(220)) else EnterTransition.None
+            },
+            popExitTransition = {
+                if (animationsEnabled) fadeOut(tween(220)) else ExitTransition.None
+            }
         ) {
             composable(Routes.HOME) {
                 HomeScreen(

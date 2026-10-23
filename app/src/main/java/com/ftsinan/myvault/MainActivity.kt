@@ -66,7 +66,7 @@ class MainActivity : FragmentActivity() {
             val darkTheme = when (lockState.themeMode) {
                 ThemeMode.SYSTEM -> systemDarkTheme
                 ThemeMode.LIGHT -> false
-                ThemeMode.DARK -> true
+                ThemeMode.DARK, ThemeMode.OLED -> true
             }
             val view = LocalView.current
             SideEffect {
@@ -76,8 +76,13 @@ class MainActivity : FragmentActivity() {
             }
             MyVaultTheme(
                 darkTheme = darkTheme,
+                oled = lockState.themeMode == ThemeMode.OLED,
                 useDynamicColor = lockState.useDynamicColor,
-                accentColor = lockState.accentColor
+                accentColor = lockState.accentColor,
+                hapticsEnabled = lockState.hapticsEnabled,
+                compactMode = lockState.compactMode,
+                reduceAnimations = lockState.reduceAnimations,
+                glassBottomBar = lockState.glassBottomBar
             ) {
                 when {
                     lockState.isLoading || !lockState.isLanguageLoaded ||

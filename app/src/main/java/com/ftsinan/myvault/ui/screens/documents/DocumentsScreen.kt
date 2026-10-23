@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.ui.theme.animatedPlacement
 import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.model.Category
 import com.ftsinan.myvault.ui.components.DocumentCard
@@ -275,7 +276,7 @@ fun DocumentsScreen(
                     DocumentCard(
                         summary = summary,
                         onClick = { onDocumentClick(summary.document.id) },
-                        modifier = Modifier.animateItem()
+                        modifier = animatedPlacement()
                     )
                 }
             }

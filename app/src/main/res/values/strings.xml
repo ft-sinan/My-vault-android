@@ -224,11 +224,26 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_oled">OLED</string>
+    <string name="settings_colour_palette">Colour palette</string>
+    <string name="settings_motion_feel">Motion &amp; feel</string>
+    <string name="settings_glass_bottom_bar">Glass bottom bar</string>
+    <string name="settings_glass_bottom_bar_subtitle">Floating, slightly translucent navigation bar</string>
+    <string name="settings_haptics">Haptic feedback</string>
+    <string name="settings_haptics_subtitle">Vibration taps on keys and choices</string>
+    <string name="settings_compact_mode">Compact mode</string>
+    <string name="settings_compact_mode_subtitle">Slightly smaller, denser layout</string>
+    <string name="settings_reduce_animations">Reduce animations</string>
+    <string name="settings_reduce_animations_subtitle">Screens and lists change instantly</string>
     <string name="settings_accent_color">Accent colour</string>
     <string name="settings_accent_subtitle">Used when wallpaper colours are turned off</string>
     <string name="accent_teal">Teal</string>
     <string name="accent_navy">Navy</string>
     <string name="accent_emerald">Emerald</string>
     <string name="accent_indigo">Indigo</string>
+    <string name="accent_ocean">Ocean</string>
+    <string name="accent_grape">Grape</string>
+    <string name="accent_cocoa">Cocoa</string>
+    <string name="accent_slate">Slate</string>
     <string name="settings_appearance_preview">Preview</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.ftsinan.myvault.ui.screens.home
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,6 +63,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
+import com.ftsinan.myvault.ui.theme.animatedPlacement
 import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.ui.components.DocumentCard
 import com.ftsinan.myvault.ui.components.EmptyState
@@ -106,6 +110,7 @@ fun HomeScreen(
                 title = {
                     Crossfade(
                         targetState = showProfileInTopBar && owner != null,
+                        animationSpec = if (LocalAnimationsEnabled.current) tween() else snap(),
                         label = "homeTopBarProfile"
                     ) { showProfile ->
                         val currentOwner = owner
@@ -300,7 +305,7 @@ fun HomeScreen(
                         DocumentCard(
                             summary = summary,
                             onClick = { onDocumentClick(summary.document.id) },
-                            modifier = Modifier.animateItem()
+                            modifier = animatedPlacement()
                         )
                     }
                 }
@@ -309,7 +314,7 @@ fun HomeScreen(
                     DocumentCard(
                         summary = summary,
                         onClick = { onDocumentClick(summary.document.id) },
-                        modifier = Modifier.animateItem()
+                        modifier = animatedPlacement()
                     )
                 }
             }

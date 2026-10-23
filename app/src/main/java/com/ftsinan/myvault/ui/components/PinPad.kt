@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.ui.theme.LocalHapticsEnabled
 import com.ftsinan.myvault.data.security.PinManager
 
 @Composable
@@ -154,9 +155,12 @@ fun PinPad(
 @Composable
 private fun PinKey(label: String, onClick: () -> Unit) {
     val view = LocalView.current
+    val hapticsEnabled = LocalHapticsEnabled.current
     TextButton(
         onClick = {
-            view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            if (hapticsEnabled) {
+                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            }
             onClick()
         },
         modifier = Modifier
