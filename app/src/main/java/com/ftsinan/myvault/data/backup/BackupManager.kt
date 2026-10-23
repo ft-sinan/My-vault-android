@@ -508,7 +508,7 @@ class BackupManager(
     }
 
     private inline fun <reified T : Enum<T>> enumOrDefault(value: String?, default: T): T =
-        enumOrNull(value) ?: default
+        enumOrNull<T>(value) ?: default
 
     private fun JSONObject.putOrNull(name: String, value: Any?) {
         put(name, value ?: JSONObject.NULL)
