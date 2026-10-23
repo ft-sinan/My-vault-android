@@ -1194,7 +1194,7 @@ private fun ScreenshotAllowanceDialog(
     var currentPin by remember { mutableStateOf("") }
     var errorText by remember { mutableStateOf("") }
     var checking by remember { mutableStateOf(false) }
-    val pinWrongText = stringResource(R.string.settings_error_current_pin_wrong)
+    val pinWrongText = stringResource(R.string.settings_current_pin_wrong)
     val scope = rememberCoroutineScope()
 
     AlertDialog(
