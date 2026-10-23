@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,6 +40,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -47,6 +54,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.ui.components.DocumentCard
+import com.ftsinan.myvault.ui.components.ExpressiveChip
+import com.ftsinan.myvault.ui.components.HeaderCircleButton
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.EmptyState
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
@@ -85,40 +96,7 @@ fun ProfileDetailScreen(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = { Text(item?.member?.name ?: "", maxLines = 1) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                },
-                actions = {
-                    item?.let { profile ->
-                        IconButton(onClick = { shareProfileImage() }) {
-                            Icon(
-                                Icons.Filled.Share,
-                                contentDescription = stringResource(R.string.profile_share)
-                            )
-                        }
-                        IconButton(onClick = { onEdit(profile.member.id) }) {
-                            Icon(
-                                Icons.Filled.Edit,
-                                contentDescription = stringResource(R.string.profile_edit)
-                            )
-                        }
-                    }
-                }
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         val profile = item
         if (profile == null) {
@@ -134,7 +112,16 @@ fun ProfileDetailScreen(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item { ProfileIdCard(profile.member.name, profile) }
+            item {
+                ProfileIdCard(
+                    item = profile,
+                    documentCount = documents.size,
+                    onBack = onBack,
+                    onShare = { shareProfileImage() },
+                    onEdit = { onEdit(profile.member.id) },
+                    modifier = Modifier.expressiveReveal(0, profile.member.id)
+                )
+            }
             item {
                 Text(
                     stringResource(R.string.profile_documents),
@@ -152,10 +139,11 @@ fun ProfileDetailScreen(
                     )
                 }
             } else {
-                items(documents, key = { it.document.id }) { summary ->
+                itemsIndexed(documents, key = { _, it -> it.document.id }) { index, summary ->
                     DocumentCard(
                         summary = summary,
-                        onClick = { onDocumentClick(summary.document.id) }
+                        onClick = { onDocumentClick(summary.document.id) },
+                        modifier = Modifier.expressiveReveal(index + 1, summary.document.id)
                     )
                 }
             }
@@ -166,8 +154,12 @@ fun ProfileDetailScreen(
 
 @Composable
 private fun ProfileIdCard(
-    @Suppress("UNUSED_PARAMETER") nameIgnored: String,
-    item: com.ftsinan.myvault.data.model.MemberListItem
+    item: com.ftsinan.myvault.data.model.MemberListItem,
+    documentCount: Int,
+    onBack: () -> Unit,
+    onShare: () -> Unit,
+    onEdit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val member = item.member
     val gradient = Brush.linearGradient(
@@ -176,53 +168,124 @@ private fun ProfileIdCard(
             MaterialTheme.colorScheme.tertiaryContainer
         )
     )
-    Card(
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(32.dp))
+            .background(gradient)
+            .padding(18.dp)
     ) {
-        Box(
+        MorphingShapeBox(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(gradient)
-                .padding(start = 18.dp, top = 10.dp, end = 18.dp, bottom = 14.dp)
+                .align(Alignment.TopEnd)
+                .offset(x = 42.dp, y = (-58).dp)
+                .size(150.dp),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.14f),
+            lobes = 12,
+            wave = 0.19f,
+            spinMillis = 28_000
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column {
-                Row(verticalAlignment = Alignment.Top) {
-                    MemberAvatar(
-                        name = member.name,
-                        photoBytes = item.photoBytes,
-                        size = 78.dp
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                HeaderCircleButton(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.action_back),
+                    onClick = onBack,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                Spacer(Modifier.weight(1f))
+                HeaderCircleButton(
+                    icon = Icons.Filled.Share,
+                    contentDescription = stringResource(R.string.profile_share),
+                    onClick = onShare,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                Spacer(Modifier.width(8.dp))
+                HeaderCircleButton(
+                    icon = Icons.Filled.Edit,
+                    contentDescription = stringResource(R.string.profile_edit),
+                    onClick = onEdit,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+            }
+
+            Spacer(Modifier.height(8.dp))
+            Box(modifier = Modifier.size(150.dp), contentAlignment = Alignment.Center) {
+                MorphingShapeBox(
+                    modifier = Modifier.size(146.dp),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.30f),
+                    lobes = 12,
+                    wave = 0.19f,
+                    spinMillis = 22_000
+                )
+                MemberAvatar(
+                    name = member.name,
+                    photoBytes = item.photoBytes,
+                    size = 104.dp
+                )
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(x = (-8).dp, y = (-4).dp)
+                        .size(38.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = documentCount.toString(),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontWeight = FontWeight.Bold
                     )
-                    Spacer(Modifier.width(16.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = member.name,
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                        Text(
-                            text = relationLabel(member.relation),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                                .copy(alpha = 0.8f)
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = member.name,
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+            Spacer(Modifier.height(8.dp))
+            ExpressiveChip(
+                text = relationLabel(member.relation),
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.66f),
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
+
+            val hasFields = member.dateOfBirth != null ||
+                !member.gender.isNullOrBlank() ||
+                !member.bloodGroup.isNullOrBlank()
+            if (hasFields) {
+                Spacer(Modifier.height(16.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.58f))
+                        .padding(horizontal = 14.dp, vertical = 8.dp)
+                ) {
+                    member.dateOfBirth?.let { dob ->
+                        ProfileFieldRow(
+                            label = stringResource(R.string.field_dob),
+                            value = "${FormatUtils.formatDate(dob)} • " +
+                                stringResource(R.string.profile_age_years, ageYears(dob))
                         )
                     }
-                }
-                Spacer(Modifier.height(14.dp))
-                member.dateOfBirth?.let { dob ->
-                    ProfileFieldRow(
-                        label = stringResource(R.string.field_dob),
-                        value = "${FormatUtils.formatDate(dob)} • " +
-                            stringResource(R.string.profile_age_years, ageYears(dob))
-                    )
-                }
-                member.gender?.takeIf { it.isNotBlank() }?.let {
-                    ProfileFieldRow(stringResource(R.string.field_gender), genderLabel(it))
-                }
-                member.bloodGroup?.takeIf { it.isNotBlank() }?.let {
-                    ProfileFieldRow(stringResource(R.string.field_blood_group), bloodGroupLabel(it))
+                    member.gender?.takeIf { it.isNotBlank() }?.let {
+                        ProfileFieldRow(stringResource(R.string.field_gender), genderLabel(it))
+                    }
+                    member.bloodGroup?.takeIf { it.isNotBlank() }?.let {
+                        ProfileFieldRow(stringResource(R.string.field_blood_group), bloodGroupLabel(it))
+                    }
                 }
             }
         }
@@ -239,14 +302,14 @@ private fun ProfileFieldRow(label: String, value: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(1f)
         )
         Text(
             text = value,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }

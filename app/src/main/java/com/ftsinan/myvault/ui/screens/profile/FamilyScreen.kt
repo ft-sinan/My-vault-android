@@ -10,13 +10,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -44,7 +49,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.MemberListItem
+import com.ftsinan.myvault.ui.components.CapsuleTopBar
+import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.MemberAvatar
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.components.relationLabel
 
@@ -56,40 +65,45 @@ fun FamilyScreen(
     viewModel: FamilyViewModel = viewModel(factory = FamilyViewModel.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        rememberTopAppBarState()
-    )
-
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Column {
+            CapsuleTopBar(
+                content = {
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
                             stringResource(R.string.family_title),
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             stringResource(R.string.family_subtitle),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 },
-                actions = {
-                    IconButton(onClick = onManageMembers) {
-                        Icon(
-                            Icons.Filled.ManageAccounts,
-                            contentDescription = stringResource(R.string.manage_members_title)
+                trailing = {
+                    HeaderCircleButton(
+                        icon = Icons.Filled.ManageAccounts,
+                        contentDescription = stringResource(R.string.manage_members_title),
+                        onClick = onManageMembers
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.secondaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = uiState.members.size.toString(),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }
@@ -109,10 +123,20 @@ fun FamilyScreen(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(uiState.members, key = { it.member.id }) { item ->
+            if (uiState.members.isNotEmpty()) {
+                item {
+                    FamilySummaryHeader(
+                        members = uiState.members,
+                        modifier = Modifier.expressiveReveal(0, "family-summary")
+                    )
+                }
+            }
+
+            itemsIndexed(uiState.members, key = { _, it -> it.member.id }) { index, item ->
                 MemberProfileCard(
                     item = item,
-                    onClick = { onProfileClick(item.member.id) }
+                    onClick = { onProfileClick(item.member.id) },
+                    modifier = Modifier.expressiveReveal(index + 1, item.member.id)
                 )
             }
 
@@ -121,8 +145,87 @@ fun FamilyScreen(
     }
 }
 
+
 @Composable
-private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit) {
+private fun FamilySummaryHeader(members: List<MemberListItem>, modifier: Modifier = Modifier) {
+    val totalDocs = members.sumOf { it.documentCount }
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(28.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(16.dp)
+    ) {
+        MorphingShapeBox(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 30.dp, y = (-34).dp)
+                .size(96.dp),
+            color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.16f),
+            lobes = 12,
+            wave = 0.18f,
+            spinMillis = 24_000
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            MorphingShapeBox(
+                modifier = Modifier.size(54.dp),
+                color = MaterialTheme.colorScheme.primary,
+                lobes = 9,
+                wave = 0.14f
+            ) {
+                Icon(
+                    Icons.Filled.Groups,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(27.dp)
+                )
+            }
+            Spacer(Modifier.width(14.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "${members.size} ${stringResource(R.string.stat_people)}",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = if (totalDocs == 1) {
+                        stringResource(R.string.documents_count_one)
+                    } else {
+                        stringResource(R.string.documents_count_many, totalDocs)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.78f)
+                )
+            }
+            val shown = members.take(4)
+            Box(
+                modifier = Modifier
+                    .width((44 + (shown.size - 1).coerceAtLeast(0) * 29).dp)
+                    .height(44.dp)
+            ) {
+                shown.forEachIndexed { index, memberItem ->
+                    Box(
+                        modifier = Modifier
+                            .offset(x = (index * 29).dp)
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer)
+                            .padding(2.dp)
+                    ) {
+                        MemberAvatar(
+                            name = memberItem.member.name,
+                            photoBytes = memberItem.photoBytes,
+                            size = 40.dp
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val member = item.member
     Card(
         onClick = onClick,
@@ -135,13 +238,26 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit) {
             }
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            MemberAvatar(name = member.name, photoBytes = item.photoBytes, size = 62.dp)
+            if (member.isOwner) {
+                Box(modifier = Modifier.size(68.dp), contentAlignment = Alignment.Center) {
+                    MorphingShapeBox(
+                        modifier = Modifier.size(68.dp),
+                        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.55f),
+                        lobes = 12,
+                        wave = 0.18f,
+                        spinMillis = 22_000
+                    )
+                    MemberAvatar(name = member.name, photoBytes = item.photoBytes, size = 58.dp)
+                }
+            } else {
+                MemberAvatar(name = member.name, photoBytes = item.photoBytes, size = 62.dp)
+            }
             Spacer(Modifier.width(14.dp))
             Column(
                 modifier = Modifier

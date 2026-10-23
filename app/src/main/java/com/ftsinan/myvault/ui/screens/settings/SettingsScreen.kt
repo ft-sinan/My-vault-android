@@ -1,7 +1,12 @@
 package com.ftsinan.myvault.ui.screens.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
@@ -20,7 +25,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,6 +42,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Animation
 import androidx.compose.material.icons.filled.BlurOn
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Compress
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Vibration
@@ -66,12 +78,19 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -89,12 +108,23 @@ import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
+import com.ftsinan.myvault.ui.components.ExpressiveChip
+import com.ftsinan.myvault.ui.components.ExpressiveStat
+import com.ftsinan.myvault.ui.components.HeaderCircleButton
+import com.ftsinan.myvault.ui.components.BlobShape
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.VaultMark
+import com.ftsinan.myvault.ui.components.expressivePastel
+import com.ftsinan.myvault.ui.components.expressiveReveal
+import com.ftsinan.myvault.ui.components.springPress
 import com.ftsinan.myvault.ui.screens.lock.canUseBiometric
 import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
 import com.ftsinan.myvault.ui.theme.isDarkScheme
 import com.ftsinan.myvault.ui.theme.localSelectionHaptic
 import com.ftsinan.myvault.ui.theme.vaultColorScheme
 import com.ftsinan.myvault.util.FormatUtils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -135,54 +165,63 @@ fun SettingsScreen(
         }
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        rememberTopAppBarState()
-    )
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Column {
-                        Text(
-                            stringResource(R.string.tab_settings),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(R.string.settings_subtitle),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.action_back))
-                    }
-                }
-            )
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val sectionOffsets = remember { mutableStateMapOf<String, Int>() }
+    fun sectionModifier(key: String): Modifier = Modifier.onGloballyPositioned { coordinates ->
+        sectionOffsets[key] = coordinates.positionInParent().y.toInt()
+    }
+    fun jumpToSection(key: String) {
+        val target = sectionOffsets[key] ?: return
+        coroutineScope.launch {
+            scrollState.animateScrollBy(((target - 10).coerceAtLeast(0) - scrollState.value).toFloat())
         }
-    ) { padding ->
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .statusBarsPadding()
+                .verticalScroll(scrollState)
+                .padding(horizontal = 16.dp)
+                .padding(top = 10.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            SettingsHubHeader(
+                onBack = onBack,
+                documentCount = documentCount,
+                biometricChecked = biometricEnabled && biometricAvailable,
+                biometricEnabled = biometricAvailable,
+                onBiometricChange = viewModel::setBiometricEnabled,
+                dynamicChecked = dynamicColorEnabled && dynamicColorAvailable,
+                dynamicEnabled = dynamicColorAvailable,
+                onDynamicChange = viewModel::setDynamicColorEnabled,
+                hapticsChecked = hapticsEnabled,
+                onHapticsChange = viewModel::setHapticsEnabled,
+                animationsChecked = !reduceAnimations,
+                onAnimationsChange = { enabled -> viewModel.setReduceAnimations(!enabled) },
+                compactChecked = compactMode,
+                onCompactChange = viewModel::setCompactMode,
+                glassChecked = glassBottomBar,
+                onGlassChange = viewModel::setGlassBottomBar,
+                themeMode = themeMode,
+                accentColor = accentColor,
+                languageName = language?.nativeName.orEmpty(),
+                storageText = stringResource(
+                    R.string.settings_storage_using,
+                    FormatUtils.formatFileSize(totalSize)
+                ),
+                onJump = ::jumpToSection,
+                modifier = Modifier.expressiveReveal(0, "settings-hub")
+            )
 
             // ---- Language --------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_language), icon = { Icon(Icons.Filled.Language, null) }) {
+            SettingsCard(modifier = sectionModifier("language"), title = stringResource(R.string.settings_language), icon = { Icon(Icons.Filled.Language, null) }) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AppLanguage.entries.forEach { option ->
                         FilterChip(
@@ -195,7 +234,7 @@ fun SettingsScreen(
             }
 
             // ---- Family ----------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_family), icon = { Icon(Icons.Filled.Groups, null) }) {
+            SettingsCard(modifier = sectionModifier("family"), title = stringResource(R.string.settings_family), icon = { Icon(Icons.Filled.Groups, null) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -219,7 +258,7 @@ fun SettingsScreen(
             }
 
             // ---- Appearance -------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
+            SettingsCard(modifier = sectionModifier("appearance"), title = stringResource(R.string.settings_appearance), icon = { Icon(Icons.Filled.Palette, null) }) {
                 Text(
                     stringResource(R.string.settings_theme_mode),
                     style = MaterialTheme.typography.bodyLarge,
@@ -329,7 +368,7 @@ fun SettingsScreen(
             }
 
             // ---- Security -------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_security), icon = { Icon(Icons.Filled.Lock, null) }) {
+            SettingsCard(modifier = sectionModifier("security"), title = stringResource(R.string.settings_security), icon = { Icon(Icons.Filled.Lock, null) }) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -410,7 +449,7 @@ fun SettingsScreen(
             }
 
             // ---- Storage --------------------------------------------------
-            SettingsCard(title = stringResource(R.string.settings_storage), icon = { Icon(Icons.Filled.Storage, null) }) {
+            SettingsCard(modifier = sectionModifier("storage"), title = stringResource(R.string.settings_storage), icon = { Icon(Icons.Filled.Storage, null) }) {
                 Text(
                     text = if (documentCount == 1) {
                         stringResource(R.string.settings_storage_one)
@@ -438,6 +477,12 @@ fun SettingsScreen(
                 )
             }
 
+            CreatorSpace(
+                documentCount = documentCount,
+                totalSize = totalSize,
+                modifier = sectionModifier("creator")
+            )
+
             OutlinedButton(
                 onClick = onLock,
                 modifier = Modifier
@@ -455,7 +500,7 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(96.dp))
         }
     }
 }
@@ -464,24 +509,25 @@ fun SettingsScreen(
 private fun SettingsCard(
     title: String,
     icon: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    contentAlignment = Alignment.Center
+                MorphingShapeBox(
+                    modifier = Modifier.size(42.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    lobes = 9,
+                    wave = 0.13f,
+                    spinMillis = 24_000
                 ) {
                     icon()
                 }
@@ -565,6 +611,7 @@ private fun themeModeLabelRes(mode: ThemeMode): Int = when (mode) {
 }
 
 private fun accentLabelRes(accent: AccentColor): Int = when (accent) {
+    AccentColor.ORION -> R.string.accent_orion
     AccentColor.TEAL -> R.string.accent_teal
     AccentColor.NAVY -> R.string.accent_navy
     AccentColor.EMERALD -> R.string.accent_emerald
@@ -876,5 +923,656 @@ private fun FeelToggleRow(
     }
     if (showDivider) {
         HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
+    }
+}
+
+
+/** The Orion-style settings hub: quick-toggle pills and pastel bento shortcuts. */
+@Composable
+private fun SettingsHubHeader(
+    onBack: () -> Unit,
+    documentCount: Int,
+    biometricChecked: Boolean,
+    biometricEnabled: Boolean,
+    onBiometricChange: (Boolean) -> Unit,
+    dynamicChecked: Boolean,
+    dynamicEnabled: Boolean,
+    onDynamicChange: (Boolean) -> Unit,
+    hapticsChecked: Boolean,
+    onHapticsChange: (Boolean) -> Unit,
+    animationsChecked: Boolean,
+    onAnimationsChange: (Boolean) -> Unit,
+    compactChecked: Boolean,
+    onCompactChange: (Boolean) -> Unit,
+    glassChecked: Boolean,
+    onGlassChange: (Boolean) -> Unit,
+    themeMode: ThemeMode,
+    accentColor: AccentColor,
+    languageName: String,
+    storageText: String,
+    onJump: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            HeaderCircleButton(
+                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.action_back),
+                onClick = onBack
+            )
+            Spacer(Modifier.weight(1f))
+            VaultMark(size = 42.dp)
+        }
+        Spacer(Modifier.height(14.dp))
+        Text(
+            text = stringResource(R.string.tab_settings),
+            style = MaterialTheme.typography.displaySmall,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "My Vault v1.0.0 · " + if (documentCount == 1) {
+                stringResource(R.string.settings_storage_one)
+            } else {
+                stringResource(R.string.settings_storage_many, documentCount)
+            },
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.settings_quick_toggles),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(Modifier.height(10.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuickToggleTile(
+                icon = Icons.Filled.Fingerprint,
+                label = stringResource(R.string.settings_quick_biometric),
+                checked = biometricChecked,
+                enabled = biometricEnabled,
+                onCheckedChange = onBiometricChange,
+                modifier = Modifier.weight(1f)
+            )
+            QuickToggleTile(
+                icon = Icons.Filled.Palette,
+                label = stringResource(R.string.settings_quick_wallpaper),
+                checked = dynamicChecked,
+                enabled = dynamicEnabled,
+                onCheckedChange = onDynamicChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuickToggleTile(
+                icon = Icons.Filled.Vibration,
+                label = stringResource(R.string.settings_haptics),
+                checked = hapticsChecked,
+                onCheckedChange = onHapticsChange,
+                modifier = Modifier.weight(1f)
+            )
+            QuickToggleTile(
+                icon = Icons.Filled.BlurOn,
+                label = stringResource(R.string.settings_glass_bottom_bar),
+                checked = glassChecked,
+                onCheckedChange = onGlassChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            QuickToggleTile(
+                icon = Icons.Filled.Animation,
+                label = stringResource(R.string.settings_quick_animations),
+                checked = animationsChecked,
+                onCheckedChange = onAnimationsChange,
+                modifier = Modifier.weight(1f)
+            )
+            QuickToggleTile(
+                icon = Icons.Filled.Compress,
+                label = stringResource(R.string.settings_compact_mode),
+                checked = compactChecked,
+                onCheckedChange = onCompactChange,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.settings_everything_else),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(Modifier.height(10.dp))
+        SettingsBentoCard(
+            icon = Icons.Filled.Palette,
+            title = stringResource(R.string.settings_appearance),
+            subtitle = if (dynamicChecked) {
+                "${stringResource(R.string.settings_quick_wallpaper)} · ${stringResource(themeModeLabelRes(themeMode))}"
+            } else {
+                "${stringResource(accentLabelRes(accentColor))} · ${stringResource(themeModeLabelRes(themeMode))}"
+            },
+            seed = Color(0xFF6B48BC),
+            onClick = { onJump("appearance") },
+            modifier = Modifier.fillMaxWidth().height(118.dp)
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().height(196.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SettingsBentoCard(
+                icon = Icons.Filled.Lock,
+                title = stringResource(R.string.settings_security),
+                subtitle = stringResource(R.string.settings_biometric_title),
+                seed = Color(0xFF087A4E),
+                onClick = { onJump("security") },
+                modifier = Modifier.weight(1f).fillMaxHeight()
+            )
+            Column(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                SettingsBentoCard(
+                    icon = Icons.Filled.Groups,
+                    title = stringResource(R.string.settings_family),
+                    subtitle = stringResource(R.string.settings_family_subtitle),
+                    seed = Color(0xFF0077A8),
+                    onClick = { onJump("family") },
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                )
+                SettingsBentoCard(
+                    icon = Icons.Filled.Language,
+                    title = stringResource(R.string.settings_language),
+                    subtitle = languageName,
+                    seed = Color(0xFF4C4ECD),
+                    onClick = { onJump("language") },
+                    modifier = Modifier.fillMaxWidth().weight(1f)
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().height(118.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SettingsBentoCard(
+                icon = Icons.Filled.Storage,
+                title = stringResource(R.string.settings_storage),
+                subtitle = storageText,
+                seed = Color(0xFFC65D00),
+                onClick = { onJump("storage") },
+                modifier = Modifier.weight(1f).fillMaxHeight()
+            )
+            SettingsBentoCard(
+                icon = Icons.Filled.Star,
+                title = stringResource(R.string.creator_title),
+                subtitle = stringResource(R.string.creator_name),
+                seed = Color(0xFFB03070),
+                onClick = { onJump("creator") },
+                modifier = Modifier.weight(1f).fillMaxHeight()
+            )
+        }
+    }
+}
+
+@Composable
+private fun QuickToggleTile(
+    icon: ImageVector,
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+) {
+    val animationsEnabled = LocalAnimationsEnabled.current
+    val corner by animateDpAsState(
+        targetValue = if (checked) 36.dp else 22.dp,
+        animationSpec = if (animationsEnabled) {
+            spring(dampingRatio = 0.68f, stiffness = 420f)
+        } else {
+            snap()
+        },
+        label = "quickToggleCorner"
+    )
+    val shape = RoundedCornerShape(corner)
+    val container by animateColorAsState(
+        targetValue = if (checked) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerHigh
+        },
+        animationSpec = if (animationsEnabled) tween(220) else snap(),
+        label = "quickToggleContainer"
+    )
+    val contentColor = if (checked) {
+        MaterialTheme.colorScheme.onPrimary
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+    Box(
+        modifier = modifier
+            .height(78.dp)
+            .graphicsLayer { alpha = if (enabled) 1f else 0.48f }
+            .clip(shape)
+            .background(container)
+            .springPress(shape, enabled = enabled) { onCheckedChange(!checked) }
+            .padding(horizontal = 14.dp, vertical = 12.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(icon, contentDescription = null, tint = contentColor, modifier = Modifier.size(21.dp))
+                Spacer(Modifier.weight(1f))
+                Text(
+                    text = stringResource(
+                        if (checked) R.string.settings_toggle_on else R.string.settings_toggle_off
+                    ),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = contentColor.copy(alpha = 0.82f)
+                )
+            }
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                color = contentColor,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun SettingsBentoCard(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    seed: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val shape = RoundedCornerShape(28.dp)
+    Box(
+        modifier = modifier
+            .clip(shape)
+            .background(expressivePastel(seed))
+            .springPress(shape, onClick = onClick)
+    ) {
+        MorphingShapeBox(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 28.dp, y = (-32).dp)
+                .size(92.dp),
+            color = seed.copy(alpha = 0.17f),
+            lobes = 12,
+            wave = 0.18f,
+            spinMillis = 26_000
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            MorphingShapeBox(
+                modifier = Modifier.size(42.dp),
+                color = seed.copy(alpha = 0.24f),
+                lobes = 9,
+                wave = 0.13f,
+                spinMillis = 22_000
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (subtitle.isNotBlank()) {
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** A complete creator area modelled on Orion's About tab, including its flipping coin. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun CreatorSpace(
+    documentCount: Int,
+    totalSize: Long,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val animationsEnabled = LocalAnimationsEnabled.current
+    var flipped by remember { mutableStateOf(false) }
+    val rotation by animateFloatAsState(
+        targetValue = if (flipped) 180f else 0f,
+        animationSpec = if (animationsEnabled) tween(680) else snap(),
+        label = "creatorCoinFlip"
+    )
+    LaunchedEffect(flipped) {
+        if (flipped) {
+            delay(2_400)
+            flipped = false
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(32.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.62f),
+                        MaterialTheme.colorScheme.surfaceContainerLow
+                    )
+                )
+            )
+            .padding(20.dp)
+    ) {
+        MorphingShapeBox(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 54.dp, y = (-70).dp)
+                .size(180.dp),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
+            lobes = 12,
+            wave = 0.19f,
+            spinMillis = 30_000
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ExpressiveChip(
+                text = stringResource(R.string.creator_title).uppercase(),
+                icon = Icons.Filled.Star,
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.72f),
+                modifier = Modifier.align(Alignment.Start)
+            )
+
+            Box(
+                modifier = Modifier.size(width = 230.dp, height = 190.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                MorphingShapeBox(
+                    modifier = Modifier.size(178.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.58f),
+                    lobes = 12,
+                    wave = 0.19f,
+                    spinMillis = 24_000
+                )
+                Box(
+                    modifier = Modifier
+                        .size(128.dp)
+                        .graphicsLayer {
+                            rotationY = rotation
+                            cameraDistance = 18.dp.toPx()
+                        }
+                        .springPress(BlobShape(lobes = 12, wave = 0.16f)) { flipped = !flipped },
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (rotation <= 90f) {
+                        MorphingShapeBox(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.primary,
+                            lobes = 12,
+                            wave = 0.16f,
+                            spinMillis = 18_000
+                        ) {
+                            Text(
+                                text = "S",
+                                style = MaterialTheme.typography.displaySmall,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .graphicsLayer { rotationY = 180f }
+                                .clip(BlobShape(lobes = 12, wave = 0.16f))
+                                .background(MaterialTheme.colorScheme.tertiaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Filled.Shield,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
+                    }
+                }
+                CreatorOrbitBadge(
+                    icon = Icons.Filled.Star,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .offset(x = 16.dp, y = 18.dp)
+                )
+                CreatorOrbitBadge(
+                    icon = Icons.Filled.Code,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .offset(x = (-4).dp)
+                )
+                CreatorOrbitBadge(
+                    icon = Icons.Filled.Shield,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .offset(x = 28.dp, y = (-8).dp)
+                )
+            }
+
+            Text(
+                text = if (flipped) {
+                    stringResource(R.string.creator_back_title)
+                } else {
+                    stringResource(R.string.creator_name)
+                },
+                style = MaterialTheme.typography.displaySmall,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = if (flipped) {
+                    stringResource(R.string.creator_back_subtitle)
+                } else {
+                    "@ft-sinan"
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center
+            )
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = stringResource(R.string.creator_role),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(10.dp))
+            Text(
+                text = stringResource(R.string.creator_bio),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 6.dp)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.creator_tap_emblem),
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(Modifier.height(16.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ExpressiveChip(
+                    text = stringResource(R.string.creator_badge_creator),
+                    icon = Icons.Filled.Star,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                )
+                ExpressiveChip(
+                    text = stringResource(R.string.creator_badge_privacy),
+                    icon = Icons.Filled.Shield,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                ExpressiveChip(
+                    text = "Kotlin · Android",
+                    icon = Icons.Filled.Code,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                )
+            }
+
+            Spacer(Modifier.height(18.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.68f))
+                    .padding(vertical = 14.dp, horizontal = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ExpressiveStat(
+                    value = "1.0.0",
+                    label = stringResource(R.string.creator_version),
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(34.dp)
+                        .background(MaterialTheme.colorScheme.outlineVariant)
+                )
+                ExpressiveStat(
+                    value = documentCount.toString(),
+                    label = stringResource(R.string.stat_docs),
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(34.dp)
+                        .background(MaterialTheme.colorScheme.outlineVariant)
+                )
+                ExpressiveStat(
+                    value = FormatUtils.formatFileSize(totalSize),
+                    label = stringResource(R.string.settings_storage),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(Modifier.height(20.dp))
+            Text(
+                text = stringResource(R.string.creator_connect),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.Start)
+            )
+            Spacer(Modifier.height(10.dp))
+            val githubShape = RoundedCornerShape(24.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(66.dp)
+                    .clip(githubShape)
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.78f))
+                    .springPress(githubShape) {
+                        runCatching {
+                            context.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ft-sinan"))
+                            )
+                        }
+                    }
+                    .padding(horizontal = 14.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    MorphingShapeBox(
+                        modifier = Modifier.size(42.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        lobes = 9,
+                        wave = 0.13f
+                    ) {
+                        Icon(
+                            Icons.Filled.Code,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = stringResource(R.string.creator_github),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "github.com/ft-sinan",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Icon(Icons.Filled.OpenInNew, contentDescription = null)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CreatorOrbitBadge(icon: ImageVector, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(38.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(19.dp)
+        )
     }
 }

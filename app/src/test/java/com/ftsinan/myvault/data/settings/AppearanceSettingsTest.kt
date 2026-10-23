@@ -16,7 +16,9 @@ class AppearanceSettingsTest {
 
     @Test
     fun `accent color parses stored values with teal fallback`() {
-        assertEquals(AccentColor.TEAL, AccentColor.fromName(null))
+        assertEquals(AccentColor.ORION, AccentColor.fromName(null))
+        assertEquals(AccentColor.ORION, AccentColor.fromName("ORION"))
+        assertEquals(AccentColor.TEAL, AccentColor.fromName("TEAL"))
         assertEquals(AccentColor.NAVY, AccentColor.fromName("NAVY"))
         assertEquals(AccentColor.EMERALD, AccentColor.fromName("EMERALD"))
         assertEquals(AccentColor.INDIGO, AccentColor.fromName("INDIGO"))
@@ -24,6 +26,6 @@ class AppearanceSettingsTest {
         assertEquals(AccentColor.GRAPE, AccentColor.fromName("GRAPE"))
         assertEquals(AccentColor.COCOA, AccentColor.fromName("COCOA"))
         assertEquals(AccentColor.SLATE, AccentColor.fromName("SLATE"))
-        assertEquals(AccentColor.TEAL, AccentColor.fromName("UNKNOWN"))
+        assertEquals(AccentColor.ORION, AccentColor.fromName("UNKNOWN"))
     }
 }

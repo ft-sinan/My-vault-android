@@ -18,9 +18,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -66,6 +69,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -77,11 +81,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.data.model.VaultDocument
 import com.ftsinan.myvault.ui.components.EmptyState
+import com.ftsinan.myvault.ui.components.ExpressiveStat
+import com.ftsinan.myvault.ui.components.HeaderCircleButton
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.categoryColor
+import com.ftsinan.myvault.ui.components.categoryIcon
+import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.categoryLabel
 import com.ftsinan.myvault.ui.components.assignedGroupIcon
 import com.ftsinan.myvault.ui.components.assignedGroupLabel
@@ -241,48 +253,7 @@ fun DocumentDetailScreen(
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(document?.title ?: stringResource(R.string.detail_details)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                },
-                actions = {
-                    document?.let { doc ->
-                        IconButton(onClick = viewModel::toggleFavourite) {
-                            Icon(
-                                if (doc.isFavourite) Icons.Filled.Star
-                                else Icons.Outlined.StarBorder,
-                                contentDescription = stringResource(R.string.home_favourites)
-                            )
-                        }
-                        IconButton(onClick = { showShareDialog = true }) {
-                            Icon(
-                                Icons.Filled.Share,
-                                contentDescription = stringResource(R.string.action_share)
-                            )
-                        }
-                        IconButton(onClick = { onEdit(doc.id) }) {
-                            Icon(
-                                Icons.Filled.Edit,
-                                contentDescription = stringResource(R.string.action_edit)
-                            )
-                        }
-                        IconButton(onClick = { showDeleteDialog = true }) {
-                            Icon(
-                                Icons.Filled.Delete,
-                                contentDescription = stringResource(R.string.action_delete)
-                            )
-                        }
-                    }
-                }
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         val doc = document
         if (doc == null) {
@@ -299,37 +270,36 @@ fun DocumentDetailScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             item {
+                val pageCount = visualPageCount.takeIf { it > 0 }
+                    ?: pages.size.takeIf { it > 0 }
+                    ?: 1
+                val heroSize = pages.sumOf { it.fileSize }.takeIf { it > 0 } ?: doc.fileSize
+                DocumentDetailHero(
+                    document = doc,
+                    pageCount = pageCount,
+                    totalSize = heroSize,
+                    onBack = onBack,
+                    onToggleFavourite = viewModel::toggleFavourite,
+                    onShare = { showShareDialog = true },
+                    onEdit = { onEdit(doc.id) },
+                    onDelete = { showDeleteDialog = true },
+                    modifier = Modifier.expressiveReveal(0, doc.id)
+                )
+            }
+
+            item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(28.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
                     Column(
                         Modifier.padding(18.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Text(
-                            doc.title,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            AssistChip(
-                                onClick = {},
-                                label = { Text(doc.docType) },
-                                leadingIcon = {
-                                    Icon(Icons.Filled.Description, null, Modifier.size(16.dp))
-                                }
-                            )
-                            AssistChip(
-                                onClick = {},
-                                label = { Text(categoryLabel(doc.category)) },
-                                leadingIcon = {
-                                    Icon(Icons.Filled.Folder, null, Modifier.size(16.dp))
-                                }
-                            )
-                        }
                         DetailRow(
                             icon = doc.assignedGroup?.let { assignedGroupIcon(it) }
                                 ?: Icons.Filled.Person,
@@ -466,13 +436,187 @@ fun DocumentDetailScreen(
     }
 }
 
+
+/** App-detail style hero: floating actions, expressive icon, title and stat strip. */
+@Composable
+private fun DocumentDetailHero(
+    document: VaultDocument,
+    pageCount: Int,
+    totalSize: Long,
+    onBack: () -> Unit,
+    onToggleFavourite: () -> Unit,
+    onShare: () -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val categoryTint = categoryColor(document.category)
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(32.dp))
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        categoryTint.copy(alpha = 0.24f),
+                        MaterialTheme.colorScheme.surfaceContainerLow
+                    )
+                )
+            )
+            .padding(16.dp)
+    ) {
+        MorphingShapeBox(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 48.dp, y = (-66).dp)
+                .size(170.dp),
+            color = categoryTint.copy(alpha = 0.13f),
+            lobes = 12,
+            wave = 0.19f,
+            spinMillis = 28_000
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HeaderCircleButton(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.action_back),
+                    onClick = onBack,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                Spacer(Modifier.weight(1f))
+                HeaderCircleButton(
+                    icon = if (document.isFavourite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                    contentDescription = stringResource(R.string.home_favourites),
+                    onClick = onToggleFavourite,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                HeaderCircleButton(
+                    icon = Icons.Filled.Share,
+                    contentDescription = stringResource(R.string.action_share),
+                    onClick = onShare,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                HeaderCircleButton(
+                    icon = Icons.Filled.Edit,
+                    contentDescription = stringResource(R.string.action_edit),
+                    onClick = onEdit,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+                HeaderCircleButton(
+                    icon = Icons.Filled.Delete,
+                    contentDescription = stringResource(R.string.action_delete),
+                    onClick = onDelete,
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.76f)
+                )
+            }
+
+            Spacer(Modifier.height(18.dp))
+            Row(verticalAlignment = Alignment.Top) {
+                MorphingShapeBox(
+                    modifier = Modifier.size(84.dp),
+                    color = categoryTint.copy(alpha = 0.18f),
+                    lobes = 9,
+                    wave = 0.14f,
+                    spinMillis = 20_000
+                ) {
+                    Icon(
+                        imageVector = categoryIcon(document.category),
+                        contentDescription = categoryLabel(document.category),
+                        tint = categoryTint,
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+                Spacer(Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = document.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(Modifier.height(3.dp))
+                    Text(
+                        text = document.docType,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = document.assignedGroup?.let { assignedGroupLabel(it) }
+                            ?: document.holderName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(18.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.62f))
+                    .padding(horizontal = 10.dp, vertical = 13.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                ExpressiveStat(
+                    value = pageCount.toString(),
+                    label = stringResource(R.string.detail_pages),
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(34.dp)
+                        .background(MaterialTheme.colorScheme.outlineVariant)
+                )
+                ExpressiveStat(
+                    value = FormatUtils.formatFileSize(totalSize),
+                    label = stringResource(R.string.detail_file_size),
+                    modifier = Modifier.weight(1f)
+                )
+                Box(
+                    Modifier
+                        .width(1.dp)
+                        .height(34.dp)
+                        .background(MaterialTheme.colorScheme.outlineVariant)
+                )
+                ExpressiveStat(
+                    value = categoryLabel(document.category),
+                    label = stringResource(R.string.docs_categories),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun DetailRow(icon: ImageVector, label: String, value: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        MorphingShapeBox(
+            modifier = Modifier.size(38.dp),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            lobes = 9,
+            wave = 0.13f,
+            spinMillis = 24_000
+        ) {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
         Column {
             Text(
                 label,

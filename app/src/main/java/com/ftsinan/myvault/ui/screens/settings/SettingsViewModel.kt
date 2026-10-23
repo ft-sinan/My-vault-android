@@ -41,13 +41,13 @@ class SettingsViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
 
     val dynamicColorEnabled: StateFlow<Boolean> = pinManager.useDynamicColor
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val themeMode: StateFlow<ThemeMode> = pinManager.themeMode
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ThemeMode.SYSTEM)
 
     val accentColor: StateFlow<AccentColor> = pinManager.accentColor
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccentColor.TEAL)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AccentColor.ORION)
 
     val hapticsEnabled: StateFlow<Boolean> = pinManager.hapticsEnabled
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)

@@ -55,18 +55,18 @@ fun EmptyState(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .size(96.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            contentAlignment = Alignment.Center
+        MorphingShapeBox(
+            modifier = Modifier.size(96.dp),
+            color = MaterialTheme.colorScheme.primaryContainer,
+            lobes = 9,
+            wave = 0.15f,
+            spinMillis = 22_000
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(46.dp)
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -103,14 +103,13 @@ fun DocumentCard(
     var titleExpanded by remember(document.id) { mutableStateOf(false) }
     var titleOverflows by remember(document.id, document.title) { mutableStateOf(false) }
 
-    Card(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    val cardShape = RoundedCornerShape(28.dp)
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(cardShape)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .springPress(cardShape, onClick = onClick)
     ) {
         Row(
             modifier = Modifier
@@ -118,18 +117,18 @@ fun DocumentCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.Top
         ) {
-            Box(
-                modifier = Modifier
-                    .size(58.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(categoryColor(document.category).copy(alpha = 0.16f)),
-                contentAlignment = Alignment.Center
+            MorphingShapeBox(
+                modifier = Modifier.size(58.dp),
+                color = categoryColor(document.category).copy(alpha = 0.16f),
+                lobes = 9,
+                wave = 0.13f,
+                spinMillis = 24_000
             ) {
                 Icon(
                     imageVector = categoryIcon(document.category),
                     contentDescription = categoryLabel(document.category),
                     tint = categoryColor(document.category),
-                    modifier = Modifier.size(29.dp)
+                    modifier = Modifier.size(28.dp)
                 )
             }
 

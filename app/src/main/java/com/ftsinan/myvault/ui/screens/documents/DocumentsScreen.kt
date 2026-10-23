@@ -13,10 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -47,6 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,7 +61,10 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.ui.theme.animatedPlacement
 import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.model.Category
+import com.ftsinan.myvault.ui.components.CapsuleTopBar
 import com.ftsinan.myvault.ui.components.DocumentCard
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.expressiveReveal
 import com.ftsinan.myvault.ui.components.EmptyState
 import com.ftsinan.myvault.ui.components.assignedGroupLabel
 import com.ftsinan.myvault.ui.components.categoryColor
@@ -74,34 +82,63 @@ fun DocumentsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val filters = uiState.filters
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        rememberTopAppBarState()
-    )
-
     LaunchedEffect(initialGroup) { viewModel.applyGroup(initialGroup) }
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Column {
-                        Text(
-                            stringResource(R.string.docs_title),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1
+            CapsuleTopBar(
+                content = {
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (filters.searchQuery.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.docs_search_hint),
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1
+                            )
+                        }
+                        BasicTextField(
+                            value = filters.searchQuery,
+                            onValueChange = viewModel::onSearchChange,
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                                color = MaterialTheme.colorScheme.onSurface
+                            ),
+                            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
                         )
+                    }
+                },
+                pillActions = {
+                    if (filters.searchQuery.isNotEmpty()) {
+                        IconButton(
+                            onClick = { viewModel.onSearchChange("") },
+                            modifier = Modifier.size(38.dp)
+                        ) {
+                            Icon(Icons.Filled.Close, contentDescription = null)
+                        }
+                    } else {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                },
+                trailing = {
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.secondaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(
-                            text = stringResource(R.string.docs_shown, uiState.documents.size),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = uiState.totalCount.toString(),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
                 }
@@ -133,63 +170,6 @@ fun DocumentsScreen(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                OutlinedTextField(
-                    value = filters.searchQuery,
-                    onValueChange = viewModel::onSearchChange,
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text(stringResource(R.string.docs_search_hint)) },
-                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-                    trailingIcon = {
-                        if (filters.searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { viewModel.onSearchChange("") }) {
-                                Icon(Icons.Filled.Close, contentDescription = null)
-                            }
-                        }
-                    },
-                    singleLine = true,
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    )
-                )
-            }
-
-            val usedCategories = Category.entries
-                .filter { (uiState.categoryCounts[it] ?: 0) > 0 }
-            if (usedCategories.isNotEmpty()) {
-                item {
-                    Text(stringResource(R.string.docs_categories),
-                        style = MaterialTheme.typography.titleLarge)
-                }
-                items(usedCategories.chunked(2)) { rowCategories ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        rowCategories.forEach { category ->
-                            CategoryCard(
-                                category = category,
-                                count = uiState.categoryCounts[category] ?: 0,
-                                selected = filters.category == category,
-                                onClick = {
-                                    viewModel.onCategorySelected(
-                                        if (filters.category == category) null else category
-                                    )
-                                },
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                        if (rowCategories.size == 1) Spacer(Modifier.weight(1f))
-                    }
-                }
-            }
-
             item {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     item {
@@ -242,6 +222,36 @@ fun DocumentsScreen(
                 }
             }
 
+            val usedCategories = Category.entries
+                .filter { (uiState.categoryCounts[it] ?: 0) > 0 }
+            if (usedCategories.isNotEmpty()) {
+                item {
+                    Text(stringResource(R.string.docs_categories),
+                        style = MaterialTheme.typography.titleLarge)
+                }
+                itemsIndexed(usedCategories.chunked(2)) { rowIndex, rowCategories ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().expressiveReveal(rowIndex + 1, rowCategories),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        rowCategories.forEach { category ->
+                            CategoryCard(
+                                category = category,
+                                count = uiState.categoryCounts[category] ?: 0,
+                                selected = filters.category == category,
+                                onClick = {
+                                    viewModel.onCategorySelected(
+                                        if (filters.category == category) null else category
+                                    )
+                                },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                        if (rowCategories.size == 1) Spacer(Modifier.weight(1f))
+                    }
+                }
+            }
+
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -272,11 +282,12 @@ fun DocumentsScreen(
                     )
                 }
             } else {
-                items(uiState.documents, key = { it.document.id }) { summary ->
+                itemsIndexed(uiState.documents, key = { _, it -> it.document.id }) { index, summary ->
                     DocumentCard(
                         summary = summary,
                         onClick = { onDocumentClick(summary.document.id) },
                         modifier = animatedPlacement()
+                            .expressiveReveal(index + 2, summary.document.id)
                     )
                 }
             }
@@ -307,12 +318,12 @@ private fun CategoryCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(Modifier.padding(16.dp)) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(color.copy(alpha = 0.16f)),
-                contentAlignment = Alignment.Center
+            MorphingShapeBox(
+                modifier = Modifier.size(46.dp),
+                color = color.copy(alpha = 0.16f),
+                lobes = 9,
+                wave = 0.13f,
+                spinMillis = 22_000
             ) {
                 Icon(categoryIcon(category), null, tint = color, modifier = Modifier.size(24.dp))
             }

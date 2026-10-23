@@ -246,4 +246,24 @@
     <string name="accent_cocoa">Cocoa</string>
     <string name="accent_slate">Slate</string>
     <string name="settings_appearance_preview">Preview</string>
+    <string name="accent_orion">Orion</string>
+    <string name="settings_quick_toggles">Quick toggles</string>
+    <string name="settings_everything_else">Everything else</string>
+    <string name="settings_quick_biometric">Biometric unlock</string>
+    <string name="settings_quick_wallpaper">Wallpaper colours</string>
+    <string name="settings_quick_animations">Animations</string>
+    <string name="settings_toggle_on">On</string>
+    <string name="settings_toggle_off">Off</string>
+    <string name="creator_title">Creator space</string>
+    <string name="creator_role">Designed &amp; built by</string>
+    <string name="creator_name">Sinan</string>
+    <string name="creator_bio">I built My Vault to keep family documents private, encrypted, and always on the device — no account, no cloud, no tracking.</string>
+    <string name="creator_badge_creator">Creator</string>
+    <string name="creator_badge_privacy">Privacy first</string>
+    <string name="creator_connect">Connect</string>
+    <string name="creator_github">Open GitHub profile</string>
+    <string name="creator_tap_emblem">Tap the emblem</string>
+    <string name="creator_back_title">Private by design</string>
+    <string name="creator_back_subtitle">On-device · Offline · Encrypted</string>
+    <string name="creator_version">Version</string>
 </resources>

@@ -68,6 +68,7 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.model.Category
 import com.ftsinan.myvault.data.model.DocumentTypes
+import com.ftsinan.myvault.ui.components.ExpressiveBackTopBar
 import com.ftsinan.myvault.ui.components.assignedGroupLabel
 import com.ftsinan.myvault.ui.components.categoryLabel
 import com.ftsinan.myvault.ui.screens.lock.findFragmentActivity
@@ -153,45 +154,17 @@ fun AddEditDocumentScreen(
         }
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        rememberTopAppBarState()
-    )
-
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
+            ExpressiveBackTopBar(
+                title = stringResource(
+                    if (uiState.isEditMode) R.string.edit_title else R.string.add_title
                 ),
-                title = {
-                    Column {
-                        Text(
-                            stringResource(
-                                if (uiState.isEditMode) R.string.edit_title
-                                else R.string.add_title
-                            ),
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1
-                        )
-                        Text(
-                            stringResource(R.string.add_encrypted_note),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                }
+                subtitle = stringResource(R.string.add_encrypted_note),
+                icon = Icons.Filled.QrCodeScanner,
+                backContentDescription = stringResource(R.string.action_back),
+                onBack = onBack
             )
         },
         bottomBar = {

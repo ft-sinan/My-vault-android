@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -59,6 +60,7 @@ import coil.compose.AsyncImage
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.ProfileOptions
 import com.ftsinan.myvault.data.model.Relation
+import com.ftsinan.myvault.ui.components.ExpressiveBackTopBar
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.components.genderLabel
@@ -95,33 +97,16 @@ fun MemberEditScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Column {
-                        Text(stringResource(titleRes))
-                        if (ownerSetup) {
-                            Text(
-                                text = stringResource(R.string.profile_setup_subtitle),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+            ExpressiveBackTopBar(
+                title = stringResource(titleRes),
+                subtitle = if (ownerSetup) {
+                    stringResource(R.string.profile_setup_subtitle)
+                } else {
+                    null
                 },
-                navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = stringResource(R.string.action_back)
-                            )
-                        }
-                    }
-                }
+                icon = Icons.Filled.Person,
+                backContentDescription = stringResource(R.string.action_back),
+                onBack = onBack
             )
         },
         bottomBar = {

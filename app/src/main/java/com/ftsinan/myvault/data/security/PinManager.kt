@@ -30,9 +30,9 @@ class PinManager(private val context: Context) {
         prefs[BIOMETRIC_ENABLED] ?: true
     }
 
-    /** Material You: use wallpaper-based colours on Android 12+. */
+    /** Material You colours; off by default so the Orion palette is the app's signature look. */
     val useDynamicColor: Flow<Boolean> = context.dataStore.data.map { prefs ->
-        prefs[USE_DYNAMIC_COLOR] ?: true
+        prefs[USE_DYNAMIC_COLOR] ?: false
     }
 
     val themeMode: Flow<ThemeMode> = context.dataStore.data.map { prefs ->

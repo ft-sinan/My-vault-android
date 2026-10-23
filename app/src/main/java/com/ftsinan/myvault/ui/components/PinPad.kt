@@ -3,6 +3,7 @@ package com.ftsinan.myvault.ui.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ftsinan.myvault.R
+import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
 import com.ftsinan.myvault.ui.theme.LocalHapticsEnabled
 import com.ftsinan.myvault.data.security.PinManager
 
@@ -56,12 +58,17 @@ fun PinDots(
 
 @Composable
 private fun PinDot(filled: Boolean, isError: Boolean) {
+    val animationsEnabled = LocalAnimationsEnabled.current
     val scale by animateFloatAsState(
         targetValue = if (filled) 1.18f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
+        animationSpec = if (animationsEnabled) {
+            spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMedium
+            )
+        } else {
+            snap()
+        },
         label = "pinDotScale"
     )
     val animatedColor by animateColorAsState(
@@ -125,17 +132,16 @@ fun PinPad(
                     modifier = Modifier
                         .size(76.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .springPress(CircleShape, onClick = onBiometricClick),
                     contentAlignment = Alignment.Center
                 ) {
-                    IconButton(onClick = onBiometricClick, modifier = Modifier.size(76.dp)) {
-                        Icon(
-                            imageVector = Icons.Filled.Fingerprint,
-                            contentDescription = stringResource(R.string.pin_biometric_content_description),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.size(34.dp)
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Filled.Fingerprint,
+                        contentDescription = stringResource(R.string.pin_biometric_content_description),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(34.dp)
+                    )
                 }
             } else {
                 Spacer(modifier = Modifier.size(76.dp))
@@ -154,19 +160,13 @@ fun PinPad(
 
 @Composable
 private fun PinKey(label: String, onClick: () -> Unit) {
-    val view = LocalView.current
-    val hapticsEnabled = LocalHapticsEnabled.current
-    TextButton(
-        onClick = {
-            if (hapticsEnabled) {
-                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            }
-            onClick()
-        },
+    Box(
         modifier = Modifier
             .size(76.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+            .springPress(CircleShape, onClickLabel = label, onClick = onClick),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = label,

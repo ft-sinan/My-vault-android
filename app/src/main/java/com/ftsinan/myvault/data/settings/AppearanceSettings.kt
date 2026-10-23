@@ -20,6 +20,7 @@ enum class ThemeMode {
  * Values are stored by enum name, so the UI can safely evolve visually.
  */
 enum class AccentColor {
+    ORION,
     TEAL,
     NAVY,
     EMERALD,
@@ -31,6 +32,6 @@ enum class AccentColor {
 
     companion object {
         fun fromName(value: String?): AccentColor =
-            entries.firstOrNull { it.name == value } ?: TEAL
+            entries.firstOrNull { it.name == value } ?: ORION
     }
 }

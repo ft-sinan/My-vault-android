@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,7 +69,13 @@ import com.ftsinan.myvault.ui.theme.animatedPlacement
 import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.ui.components.DocumentCard
 import com.ftsinan.myvault.ui.components.EmptyState
+import com.ftsinan.myvault.ui.components.CapsuleTopBar
+import com.ftsinan.myvault.ui.components.HeaderAvatarButton
+import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.MemberAvatar
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.expressiveReveal
+import com.ftsinan.myvault.ui.components.springPress
 import com.ftsinan.myvault.ui.components.bloodGroupLabel
 import com.ftsinan.myvault.ui.screens.addedit.ImportSource
 import com.ftsinan.myvault.util.FormatUtils
@@ -92,101 +99,55 @@ fun HomeScreen(
                 listState.firstVisibleItemScrollOffset > 220
         }
     }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
-        rememberTopAppBarState()
-    )
     val owner = uiState.owner
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Crossfade(
-                        targetState = showProfileInTopBar && owner != null,
-                        animationSpec = if (LocalAnimationsEnabled.current) tween() else snap(),
-                        label = "homeTopBarProfile"
-                    ) { showProfile ->
-                        val currentOwner = owner
-                        if (showProfile && currentOwner != null) {
-                            Row(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(50))
-                                    .clickable { onProfileClick(currentOwner.member.id) }
-                                    .padding(end = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                MemberAvatar(
-                                    name = currentOwner.member.name,
-                                    photoBytes = currentOwner.photoBytes,
-                                    size = 36.dp
+            CapsuleTopBar(
+                content = {
+                    Box(modifier = Modifier.weight(1f)) {
+                        Crossfade(
+                            targetState = showProfileInTopBar && owner != null,
+                            animationSpec = if (LocalAnimationsEnabled.current) tween() else snap(),
+                            label = "homeCapsuleProfile"
+                        ) { showProfile ->
+                            val currentOwner = owner
+                            Column {
+                                Text(
+                                    text = if (showProfile && currentOwner != null) {
+                                        currentOwner.member.name.substringBefore(" ")
+                                    } else {
+                                        stringResource(R.string.app_name)
+                                    },
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
-                                Spacer(Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = currentOwner.member.name
-                                            .substringBefore(" "),
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.home_subtitle),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                            }
-                        } else {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(RoundedCornerShape(13.dp))
-                                        .background(MaterialTheme.colorScheme.primaryContainer),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Shield,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                                Spacer(Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = stringResource(R.string.app_name),
-                                        style = MaterialTheme.typography.titleLarge,
-                                        fontWeight = FontWeight.SemiBold,
-                                        maxLines = 1
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.home_subtitle),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
+                                Text(
+                                    text = stringResource(R.string.home_subtitle),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
                         }
                     }
                 },
-                actions = {
-                    IconButton(onClick = onLock) {
-                        Icon(
-                            Icons.Filled.Lock,
-                            contentDescription = stringResource(R.string.settings_lock_now)
+                trailing = {
+                    HeaderCircleButton(
+                        icon = Icons.Filled.Lock,
+                        contentDescription = stringResource(R.string.settings_lock_now),
+                        onClick = onLock
+                    )
+                    owner?.let { currentOwner ->
+                        HeaderAvatarButton(
+                            name = currentOwner.member.name,
+                            photoBytes = currentOwner.photoBytes,
+                            onClick = { onProfileClick(currentOwner.member.id) },
+                            size = 38.dp
                         )
                     }
                 }
@@ -209,6 +170,7 @@ fun HomeScreen(
         ) {
             uiState.owner?.let { owner ->
                 item {
+                    Box(modifier = Modifier.expressiveReveal(0, "home-owner")) {
                     OwnerProfileCard(
                         owner = owner,
                         totalCount = uiState.totalCount,
@@ -216,6 +178,7 @@ fun HomeScreen(
                         totalSize = uiState.totalSize,
                         onClick = { onProfileClick(owner.member.id) }
                     )
+                    }
                 }
             }
 
@@ -229,7 +192,7 @@ fun HomeScreen(
                         title = stringResource(R.string.add_scan),
                         subtitle = stringResource(R.string.add_scan_subtitle),
                         onClick = { onAddDocument(ImportSource.SCAN) },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).expressiveReveal(1, "home-scan"),
                         primary = true
                     )
                     QuickActionCard(
@@ -237,7 +200,7 @@ fun HomeScreen(
                         title = stringResource(R.string.add_file),
                         subtitle = stringResource(R.string.add_file_subtitle),
                         onClick = { onAddDocument(ImportSource.FILE) },
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).expressiveReveal(2, "home-file"),
                         primary = false
                     )
                 }
@@ -260,13 +223,16 @@ fun HomeScreen(
                 }
                 item {
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-                        items(uiState.members, key = { it.member.id }) { item ->
+                        itemsIndexed(uiState.members, key = { _, it -> it.member.id }) { index, item ->
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 modifier = Modifier
                                     .width(72.dp)
+                                    .expressiveReveal(index + 2, item.member.id)
                                     .clip(RoundedCornerShape(20.dp))
-                                    .clickable { onProfileClick(item.member.id) }
+                                    .springPress(RoundedCornerShape(20.dp)) {
+                                        onProfileClick(item.member.id)
+                                    }
                                     .padding(vertical = 6.dp)
                             ) {
                                 MemberAvatar(
@@ -301,20 +267,22 @@ fun HomeScreen(
             } else {
                 if (uiState.favourites.isNotEmpty()) {
                     item { SectionTitle(stringResource(R.string.home_favourites)) }
-                    items(uiState.favourites, key = { "fav-${it.document.id}" }) { summary ->
+                    itemsIndexed(uiState.favourites, key = { _, it -> "fav-${it.document.id}" }) { index, summary ->
                         DocumentCard(
                             summary = summary,
                             onClick = { onDocumentClick(summary.document.id) },
                             modifier = animatedPlacement()
+                                .expressiveReveal(index + 3, summary.document.id)
                         )
                     }
                 }
                 item { SectionTitle(stringResource(R.string.home_recent)) }
-                items(uiState.recent, key = { "recent-${it.document.id}" }) { summary ->
+                itemsIndexed(uiState.recent, key = { _, it -> "recent-${it.document.id}" }) { index, summary ->
                     DocumentCard(
                         summary = summary,
                         onClick = { onDocumentClick(summary.document.id) },
                         modifier = animatedPlacement()
+                            .expressiveReveal(index + 3, summary.document.id)
                     )
                 }
             }
@@ -367,25 +335,25 @@ private fun OwnerProfileCard(
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             // Soft decorative shapes keep the compact banner from feeling flat.
-            Box(
+            MorphingShapeBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = 28.dp, y = (-34).dp)
-                    .size(84.dp)
-                    .clip(CircleShape)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.12f)
-                    )
+                    .offset(x = 30.dp, y = (-38).dp)
+                    .size(104.dp),
+                color = MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.14f),
+                lobes = 12,
+                wave = 0.18f,
+                spinMillis = 24_000
             )
-            Box(
+            MorphingShapeBox(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .offset(x = (-26).dp, y = 34.dp)
-                    .size(38.dp)
-                    .clip(CircleShape)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceContainerLowest.copy(alpha = 0.08f)
-                    )
+                    .offset(x = (-24).dp, y = 34.dp)
+                    .size(40.dp),
+                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.34f),
+                lobes = 9,
+                wave = 0.14f,
+                spinMillis = 18_000
             )
             Icon(
                 imageVector = Icons.Filled.Shield,
@@ -574,7 +542,19 @@ private fun QuickActionCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(28.dp))
+            MorphingShapeBox(
+                modifier = Modifier.size(48.dp),
+                color = if (primary) {
+                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.18f)
+                } else {
+                    MaterialTheme.colorScheme.primaryContainer
+                },
+                lobes = 9,
+                wave = 0.14f,
+                spinMillis = 20_000
+            ) {
+                Icon(icon, contentDescription = null, modifier = Modifier.size(25.dp))
+            }
             Spacer(Modifier.height(12.dp))
             Text(title, style = MaterialTheme.typography.titleMedium)
             Text(

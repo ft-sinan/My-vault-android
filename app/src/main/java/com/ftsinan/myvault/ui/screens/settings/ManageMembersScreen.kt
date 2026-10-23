@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -55,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.data.model.MemberProfile
+import com.ftsinan.myvault.ui.components.ExpressiveBackTopBar
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.relationLabel
 
@@ -117,31 +119,12 @@ fun ManageMembersScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                ),
-                title = {
-                    Column {
-                        Text(stringResource(R.string.manage_members_title), maxLines = 1)
-                        Text(
-                            stringResource(R.string.manage_members_subtitle),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.action_back)
-                        )
-                    }
-                }
+            ExpressiveBackTopBar(
+                title = stringResource(R.string.manage_members_title),
+                subtitle = stringResource(R.string.manage_members_subtitle),
+                icon = Icons.Filled.Groups,
+                backContentDescription = stringResource(R.string.action_back),
+                onBack = onBack
             )
         }
     ) { padding ->

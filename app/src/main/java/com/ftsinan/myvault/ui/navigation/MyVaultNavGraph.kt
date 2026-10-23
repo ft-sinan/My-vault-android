@@ -1,6 +1,17 @@
 package com.ftsinan.myvault.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -9,6 +20,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -39,6 +54,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +64,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -61,6 +87,7 @@ import androidx.navigation.navArgument
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.AssignedGroup
 import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.ui.components.springPress
 import com.ftsinan.myvault.ui.screens.addedit.AddEditDocumentScreen
 import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
 import com.ftsinan.myvault.ui.theme.LocalGlassBottomBar
@@ -118,6 +145,19 @@ fun MyVaultNavGraph(
     val glassBottomBar = LocalGlassBottomBar.current
     val animationsEnabled = LocalAnimationsEnabled.current
     var showAddSheet by remember { mutableStateOf(false) }
+    val dockShownState = rememberSaveable { mutableStateOf(true) }
+    val dockConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (available.y < -10f) {
+                    dockShownState.value = false
+                } else if (available.y > 10f) {
+                    dockShownState.value = true
+                }
+                return Offset.Zero
+            }
+        }
+    }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -128,6 +168,10 @@ fun MyVaultNavGraph(
         Routes.FAMILY,
         Routes.SETTINGS
     )
+
+    LaunchedEffect(currentRoute) {
+        if (showBottomBar) dockShownState.value = true
+    }
 
     fun navigateTopLevel(route: String, restoreSavedState: Boolean = true) {
         navController.navigate(route) {
@@ -202,138 +246,77 @@ fun MyVaultNavGraph(
         }
     }
 
-    Scaffold(
-        // Every destination provides its own top bar. Zero insets here stop
-        // Scaffold from applying the status-bar height a second time above
-        // those top bars, which made every header look oversized.
-        contentWindowInsets = WindowInsets(0.dp),
-        bottomBar = {
-            if (showBottomBar) {
-                Column {
-                    if (!glassBottomBar) {
-                        HorizontalDivider()
-                    }
-                    Box(
-                        modifier = if (glassBottomBar) {
-                            Modifier
-                                .navigationBarsPadding()
-                                .padding(horizontal = 16.dp, vertical = 10.dp)
-                        } else {
-                            Modifier
-                        }
-                    ) {
-                    NavigationBar(
-                        modifier = if (glassBottomBar) {
-                            Modifier
-                                .shadow(10.dp, RoundedCornerShape(28.dp))
-                                .clip(RoundedCornerShape(28.dp))
-                        } else {
-                            Modifier
-                        },
-                        containerColor = if (glassBottomBar) {
-                            MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.88f)
-                        } else {
-                            NavigationBarDefaults.containerColor
-                        },
-                        tonalElevation = if (glassBottomBar) {
-                            0.dp
-                        } else {
-                            NavigationBarDefaults.Elevation
-                        },
-                        windowInsets = if (glassBottomBar) {
-                            WindowInsets(0.dp)
-                        } else {
-                            NavigationBarDefaults.windowInsets
-                        }
-                    ) {
-                        NavigationBarItem(
-                            selected = isSelected(Routes.HOME),
-                            onClick = { navigateTopLevel(Routes.HOME) },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Home,
-                                    contentDescription = stringResource(R.string.tab_home)
-                                )
-                            },
-                            label = { Text(stringResource(R.string.tab_home)) }
-                        )
-                        NavigationBarItem(
-                            selected = isSelected(Routes.DOCUMENTS),
-                            onClick = { navigateTopLevel(Routes.documents()) },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Description,
-                                    contentDescription = stringResource(R.string.tab_docs)
-                                )
-                            },
-                            label = { Text(stringResource(R.string.tab_docs)) }
-                        )
-                        NavigationBarItem(
-                            selected = false,
-                            onClick = { showAddSheet = true },
-                            icon = {
-                                Box(
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .background(
-                                            MaterialTheme.colorScheme.primary,
-                                            CircleShape
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        Icons.Filled.Add,
-                                        contentDescription = stringResource(R.string.tab_add),
-                                        tint = MaterialTheme.colorScheme.onPrimary,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                            },
-                            label = { Text(stringResource(R.string.tab_add)) }
-                        )
-                        NavigationBarItem(
-                            selected = isSelected(Routes.FAMILY),
-                            onClick = { navigateTopLevel(Routes.FAMILY) },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Groups,
-                                    contentDescription = stringResource(R.string.tab_family)
-                                )
-                            },
-                            label = { Text(stringResource(R.string.tab_family)) }
-                        )
-                        NavigationBarItem(
-                            selected = isSelected(Routes.SETTINGS),
-                            onClick = { navigateTopLevel(Routes.SETTINGS) },
-                            icon = {
-                                Icon(
-                                    Icons.Filled.Settings,
-                                    contentDescription = stringResource(R.string.tab_settings)
-                                )
-                            },
-                            label = { Text(stringResource(R.string.tab_settings)) }
-                        )
-                    }
-                    }
-                }
-            }
-        }
-    ) { innerPadding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         NavHost(
             navController = navController,
             startDestination = Routes.HOME,
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(dockConnection),
             enterTransition = {
-                if (animationsEnabled) fadeIn(tween(220)) else EnterTransition.None
+                if (!animationsEnabled) {
+                    EnterTransition.None
+                } else {
+                    val fromTop = routeRank(initialState.destination.route) < 10
+                    val toTop = routeRank(targetState.destination.route) < 10
+                    if (fromTop && toTop) {
+                        fadeIn(tween(260)) + scaleIn(
+                            initialScale = 0.985f,
+                            animationSpec = tween(260)
+                        )
+                    } else {
+                        fadeIn(tween(240)) + slideInHorizontally(tween(320)) { it / 5 } +
+                            scaleIn(initialScale = 0.99f, animationSpec = tween(320))
+                    }
+                }
             },
             exitTransition = {
-                if (animationsEnabled) fadeOut(tween(220)) else ExitTransition.None
+                if (!animationsEnabled) {
+                    ExitTransition.None
+                } else {
+                    val fromTop = routeRank(initialState.destination.route) < 10
+                    val toTop = routeRank(targetState.destination.route) < 10
+                    if (fromTop && toTop) {
+                        fadeOut(tween(180)) + scaleOut(
+                            targetScale = 0.99f,
+                            animationSpec = tween(180)
+                        )
+                    } else {
+                        fadeOut(tween(180)) + slideOutHorizontally(tween(240)) { -it / 8 }
+                    }
+                }
             },
             popEnterTransition = {
-                if (animationsEnabled) fadeIn(tween(220)) else EnterTransition.None
+                if (!animationsEnabled) {
+                    EnterTransition.None
+                } else {
+                    val fromTop = routeRank(initialState.destination.route) < 10
+                    val toTop = routeRank(targetState.destination.route) < 10
+                    if (fromTop && toTop) {
+                        fadeIn(tween(240)) + scaleIn(
+                            initialScale = 0.985f,
+                            animationSpec = tween(240)
+                        )
+                    } else {
+                        fadeIn(tween(220)) + slideInHorizontally(tween(300)) { -it / 5 }
+                    }
+                }
             },
             popExitTransition = {
-                if (animationsEnabled) fadeOut(tween(220)) else ExitTransition.None
+                if (!animationsEnabled) {
+                    ExitTransition.None
+                } else {
+                    val fromTop = routeRank(initialState.destination.route) < 10
+                    val toTop = routeRank(targetState.destination.route) < 10
+                    if (fromTop && toTop) {
+                        fadeOut(tween(180)) + scaleOut(
+                            targetScale = 0.99f,
+                            animationSpec = tween(180)
+                        )
+                    } else {
+                        fadeOut(tween(180)) + slideOutHorizontally(tween(260)) { it / 5 }
+                    }
+                }
             }
         ) {
             composable(Routes.HOME) {
@@ -479,6 +462,225 @@ fun MyVaultNavGraph(
                     onEdit = { navController.navigate(Routes.edit(it)) }
                 )
             }
+        }
+
+        if (showBottomBar) {
+            VaultFloatingDock(
+                visible = dockShownState.value,
+                glass = glassBottomBar,
+                homeSelected = isSelected(Routes.HOME),
+                documentsSelected = isSelected(Routes.DOCUMENTS),
+                familySelected = isSelected(Routes.FAMILY),
+                settingsSelected = isSelected(Routes.SETTINGS),
+                onHome = { navigateTopLevel(Routes.HOME) },
+                onDocuments = { navigateTopLevel(Routes.documents()) },
+                onAdd = { showAddSheet = true },
+                onFamily = { navigateTopLevel(Routes.FAMILY) },
+                onSettings = { navigateTopLevel(Routes.SETTINGS) },
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+        }
+    }
+}
+
+
+private fun routeRank(route: String?): Int = when (route) {
+    Routes.HOME -> 0
+    Routes.DOCUMENTS -> 1
+    Routes.FAMILY -> 2
+    Routes.SETTINGS -> 3
+    else -> 10
+}
+
+/** Orion-style floating dock with an expanding selected label and scroll-away motion. */
+@Composable
+private fun VaultFloatingDock(
+    visible: Boolean,
+    glass: Boolean,
+    homeSelected: Boolean,
+    documentsSelected: Boolean,
+    familySelected: Boolean,
+    settingsSelected: Boolean,
+    onHome: () -> Unit,
+    onDocuments: () -> Unit,
+    onAdd: () -> Unit,
+    onFamily: () -> Unit,
+    onSettings: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val animationsEnabled = LocalAnimationsEnabled.current
+    val translation by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (visible) 0f else 150f,
+        animationSpec = if (animationsEnabled) {
+            spring(dampingRatio = 0.82f, stiffness = 300f)
+        } else {
+            snap()
+        },
+        label = "dockTranslation"
+    )
+    val alpha by androidx.compose.animation.core.animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = if (animationsEnabled) tween(180) else snap(),
+        label = "dockAlpha"
+    )
+    Box(
+        modifier = modifier
+            .navigationBarsPadding()
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .graphicsLayer {
+                translationY = translation.dp.toPx()
+                this.alpha = alpha
+            }
+            .shadow(14.dp, CircleShape)
+            .clip(CircleShape)
+            .background(
+                if (glass) {
+                    MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.92f)
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                }
+            )
+            .padding(6.dp)
+    ) {
+        Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(3.dp)) {
+            DockItem(
+                icon = Icons.Filled.Home,
+                label = stringResource(R.string.tab_home),
+                selected = homeSelected,
+                onClick = onHome
+            )
+            DockItem(
+                icon = Icons.Filled.Description,
+                label = stringResource(R.string.tab_docs),
+                selected = documentsSelected,
+                onClick = onDocuments
+            )
+            DockAddItem(onClick = onAdd)
+            DockItem(
+                icon = Icons.Filled.Groups,
+                label = stringResource(R.string.tab_family),
+                selected = familySelected,
+                onClick = onFamily
+            )
+            DockItem(
+                icon = Icons.Filled.Settings,
+                label = stringResource(R.string.tab_settings),
+                selected = settingsSelected,
+                onClick = onSettings
+            )
+        }
+    }
+}
+
+@Composable
+private fun DockItem(
+    icon: ImageVector,
+    label: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    val animationsEnabled = LocalAnimationsEnabled.current
+    val container by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.secondaryContainer
+        } else {
+            Color.Transparent
+        },
+        animationSpec = if (animationsEnabled) tween(220) else snap(),
+        label = "dockItemContainer"
+    )
+    val contentColor by animateColorAsState(
+        targetValue = if (selected) {
+            MaterialTheme.colorScheme.onSecondaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        },
+        animationSpec = if (animationsEnabled) tween(220) else snap(),
+        label = "dockItemContent"
+    )
+    val iconScale = remember { Animatable(1f) }
+    LaunchedEffect(selected, animationsEnabled) {
+        if (selected && animationsEnabled) {
+            iconScale.snapTo(0.68f)
+            iconScale.animateTo(1f, spring(dampingRatio = 0.52f, stiffness = 460f))
+        } else {
+            iconScale.snapTo(1f)
+        }
+    }
+    Box(
+        modifier = Modifier
+            .height(52.dp)
+            .clip(CircleShape)
+            .background(container)
+            .springPress(CircleShape, role = Role.Tab, onClickLabel = label, onClick = onClick)
+            .padding(horizontal = 11.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = contentColor,
+                modifier = Modifier
+                    .size(24.dp)
+                    .graphicsLayer {
+                        scaleX = iconScale.value
+                        scaleY = iconScale.value
+                    }
+            )
+            AnimatedVisibility(
+                visible = selected,
+                enter = if (animationsEnabled) {
+                    expandHorizontally(spring(dampingRatio = 0.76f, stiffness = 380f)) +
+                        fadeIn(tween(160))
+                } else {
+                    EnterTransition.None
+                },
+                exit = if (animationsEnabled) {
+                    shrinkHorizontally(tween(140)) + fadeOut(tween(100))
+                } else {
+                    ExitTransition.None
+                }
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = contentColor,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.widthIn(max = 88.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DockAddItem(onClick: () -> Unit) {
+    val label = stringResource(R.string.tab_add)
+    Box(
+        modifier = Modifier
+            .size(width = 48.dp, height = 52.dp)
+            .springPress(CircleShape, onClickLabel = label, onClick = onClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = label,
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

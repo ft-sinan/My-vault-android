@@ -30,6 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ftsinan.myvault.data.settings.AppLanguage
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
+import com.ftsinan.myvault.ui.components.VaultMark
 
 /**
  * First screen on a fresh install. Intentionally bilingual itself, so it
@@ -47,24 +49,15 @@ fun LanguageSelectionScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(96.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        shape = RoundedCornerShape(28.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Shield,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(52.dp)
+            Box(modifier = Modifier.size(124.dp), contentAlignment = Alignment.Center) {
+                MorphingShapeBox(
+                    modifier = Modifier.size(124.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
+                    lobes = 12,
+                    wave = 0.19f,
+                    spinMillis = 24_000
                 )
+                VaultMark(size = 88.dp)
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
@@ -99,11 +92,20 @@ fun LanguageSelectionScreen(
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Language,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                        MorphingShapeBox(
+                            modifier = Modifier.size(44.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            lobes = 9,
+                            wave = 0.13f,
+                            spinMillis = 22_000
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Language,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
                         Column(modifier = Modifier.padding(start = 14.dp)) {
                             Text(
                                 text = language.nativeName,

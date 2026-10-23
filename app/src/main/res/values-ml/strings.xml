@@ -238,4 +238,24 @@
     <string name="accent_cocoa">കൊക്കോ</string>
     <string name="accent_slate">സ്ലേറ്റ്</string>
     <string name="settings_appearance_preview">പ്രിവ്യൂ</string>
+    <string name="accent_orion">ഒറിയോൺ</string>
+    <string name="settings_quick_toggles">ക്വിക്ക് ടോഗിളുകൾ</string>
+    <string name="settings_everything_else">മറ്റെല്ലാം</string>
+    <string name="settings_quick_biometric">ബയോമെട്രിക് അൺലോക്ക്</string>
+    <string name="settings_quick_wallpaper">വാൾപേപ്പർ നിറങ്ങൾ</string>
+    <string name="settings_quick_animations">ആനിമേഷനുകൾ</string>
+    <string name="settings_toggle_on">ഓൺ</string>
+    <string name="settings_toggle_off">ഓഫ്</string>
+    <string name="creator_title">ക്രിയേറ്റർ സ്‌പേസ്</string>
+    <string name="creator_role">രൂപകൽപ്പനയും നിർമ്മാണവും</string>
+    <string name="creator_name">സിനാൻ</string>
+    <string name="creator_bio">കുടുംബ രേഖകൾ സ്വകാര്യമായും എൻക്രിപ്റ്റ് ചെയ്തും എപ്പോഴും നിങ്ങളുടെ ഫോണിൽ തന്നെയും സൂക്ഷിക്കാനാണ് ഞാൻ My Vault നിർമ്മിച്ചത് — അക്കൗണ്ടും ക്ലൗഡും ട്രാക്കിംഗും ഇല്ല.</string>
+    <string name="creator_badge_creator">സ്രഷ്ടാവ്</string>
+    <string name="creator_badge_privacy">സ്വകാര്യത ആദ്യം</string>
+    <string name="creator_connect">ബന്ധപ്പെടുക</string>
+    <string name="creator_github">GitHub പ്രൊഫൈൽ തുറക്കുക</string>
+    <string name="creator_tap_emblem">എംബ്ലത്തിൽ സ്പർശിക്കുക</string>
+    <string name="creator_back_title">സ്വകാര്യതയാണ് അടിസ്ഥാനം</string>
+    <string name="creator_back_subtitle">ഫോണിൽ തന്നെ · ഓഫ്‌ലൈൻ · എൻക്രിപ്റ്റ് ചെയ്തത്</string>
+    <string name="creator_version">പതിപ്പ്</string>
 </resources>

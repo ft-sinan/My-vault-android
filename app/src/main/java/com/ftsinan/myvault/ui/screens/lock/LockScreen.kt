@@ -38,7 +38,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.ui.components.PinDots
+import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.PinPad
+import com.ftsinan.myvault.ui.components.VaultMark
 
 @Composable
 fun LockScreen(viewModel: LockViewModel, ownerName: String? = null) {
@@ -172,24 +174,15 @@ private fun LockScaffold(
         ) {
             Spacer(modifier = Modifier.height(36.dp))
             Box(contentAlignment = Alignment.BottomEnd) {
-                Box(
-                    modifier = Modifier
-                        .size(104.dp)
-                        .clip(RoundedCornerShape(30.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            shape = RoundedCornerShape(30.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Shield,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(56.dp)
+                Box(modifier = Modifier.size(122.dp), contentAlignment = Alignment.Center) {
+                    MorphingShapeBox(
+                        modifier = Modifier.size(122.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
+                        lobes = 12,
+                        wave = 0.19f,
+                        spinMillis = 24_000
                     )
+                    VaultMark(size = 88.dp)
                 }
                 Box(
                     modifier = Modifier
