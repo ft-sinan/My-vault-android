@@ -7,18 +7,21 @@ on:
       - ".github/workflows/fetch-orion-screenshots.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   fetch:
     name: Download Orion submission screenshots
     runs-on: ubuntu-latest
     steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
       - name: Download screenshots
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p orion-screenshots
+          mkdir -p docs/store/orion-fetched
           cat > urls.txt <<'URLS'
           https://cdn.phototourl.com/member/2026-10-23-7d364c1d-d1c6-49b1-bd89-8b0d26713304.jpg
           https://cdn.phototourl.com/member/2026-10-23-f74ff853-ad1c-4879-89b0-0074bc0ec471.jpg
@@ -37,16 +40,30 @@ jobs:
             curl --location --fail --retry 3 --retry-delay 2 \
               --user-agent 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36' \
               --referer 'https://github.com/RookieEnough/Orion-Data/issues/2185' \
-              --output "orion-screenshots/$name" "$url"
+              --output "docs/store/orion-fetched/$name" "$url"
             index=$((index + 1))
           done < urls.txt
-          file orion-screenshots/*
-          sha256sum orion-screenshots/* | tee orion-screenshots/SHA256SUMS.txt
-          cp urls.txt orion-screenshots/source-urls.txt
+          file docs/store/orion-fetched/*
+          sha256sum docs/store/orion-fetched/* | tee docs/store/orion-fetched/SHA256SUMS.txt
+          cp urls.txt docs/store/orion-fetched/source-urls.txt
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         with:
           name: orion-submission-screenshots
-          path: orion-screenshots/
+          path: docs/store/orion-fetched/
           if-no-files-found: error
+
+      - name: Commit fetched originals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/store/orion-fetched
+          if git diff --cached --quiet; then
+            echo 'No screenshot changes to commit.'
+          else
+            git commit -m 'Fetch Orion submission screenshot originals'
+            git push origin HEAD:arena/16bfecb9-my-vault-android
+          fi
