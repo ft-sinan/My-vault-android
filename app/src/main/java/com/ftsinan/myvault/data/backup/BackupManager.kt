@@ -36,12 +36,69 @@ data class BackupSummary(
     val totalBytes: Long
 )
 
+/** One profile from a prepared backup that can become this phone's owner. */
+data class BackupProfileOption(
+    val backupMemberId: Long,
+    val name: String,
+    val isOriginalOwner: Boolean
+)
+
 /** A validated restore whose files are staged but not yet committed. */
 class PreparedBackupRestore internal constructor(
     val summary: BackupSummary,
+    val profileOptions: List<BackupProfileOption>,
     internal val restoreData: VaultRestoreData,
     internal val stagedFileNames: List<String>
 )
+
+/**
+ * Reassigns only the device-local phone-owner role inside a full restore.
+ * Every profile, document and page remains; the previous owner becomes a
+ * normal family profile. Other members' saved relations are left for the
+ * new phone user to review because they cannot be inferred reliably.
+ */
+internal fun VaultRestoreData.withPhoneOwner(
+    selectedBackupMemberId: Long
+): VaultRestoreData {
+    val selected = members.firstOrNull { it.id == selectedBackupMemberId }
+        ?: throw IllegalArgumentException("Selected profile is not in this backup")
+    val originalOwnerId = members.firstOrNull { it.isOwner }?.id
+
+    val updatedMembers = members.map { member ->
+        when {
+            member.id == selected.id -> member.copy(
+                isOwner = true,
+                relation = Relation.SELF
+            )
+            member.isOwner -> member.copy(
+                isOwner = false,
+                relation = Relation.FAMILY
+            )
+            else -> member
+        }
+    }.sortedWith(
+        compareByDescending<MemberProfile> { it.isOwner }
+            .thenBy { it.sortOrder }
+            .thenBy { it.id }
+    )
+    require(updatedMembers.count { it.isOwner } == 1) {
+        "Backup must contain exactly one phone owner"
+    }
+
+    val updatedDocuments = documents.map { document ->
+        val memberId = document.memberId ?: return@map document
+        when (memberId) {
+            selected.id -> document.copy(relation = Relation.SELF)
+            originalOwnerId -> document.copy(relation = Relation.FAMILY)
+            else -> document
+        }
+    }
+
+    return copy(
+        members = updatedMembers,
+        documents = updatedDocuments
+    )
+}
 
 /**
  * Creates and restores portable `.mvbackup` files.
@@ -286,6 +343,13 @@ class BackupManager(
             )
             PreparedBackupRestore(
                 summary = summary,
+                profileOptions = restoreData.members.map { member ->
+                    BackupProfileOption(
+                        backupMemberId = member.id,
+                        name = member.name,
+                        isOriginalOwner = member.isOwner
+                    )
+                },
                 restoreData = restoreData,
                 stagedFileNames = staged.values.map { it.encryptedFileName }
             )
@@ -297,9 +361,15 @@ class BackupManager(
         }
     }
 
-    suspend fun commitRestore(prepared: PreparedBackupRestore) {
+    suspend fun commitRestore(
+        prepared: PreparedBackupRestore,
+        selectedOwnerBackupMemberId: Long? = null
+    ) {
         try {
-            val oldFileNames = repository.restoreVault(prepared.restoreData)
+            val restoreData = selectedOwnerBackupMemberId?.let { selectedId ->
+                prepared.restoreData.withPhoneOwner(selectedId)
+            } ?: prepared.restoreData
+            val oldFileNames = repository.restoreVault(restoreData)
             withContext(Dispatchers.IO) {
                 fileManager.deleteEncryptedFiles(
                     oldFileNames.filterNot { it in prepared.stagedFileNames }

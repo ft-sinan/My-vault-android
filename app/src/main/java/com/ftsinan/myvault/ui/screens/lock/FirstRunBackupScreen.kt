@@ -52,6 +52,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupProtection
+import com.ftsinan.myvault.ui.components.BackupOwnerSelector
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.ShieldKeyholeMark
 import com.ftsinan.myvault.util.FormatUtils
@@ -193,6 +194,15 @@ fun FirstRunBackupScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                    if (uiState.profileOptions.size > 1) {
+                        Spacer(Modifier.height(14.dp))
+                        BackupOwnerSelector(
+                            options = uiState.profileOptions,
+                            selectedBackupMemberId = uiState.selectedOwnerBackupId,
+                            enabled = uiState.phase == FirstRunBackupPhase.READY,
+                            onSelect = viewModel::selectRestoreOwner
+                        )
+                    }
                     Spacer(Modifier.height(12.dp))
                     Text(
                         text = stringResource(R.string.first_run_backup_ready_body),
@@ -211,7 +221,9 @@ fun FirstRunBackupScreen(
             confirmButton = {
                 Button(
                     onClick = viewModel::commitRestore,
-                    enabled = uiState.phase == FirstRunBackupPhase.READY
+                    enabled = uiState.phase == FirstRunBackupPhase.READY &&
+                        (uiState.profileOptions.isEmpty() ||
+                            uiState.selectedOwnerBackupId != null)
                 ) {
                     Text(stringResource(R.string.backup_restore))
                 }

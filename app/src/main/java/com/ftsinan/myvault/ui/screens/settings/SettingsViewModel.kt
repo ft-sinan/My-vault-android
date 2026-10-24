@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupManager
+import com.ftsinan.myvault.data.backup.BackupProfileOption
 import com.ftsinan.myvault.data.backup.BackupProtection
 import com.ftsinan.myvault.data.backup.BackupSummary
 import com.ftsinan.myvault.data.backup.PreparedBackupRestore
@@ -50,6 +51,8 @@ data class BackupUiState(
     val phase: BackupPhase = BackupPhase.IDLE,
     val restoreUri: Uri? = null,
     val summary: BackupSummary? = null,
+    val profileOptions: List<BackupProfileOption> = emptyList(),
+    val selectedOwnerBackupId: Long? = null,
     @StringRes val messageRes: Int? = null,
     val messageIsError: Boolean = false
 ) {
@@ -240,7 +243,11 @@ class SettingsViewModel(
             _backupState.value = BackupUiState(
                 phase = BackupPhase.READY,
                 restoreUri = uri,
-                summary = prepared.summary
+                summary = prepared.summary,
+                profileOptions = prepared.profileOptions,
+                selectedOwnerBackupId = prepared.profileOptions
+                    .firstOrNull { it.isOriginalOwner }?.backupMemberId
+                    ?: prepared.profileOptions.firstOrNull()?.backupMemberId
             )
         } catch (_: AEADBadTagException) {
             _backupState.value = BackupUiState(
@@ -259,12 +266,29 @@ class SettingsViewModel(
         }
     }
 
+    fun selectRestoreOwner(backupMemberId: Long) {
+        val state = _backupState.value
+        if (state.phase != BackupPhase.READY) return
+        if (state.profileOptions.none { it.backupMemberId == backupMemberId }) return
+        _backupState.value = state.copy(
+            selectedOwnerBackupId = backupMemberId,
+            messageRes = null,
+            messageIsError = false
+        )
+    }
+
     fun commitRestore(currentPin: String) {
         val prepared = preparedRestore ?: return
         val summary = prepared.summary
+        val profileOptions = prepared.profileOptions
+        val selectedOwnerBackupId = _backupState.value.selectedOwnerBackupId
+            ?: profileOptions.firstOrNull { it.isOriginalOwner }?.backupMemberId
+            ?: profileOptions.firstOrNull()?.backupMemberId
         _backupState.value = BackupUiState(
             phase = BackupPhase.RESTORING,
-            summary = summary
+            summary = summary,
+            profileOptions = profileOptions,
+            selectedOwnerBackupId = selectedOwnerBackupId
         )
         viewModelScope.launch {
             try {
@@ -272,12 +296,17 @@ class SettingsViewModel(
                     _backupState.value = BackupUiState(
                         phase = BackupPhase.READY,
                         summary = summary,
+                        profileOptions = profileOptions,
+                        selectedOwnerBackupId = selectedOwnerBackupId,
                         messageRes = R.string.settings_current_pin_wrong,
                         messageIsError = true
                     )
                     return@launch
                 }
-                backupManager.commitRestore(prepared)
+                backupManager.commitRestore(
+                    prepared = prepared,
+                    selectedOwnerBackupMemberId = selectedOwnerBackupId
+                )
                 preparedRestore = null
                 _backupState.value = BackupUiState(
                     messageRes = R.string.backup_restored

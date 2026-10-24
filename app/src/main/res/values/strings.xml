@@ -185,6 +185,9 @@
     <string name="backup_preparing">Checking backup…</string>
     <string name="backup_ready_title">Replace this vault?</string>
     <string name="backup_ready_body">All current profiles and documents will be replaced by the contents of this backup.</string>
+    <string name="backup_phone_owner_question">Who will use My Vault on this phone?</string>
+    <string name="backup_phone_owner_subtitle">Choose your profile. All profiles and documents will be restored.</string>
+    <string name="backup_original_owner">Original owner</string>
     <string name="backup_summary">%1$d people • %2$d documents • %3$d pages</string>
     <string name="backup_created_on">Backup date: %1$s</string>
     <string name="backup_replace">Replace vault</string>

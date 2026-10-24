@@ -147,6 +147,7 @@ import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
+import com.ftsinan.myvault.ui.components.BackupOwnerSelector
 import com.ftsinan.myvault.ui.components.ExpressiveChip
 import com.ftsinan.myvault.ui.components.ExpressiveStat
 import com.ftsinan.myvault.ui.components.ExpressiveHeroHeader
@@ -435,6 +436,15 @@ fun SettingsScreen(
                             text = stringResource(R.string.backup_ready_body),
                             style = MaterialTheme.typography.bodyMedium
                         )
+                        if (backupState.profileOptions.size > 1) {
+                            Spacer(Modifier.height(14.dp))
+                            BackupOwnerSelector(
+                                options = backupState.profileOptions,
+                                selectedBackupMemberId = backupState.selectedOwnerBackupId,
+                                enabled = backupState.phase == BackupPhase.READY,
+                                onSelect = viewModel::selectRestoreOwner
+                            )
+                        }
                         Spacer(Modifier.height(14.dp))
                         Text(
                             text = stringResource(R.string.backup_current_pin_body),
@@ -476,7 +486,9 @@ fun SettingsScreen(
                             viewModel.commitRestore(enteredPin)
                         },
                         enabled = restoreCurrentPin.length == PinManager.PIN_LENGTH &&
-                            backupState.phase == BackupPhase.READY
+                            backupState.phase == BackupPhase.READY &&
+                            (backupState.profileOptions.isEmpty() ||
+                                backupState.selectedOwnerBackupId != null)
                     ) {
                         Text(stringResource(R.string.backup_replace))
                     }

@@ -129,7 +129,7 @@ The presentation is expressive and friendly; the storage model underneath stays 
     <td width="50%" valign="top">
       <img src="assets/readme/feature-backup.svg" width="72" alt="Backup and restore illustration"><br>
       <strong>Backup that can move house</strong><br>
-      Export the whole vault as one portable <code>.mvbackup</code>. Protect it with a PBKDF2/AES-256-GCM password, or explicitly choose no password after a warning. Restores verify checksums before anything is replaced.<br><br>
+      Export the whole vault as one portable <code>.mvbackup</code>. Protect it with a PBKDF2/AES-256-GCM password, or explicitly choose no password after a warning. Restores verify checksums before anything is replaced. When a backup contains multiple people, restore asks who will use My Vault on this phone and makes that profile <strong>My profile</strong> while keeping the complete family vault.<br><br>
       <code>.mvbackup</code> <code>600k PBKDF2</code> <code>Verified restore</code>
     </td>
   </tr>
@@ -151,7 +151,7 @@ The presentation is expressive and friendly; the storage model underneath stays 
 
 ### And a few thoughtful details
 
-- First open is **language → backup choice → PIN → profile**; returning users can restore a `.mvbackup` before creating a PIN for the new phone, while new users only need a profile name.
+- First open is **language → backup choice → PIN → profile**; returning users can restore a `.mvbackup` before creating a PIN for the new phone. A multi-profile restore asks **“Who will use My Vault on this phone?”** so a family member can enter with their own profile as **My profile** while every profile and document is kept.
 - Long document titles expand inside the document card, without opening the document.
 - Document numbers are masked until you choose to reveal or copy them.
 - Shared profile-card images include available profile details **except relation**.
@@ -231,7 +231,7 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 1. Open the [**latest GitHub Release**](https://github.com/ft-sinan/My-vault-android/releases/latest).
 2. Download `MyVault-vX.Y.Z.apk` — and its `.sha256` file if you want to verify the APK yourself.
 3. Install it on an Android 8.0 or newer phone. Android may ask you to allow installs from your browser or file manager.
-4. On first launch, choose **English** or **മലയാളം**. If you already have a `.mvbackup`, restore it and then create a PIN for this phone; otherwise create a new vault, create a PIN, and add at least your name.
+4. On first launch, choose **English** or **മലയാളം**. If you already have a `.mvbackup`, restore it, choose which restored profile is yours on this phone, and then create a PIN for this phone; otherwise create a new vault, create a PIN, and add at least your name.
 
 Later versions can be checked manually from **Settings → Storage & privacy → App updates → Check for updates**. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
 

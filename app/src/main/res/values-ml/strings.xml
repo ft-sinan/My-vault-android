@@ -178,6 +178,9 @@
     <string name="backup_preparing">ബാക്കപ്പ് പരിശോധിക്കുന്നു…</string>
     <string name="backup_ready_title">ഈ വോൾട്ട് മാറ്റിസ്ഥാപിക്കണോ?</string>
     <string name="backup_ready_body">നിലവിലെ എല്ലാ പ്രൊഫൈലുകളും രേഖകളും ഈ ബാക്കപ്പിലെ ഉള്ളടക്കം ഉപയോഗിച്ച് മാറ്റിസ്ഥാപിക്കും.</string>
+    <string name="backup_phone_owner_question">ഈ ഫോണിൽ My Vault ആരാണ് ഉപയോഗിക്കുന്നത്?</string>
+    <string name="backup_phone_owner_subtitle">നിങ്ങളുടെ പ്രൊഫൈൽ തിരഞ്ഞെടുക്കുക. എല്ലാ പ്രൊഫൈലുകളും രേഖകളും റീസ്റ്റോർ ചെയ്യും.</string>
+    <string name="backup_original_owner">യഥാർത്ഥ ഉടമ</string>
     <string name="backup_summary">%1$d ആളുകൾ • %2$d രേഖകൾ • %3$d പേജുകൾ</string>
     <string name="backup_created_on">ബാക്കപ്പ് തീയതി: %1$s</string>
     <string name="backup_replace">വോൾട്ട് മാറ്റിസ്ഥാപിക്കുക</string>
