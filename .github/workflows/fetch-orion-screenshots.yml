@@ -1,7 +1,10 @@
 name: Fetch Orion screenshots (temporary)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: ["arena/16bfecb9-my-vault-android"]
+    paths:
+      - ".github/workflows/fetch-orion-screenshots.yml"
 
 permissions:
   contents: read
