@@ -166,16 +166,25 @@ The presentation is expressive and friendly; the storage model underneath stays 
 </p>
 
 <a id="screenshots"></a>
-## <img src="assets/readme/shape-4.svg" height="26" align="top" alt=""> Screenshots &amp; store previews
+## <img src="assets/readme/shape-4.svg" height="26" align="top" alt=""> Screenshots
 
-The gallery uses the fictional **Nair** family and masked sample values only. No real family documents, photos or ID numbers are used in this repository. Tap any preview to open the full-size file.
+Real device screenshots from the Orion Store submission, captured with the fictional sample vault. No real documents or ID numbers are shown; the profile images are the sample images supplied with that submission. Tap any screenshot to open the full-size file.
 
 <table>
   <tr>
-    <td width="25%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="My Vault Home with sample family data" width="100%"></a><br><sub><strong>Home</strong><br>Owner, family and recent documents</sub></td>
-    <td width="25%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="My Vault Documents list with sample data" width="100%"></a><br><sub><strong>Documents</strong><br>Search, filters and masked numbers</sub></td>
-    <td width="25%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="My Vault Family profiles with sample data" width="100%"></a><br><sub><strong>Family</strong><br>Profiles with their documents</sub></td>
-    <td width="25%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="My Vault backup and restore screen" width="100%"></a><br><sub><strong>Backup &amp; restore</strong><br>Portable, verified vault files</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="My Vault Home with sample family data" width="100%"></a><br><sub><strong>Home</strong><br>Owner profile, quick actions and family</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="My Vault Documents categories with sample data" width="100%"></a><br><sub><strong>Documents</strong><br>Search, favourites and categories</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="My Vault Family profiles with sample data" width="100%"></a><br><sub><strong>Family</strong><br>Every profile at a glance</sub></td>
+  </tr>
+  <tr>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/06-profile.jpg"><img src="docs/store/screenshots/06-profile.jpg" alt="My Vault member profile and documents" width="100%"></a><br><sub><strong>Profile</strong><br>Personal details and their documents</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/05-add-document.jpg"><img src="docs/store/screenshots/05-add-document.jpg" alt="Add a document with Scan or File" width="100%"></a><br><sub><strong>Add a document</strong><br>Scan, or choose an image/PDF file</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="My Vault backup and restore screen" width="100%"></a><br><sub><strong>Backup &amp; restore</strong><br>Portable, verified vault files</sub></td>
+  </tr>
+  <tr>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/07-settings.jpg"><img src="docs/store/screenshots/07-settings.jpg" alt="My Vault Settings quick toggles" width="100%"></a><br><sub><strong>Settings</strong><br>Quick toggles for everyday choices</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/08-appearance.jpg"><img src="docs/store/screenshots/08-appearance.jpg" alt="My Vault Appearance themes and colour palettes" width="100%"></a><br><sub><strong>Appearance</strong><br>Themes, wallpaper colours and palettes</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/09-settings-pages.jpg"><img src="docs/store/screenshots/09-settings-pages.jpg" alt="My Vault Settings pages and Creator Space" width="100%"></a><br><sub><strong>Settings pages</strong><br>Dedicated pages, then Creator Space</sub></td>
   </tr>
 </table>
 
