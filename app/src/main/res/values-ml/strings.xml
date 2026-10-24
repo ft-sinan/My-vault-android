@@ -22,6 +22,14 @@
     <string name="pin_confirm_title">PIN സ്ഥിരീകരിക്കുക</string>
     <string name="pin_confirm_subtitle">സ്ഥിരീകരിക്കാൻ അതേ PIN വീണ്ടും നൽകുക.</string>
     <string name="pin_mismatch">PIN-കൾ ഒത്തുപോകുന്നില്ല. വീണ്ടും ശ്രമിക്കുക.</string>
+    <string name="first_run_backup_question">നിങ്ങൾക്ക് ഒരു ബാക്കപ്പ് ഉണ്ടോ?</string>
+    <string name="first_run_backup_subtitle">മുമ്പ് My Vault ഉപയോഗിച്ചിട്ടുണ്ടെങ്കിൽ, പ്രൊഫൈലുകളും രേഖകളും തിരികെ കൊണ്ടുവരാൻ .mvbackup ഫയൽ റീസ്റ്റോർ ചെയ്യുക.</string>
+    <string name="first_run_restore_backup">അതെ, ബാക്കപ്പ് റീസ്റ്റോർ ചെയ്യുക</string>
+    <string name="first_run_restore_backup_subtitle">.mvbackup ഫയൽ തിരഞ്ഞെടുക്കുക</string>
+    <string name="first_run_create_new_vault">ഇല്ല, പുതിയ വോൾട്ട് സൃഷ്ടിക്കുക</string>
+    <string name="first_run_create_new_vault_subtitle">PIN സൃഷ്ടിച്ച് പ്രൊഫൈൽ സജ്ജമാക്കുക</string>
+    <string name="first_run_backup_ready_body">ഈ പ്രൊഫൈലുകളും രേഖകളും ഈ ഫോണിലേക്ക് റീസ്റ്റോർ ചെയ്യുക. തുടർന്ന് ഈ ഫോണിനായി ഒരു PIN സൃഷ്ടിക്കണം — വോൾട്ട് PIN ബാക്കപ്പിൽ സൂക്ഷിച്ചിട്ടില്ല.</string>
+    <string name="first_run_backup_restore_failed">ബാക്കപ്പ് റീസ്റ്റോർ ചെയ്യാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="lock_trust_pill">ഓഫ്‌ലൈൻ  •  എൻക്രിപ്റ്റഡ്  •  സ്വകാര്യം</string>
     <string name="lock_unlocked">വോൾട്ട് അൺലോക്ക് ചെയ്തു</string>
     <string name="profile_setup_title">നിങ്ങളുടെ പ്രൊഫൈൽ സജ്ജമാക്കുക</string>

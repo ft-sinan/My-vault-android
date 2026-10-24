@@ -24,6 +24,14 @@
     <string name="pin_confirm_title">Confirm your PIN</string>
     <string name="pin_confirm_subtitle">Enter the same PIN once more to confirm.</string>
     <string name="pin_mismatch">PINs don\'t match. Please start again.</string>
+    <string name="first_run_backup_question">Do you have a backup?</string>
+    <string name="first_run_backup_subtitle">If you have used My Vault before, restore your .mvbackup file to bring back your profiles and documents.</string>
+    <string name="first_run_restore_backup">Yes, restore my backup</string>
+    <string name="first_run_restore_backup_subtitle">Choose a .mvbackup file</string>
+    <string name="first_run_create_new_vault">No, create a new vault</string>
+    <string name="first_run_create_new_vault_subtitle">Create a PIN and set up your profile</string>
+    <string name="first_run_backup_ready_body">Restore these profiles and documents to this phone. Next, you will create a PIN for this phone — your vault PIN is not stored in the backup.</string>
+    <string name="first_run_backup_restore_failed">Could not restore the backup. Please try again.</string>
     <string name="lock_trust_pill">Offline  •  Encrypted  •  Private</string>
     <string name="lock_unlocked">Vault unlocked</string>
     <string name="profile_setup_title">Set up your profile</string>

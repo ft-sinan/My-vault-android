@@ -40,11 +40,20 @@ data class LockUiState(
     val glassBottomBar: Boolean = true,
     val isProfileLoaded: Boolean = false,
     val hasOwnerProfile: Boolean = false,
+    /** True after a first-run user chooses a new vault or restores a backup. */
+    val hasSelectedInitialSetupPath: Boolean = false,
     /** Name only is shown on the lock screen (never the photo). */
     val ownerName: String? = null,
     val error: String? = null,
     val failedAttempts: Int = 0
 )
+
+/** Existing users with a PIN, and restored data awaiting its new PIN, skip this. */
+internal fun shouldShowFirstRunBackupPrompt(
+    isPinSet: Boolean,
+    hasOwnerProfile: Boolean,
+    hasSelectedInitialSetupPath: Boolean
+): Boolean = !isPinSet && !hasOwnerProfile && !hasSelectedInitialSetupPath
 
 /**
  * Owns app-entry state for the whole session: language choice, PIN lock
@@ -127,6 +136,14 @@ class LockViewModel(
 
     fun setLanguage(language: AppLanguage) {
         languageManager.setLanguage(language)
+    }
+
+    fun selectNewVaultSetup() {
+        _uiState.update { it.copy(hasSelectedInitialSetupPath = true) }
+    }
+
+    fun markInitialBackupRestored() {
+        _uiState.update { it.copy(hasSelectedInitialSetupPath = true) }
     }
 
     fun setupPin(pin: String) {
