@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="scan feature illustration">
+<path d="M38 18 C78 2 130 24 143 62 C155 98 133 142 91 151 C52 159 12 135 9 94 C6 58 13 29 38 18Z" fill="#DED8FF"/>
+
+<rect x="48" y="28" width="66" height="92" rx="14" fill="#FFFFFF"/>
+<path d="M34 47 V34 H47 M115 34 H128 V47 M128 101 V114 H115 M47 114 H34 V101" fill="none" stroke="#494BD6" stroke-width="8" stroke-linecap="round"/>
+<line x1="44" y1="76" x2="118" y2="76" stroke="#C8F169" stroke-width="8" stroke-linecap="round"/>
+<line x1="64" y1="52" x2="98" y2="52" stroke="#17211C" stroke-width="7" stroke-linecap="round" opacity="0.65"/>
+<line x1="64" y1="97" x2="91" y2="97" stroke="#17211C" stroke-width="7" stroke-linecap="round" opacity="0.45"/>
+
+</svg>

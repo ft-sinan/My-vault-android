@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="personalise feature illustration">
+<path d="M38 18 C78 2 130 24 143 62 C155 98 133 142 91 151 C52 159 12 135 9 94 C6 58 13 29 38 18Z" fill="#FFD6CE"/>
+
+<path d="M80 28 C111 28 128 48 128 72 C128 86 118 94 106 94 H94 C87 94 83 99 85 106 C87 116 80 124 69 122 C46 118 30 99 32 74 C34 48 54 28 80 28Z" fill="#FFFFFF"/>
+<circle cx="57" cy="58" r="10" fill="#C8F169"/><circle cx="83" cy="48" r="10" fill="#CDE7FF"/>
+<circle cx="102" cy="69" r="10" fill="#DED8FF"/><circle cx="63" cy="84" r="10" fill="#FFE0BD"/>
+<circle cx="79" cy="103" r="6" fill="#173F35"/>
+
+</svg>

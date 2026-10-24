@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520" role="img" aria-labelledby="title desc">
+<title id="title">My Vault — Android family document vault</title>
+<desc id="desc">A premium offline-first vault for Indian family IDs and certificates.</desc>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#102A21"/><stop offset="1" stop-color="#173F35"/>
+</linearGradient>
+<clipPath id="clip"><rect width="1400" height="520" rx="56"/></clipPath>
+</defs>
+<rect width="1400" height="520" rx="56" fill="url(#bg)"/>
+<g clip-path="url(#clip)">
+<circle cx="1220" cy="-20" r="210" fill="#C8F169" opacity="0.16"/>
+<circle cx="118" cy="530" r="190" fill="#CDE7FF" opacity="0.11"/>
+<circle cx="730" cy="-80" r="150" fill="#DED8FF" opacity="0.1"/>
+<path d="M106 92 C150 40 224 52 240 104 C256 156 190 190 144 166 C102 144 76 132 106 92Z" fill="#C8F169" opacity="0.14"/>
+<path d="M1250 405 C1300 360 1372 386 1370 438 C1368 488 1298 504 1262 470 C1232 442 1218 430 1250 405Z" fill="#FFE0BD" opacity="0.12"/>
+<g opacity="0.22" fill="#F2EFE3">
+  <circle cx="675" cy="106" r="5"/><circle cx="705" cy="106" r="5"/><circle cx="735" cy="106" r="5"/>
+  <circle cx="675" cy="132" r="5"/><circle cx="705" cy="132" r="5"/><circle cx="735" cy="132" r="5"/>
+</g>
+<!-- Right app card -->
+<g transform="rotate(5 1085 270)">
+<rect x="900" y="72" width="390" height="390" rx="44" fill="#245B4A" opacity="0.3"/>
+</g>
+<rect x="870" y="54" width="410" height="410" rx="46" fill="#F7F5EB"/>
+<rect x="898" y="82" width="354" height="58" rx="29" fill="#FFFFFF"/>
+<g transform="translate(908 86) scale(0.46)" opacity="1">
+<path d="M54 5 L89 15 V45 C89 68 75 86 54 99 C33 86 19 68 19 45 V15 Z" fill="#F2EFE3"/>
+<path d="M54 17 L77 24 V45 C77 62 68 75 54 84 C40 75 31 62 31 45 V24 Z" fill="none" stroke="#173F35" stroke-width="6" stroke-linejoin="round"/>
+<circle cx="54" cy="50" r="17" fill="#C8F169"/>
+<circle cx="54" cy="45" r="5.2" fill="#173F35"/>
+<path d="M49.5 48 H58.5 L61 61 H47 Z" fill="#173F35"/>
+</g>
+<text x="968" y="119" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">My Vault</text>
+<circle cx="1214" cy="111" r="20" fill="#DED8FF"/>
+<text x="1214" y="119" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800" fill="#494BD6" text-anchor="middle" opacity="1">A</text>
+<rect x="898" y="158" width="354" height="54" rx="18" fill="#C8F169"/>
+<text x="924" y="181" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="800" fill="#173F35" text-anchor="start" opacity="1">Your family vault is protected</text>
+<text x="924" y="202" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="400" fill="#173F35" text-anchor="start" opacity="0.78">4 people  •  18 documents</text>
+
+<rect x="990" y="235" width="246" height="62" rx="18" fill="#F7F5EB" stroke="#D8DFD3"/>
+<rect x="1005" y="246" width="42" height="40" rx="12" fill="#FFD6CE"/>
+<text x="1026" y="274" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800" fill="#7C2949" text-anchor="middle" opacity="1">Aa</text>
+<text x="1062" y="266" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">Aadhaar</text>
+<text x="1062" y="287" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#5F6B64" text-anchor="start" opacity="1">Encrypted on-device</text>
+
+<rect x="990" y="309" width="246" height="62" rx="18" fill="#F7F5EB" stroke="#D8DFD3"/>
+<rect x="1005" y="320" width="42" height="40" rx="12" fill="#DED8FF"/>
+<text x="1026" y="348" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="800" fill="#383B8F" text-anchor="middle" opacity="1">PAN</text>
+<text x="1062" y="340" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">PAN Card</text>
+<text x="1062" y="361" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#5F6B64" text-anchor="start" opacity="1">Encrypted on-device</text>
+
+<rect x="990" y="383" width="246" height="62" rx="18" fill="#F7F5EB" stroke="#D8DFD3"/>
+<rect x="1005" y="394" width="42" height="40" rx="12" fill="#CDE7FF"/>
+<text x="1026" y="422" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="800" fill="#245B83" text-anchor="middle" opacity="1">PP</text>
+<text x="1062" y="414" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">Passport</text>
+<text x="1062" y="435" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="400" fill="#5F6B64" text-anchor="start" opacity="1">Encrypted on-device</text>
+
+<!-- Left copy -->
+<rect x="78" y="62" width="422" height="42" rx="21" fill="#C8F169"/>
+<text x="289" y="90" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" fill="#173F35" text-anchor="middle" opacity="1" letter-spacing="1">ANDROID FAMILY DOCUMENT VAULT</text>
+<text x="76" y="190" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="900" fill="#F2EFE3" text-anchor="start" opacity="1">My Vault</text>
+<text x="80" y="249" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="800" fill="#F2EFE3" text-anchor="start" opacity="1">Every family document,</text>
+<text x="80" y="298" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="800" fill="#F2EFE3" text-anchor="start" opacity="1">safe on your phone.</text>
+<text x="82" y="342" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="400" fill="#CBDED2" text-anchor="start" opacity="1">Aadhaar, PAN, certificates, passports and more —</text>
+<text x="82" y="371" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="400" fill="#CBDED2" text-anchor="start" opacity="1">organised by person and encrypted on-device.</text>
+<g>
+<rect x="80" y="405" width="182" height="42" rx="21.0" fill="#224C3F"/>
+<circle cx="102" cy="426.0" r="6" fill="#C8F169"/>
+<text x="182.0" y="433.0" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#F2EFE3" text-anchor="middle" opacity="1">Offline-first</text>
+</g>
+<g>
+<rect x="278" y="405" width="278" height="42" rx="21.0" fill="#263D54"/>
+<circle cx="300" cy="426.0" r="6" fill="#CDE7FF"/>
+<text x="428.0" y="433.0" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#F2EFE3" text-anchor="middle" opacity="1">English + Malayalam</text>
+</g>
+<g>
+<rect x="572" y="405" width="142" height="42" rx="21.0" fill="#4C3A2A"/>
+<circle cx="594" cy="426.0" r="6" fill="#FFE0BD"/>
+<text x="654.0" y="433.0" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" fill="#F2EFE3" text-anchor="middle" opacity="1">No ads</text>
+</g>
+</g>
+</svg>
