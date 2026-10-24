@@ -1,0 +1,137 @@
+{
+  "ar": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": [
+      "stat_saved"
+    ]
+  },
+  "de": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "es": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "fr": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": [
+      "stat_docs",
+      "add_file",
+      "assignment_group",
+      "category_property"
+    ]
+  },
+  "hi": {
+    "strings": 374,
+    "missing_tokens": {
+      "docs_shown": [
+        "MVPH0"
+      ],
+      "documents_count_many": [
+        "MVPH0"
+      ],
+      "pages_count": [
+        "MVPH0"
+      ],
+      "detail_page_of": [
+        "MVPH0",
+        "MVPH1"
+      ],
+      "profile_age_years": [
+        "MVPH0"
+      ],
+      "backup_summary": [
+        "MVPH0",
+        "MVPH1",
+        "MVPH2"
+      ],
+      "settings_safety_body": [
+        "MVNL2",
+        "MVNL3",
+        "MVNL4",
+        "MVNL5",
+        "MVTERM7"
+      ],
+      "settings_updates_available": [
+        "MVPH0"
+      ]
+    },
+    "placeholder_mismatches": [
+      "docs_shown",
+      "documents_count_many",
+      "pages_count",
+      "detail_page_of",
+      "profile_age_years",
+      "backup_summary",
+      "settings_updates_available"
+    ],
+    "empty_values": []
+  },
+  "id": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "it": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "ja": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": [
+      "stat_on_device"
+    ]
+  },
+  "ko": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [
+      "detail_page_of"
+    ],
+    "empty_values": []
+  },
+  "pt-BR": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "ru": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": [
+      "assignment_group"
+    ]
+  },
+  "tr": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [],
+    "empty_values": []
+  },
+  "zh-CN": {
+    "strings": 374,
+    "missing_tokens": {},
+    "placeholder_mismatches": [
+      "detail_page_of"
+    ],
+    "empty_values": [
+      "stat_on_device"
+    ]
+  }
+}
