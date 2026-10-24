@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalView
@@ -25,6 +26,7 @@ import com.ftsinan.myvault.ui.screens.lock.VaultStartupScreen
 import com.ftsinan.myvault.ui.screens.lock.VaultUnlockAnimationScreen
 import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
 import com.ftsinan.myvault.ui.theme.MyVaultTheme
+import kotlinx.coroutines.delay
 
 /**
  * Single activity for the whole app.
@@ -35,13 +37,18 @@ import com.ftsinan.myvault.ui.theme.MyVaultTheme
  * profile (name required, rest optional) -> vault.
  *
  * Security behaviours:
- *  - FLAG_SECURE: vault content never appears in screenshots /
- *    screen recordings / the recent-apps thumbnail.
+ *  - FLAG_SECURE is on by default so vault content does not appear in
+ *    screenshots, screen recordings or the recent-apps thumbnail. A
+ *    PIN-confirmed five-minute allowance can temporarily clear it for
+ *    debugging/store screenshots; locking or backgrounding ends it early.
  *  - Auto-lock after [AUTO_LOCK_MILLIS] in the background.
  */
 class MainActivity : FragmentActivity() {
 
     private val lockViewModel: LockViewModel by viewModels { LockViewModel.Factory }
+    private val screenshotAllowanceManager by lazy {
+        (application as MyVaultApplication).container.screenshotAllowanceManager
+    }
 
     private var backgroundedAt: Long? = null
 
@@ -59,6 +66,18 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val lockState by lockViewModel.uiState.collectAsStateWithLifecycle()
+            val screenshotExpiresAt by screenshotAllowanceManager.expiresAtMillis
+                .collectAsStateWithLifecycle()
+            LaunchedEffect(screenshotExpiresAt) {
+                val remaining = screenshotExpiresAt - System.currentTimeMillis()
+                if (remaining > 0L) {
+                    delay(remaining)
+                    screenshotAllowanceManager.clear()
+                }
+            }
+            LaunchedEffect(lockState.isUnlocked) {
+                if (!lockState.isUnlocked) screenshotAllowanceManager.clear()
+            }
             val systemDarkTheme = isSystemInDarkTheme()
             val darkTheme = when (lockState.themeMode) {
                 ThemeMode.SYSTEM -> systemDarkTheme
@@ -70,6 +89,14 @@ class MainActivity : FragmentActivity() {
                 val insetsController = WindowCompat.getInsetsController(window, view)
                 insetsController.isAppearanceLightStatusBars = !darkTheme
                 insetsController.isAppearanceLightNavigationBars = !darkTheme
+                if (screenshotExpiresAt > System.currentTimeMillis()) {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                } else {
+                    window.setFlags(
+                        WindowManager.LayoutParams.FLAG_SECURE,
+                        WindowManager.LayoutParams.FLAG_SECURE
+                    )
+                }
             }
             MyVaultTheme(
                 darkTheme = darkTheme,
@@ -121,6 +148,18 @@ class MainActivity : FragmentActivity() {
         if (LanguageManager.read(this) == language) return
         lockViewModel.setLanguage(language)
         recreate()
+    }
+
+    override fun onPause() {
+        // Leaving the foreground ends any temporary screenshot window early,
+        // before Android can take a recent-apps snapshot. Screenshots already
+        // captured stay in the user's gallery.
+        screenshotAllowanceManager.clear()
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+        super.onPause()
     }
 
     override fun onStop() {

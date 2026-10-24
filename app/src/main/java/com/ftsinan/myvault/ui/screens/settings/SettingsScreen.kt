@@ -82,6 +82,7 @@ import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.AlertDialog
@@ -221,6 +222,10 @@ fun SettingsScreen(
     val totalSize by viewModel.totalSize.collectAsStateWithLifecycle()
     val message by viewModel.message.collectAsStateWithLifecycle()
     val backupState by viewModel.backupState.collectAsStateWithLifecycle()
+    val screenshotAllowanceExpiresAt by viewModel.screenshotAllowanceExpiresAt
+        .collectAsStateWithLifecycle()
+    val screenshotsTemporarilyAllowed =
+        screenshotAllowanceExpiresAt > System.currentTimeMillis()
     val biometricAvailable = remember { canUseBiometric(context) }
     val dynamicColorAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
@@ -271,6 +276,7 @@ fun SettingsScreen(
     var downloadedUpdate by remember { mutableStateOf<File?>(null) }
 
     var showCreateBackupDialog by remember { mutableStateOf(false) }
+    var showScreenshotAllowanceDialog by remember { mutableStateOf(false) }
     var pendingBackupProtection by remember { mutableStateOf(BackupProtection.PASSWORD) }
     var pendingBackupPassword by remember { mutableStateOf<String?>(null) }
     var restorePassword by remember { mutableStateOf("") }
@@ -296,6 +302,17 @@ fun SettingsScreen(
     fun suggestedBackupFileName(): String {
         val stamp = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
         return "My-Vault-Backup-$stamp.mvbackup"
+    }
+
+    if (showScreenshotAllowanceDialog) {
+        ScreenshotAllowanceDialog(
+            onDismiss = { showScreenshotAllowanceDialog = false },
+            onVerifyPin = viewModel::verifyCurrentPin,
+            onAllow = {
+                viewModel.allowScreenshotsTemporarily()
+                showScreenshotAllowanceDialog = false
+            }
+        )
     }
 
     if (showCreateBackupDialog) {
@@ -863,6 +880,54 @@ fun SettingsScreen(
                 ) {
                     Text(stringResource(R.string.settings_change_pin))
                 }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 20.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        Icons.Filled.PhotoCamera,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            stringResource(R.string.settings_screenshots_title),
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = if (screenshotsTemporarilyAllowed) {
+                                stringResource(R.string.settings_screenshots_active)
+                            } else {
+                                stringResource(R.string.settings_screenshots_subtitle)
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = {
+                        if (screenshotsTemporarilyAllowed) {
+                            viewModel.stopScreenshotAllowance()
+                        } else {
+                            showScreenshotAllowanceDialog = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        if (screenshotsTemporarilyAllowed) {
+                            stringResource(R.string.settings_screenshots_stop)
+                        } else {
+                            stringResource(R.string.settings_screenshots_start)
+                        }
+                    )
+                }
             }
 
             OutlinedButton(
@@ -1117,6 +1182,78 @@ private fun BackupPasswordField(
         visualTransformation = PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+private fun ScreenshotAllowanceDialog(
+    onDismiss: () -> Unit,
+    onVerifyPin: suspend (String) -> Boolean,
+    onAllow: () -> Unit
+) {
+    var currentPin by remember { mutableStateOf("") }
+    var errorText by remember { mutableStateOf("") }
+    var checking by remember { mutableStateOf(false) }
+    val pinWrongText = stringResource(R.string.settings_current_pin_wrong)
+    val scope = rememberCoroutineScope()
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.settings_screenshots_dialog_title)) },
+        text = {
+            Column {
+                Text(
+                    text = stringResource(R.string.settings_screenshots_dialog_body),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.settings_screenshots_warning),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                PinField(
+                    value = currentPin,
+                    onValueChange = {
+                        currentPin = it
+                        errorText = ""
+                    },
+                    label = stringResource(R.string.settings_current_pin)
+                )
+                if (errorText.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = errorText,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    checking = true
+                    scope.launch {
+                        if (onVerifyPin(currentPin)) {
+                            onAllow()
+                        } else {
+                            errorText = pinWrongText
+                        }
+                        checking = false
+                    }
+                },
+                enabled = currentPin.length >= 4 && !checking
+            ) {
+                Text(stringResource(R.string.settings_screenshots_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.action_cancel))
+            }
+        }
     )
 }
 

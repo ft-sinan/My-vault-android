@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.ftsinan.myvault.MyVaultApplication
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.security.PinManager
+import com.ftsinan.myvault.data.security.ScreenshotAllowanceManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
@@ -53,6 +54,7 @@ class LockViewModel(
     private val pinManager: PinManager,
     private val fileManager: VaultFileManager,
     private val languageManager: LanguageManager,
+    private val screenshotAllowanceManager: ScreenshotAllowanceManager,
     repository: DocumentRepository
 ) : ViewModel() {
 
@@ -181,6 +183,7 @@ class LockViewModel(
     /** Locks the vault and wipes every decrypted preview/shared copy. */
     fun lock() {
         if (!_uiState.value.isUnlocked) return
+        screenshotAllowanceManager.clear()
         _uiState.update {
             it.copy(isUnlocked = false, showUnlockAnimation = false, error = null)
         }
@@ -197,6 +200,7 @@ class LockViewModel(
                     pinManager = app.container.pinManager,
                     fileManager = app.container.fileManager,
                     languageManager = app.container.languageManager,
+                    screenshotAllowanceManager = app.container.screenshotAllowanceManager,
                     repository = app.container.documentRepository
                 )
             }

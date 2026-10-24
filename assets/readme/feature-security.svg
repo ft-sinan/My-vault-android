@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="security feature illustration">
+<path d="M38 18 C78 2 130 24 143 62 C155 98 133 142 91 151 C52 159 12 135 9 94 C6 58 13 29 38 18Z" fill="#D6F0D2"/>
+<g transform="translate(26 18) scale(1.0)" opacity="1">
+<path d="M54 5 L89 15 V45 C89 68 75 86 54 99 C33 86 19 68 19 45 V15 Z" fill="#F2EFE3"/>
+<path d="M54 17 L77 24 V45 C77 62 68 75 54 84 C40 75 31 62 31 45 V24 Z" fill="none" stroke="#173F35" stroke-width="6" stroke-linejoin="round"/>
+<circle cx="54" cy="50" r="17" fill="#C8F169"/>
+<circle cx="54" cy="45" r="5.2" fill="#173F35"/>
+<path d="M49.5 48 H58.5 L61 61 H47 Z" fill="#173F35"/>
+</g>
+</svg>
