@@ -172,19 +172,19 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 
 <table>
   <tr>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="My Vault Home with sample family data" width="100%"></a><br><sub><strong>Home</strong><br>Owner profile, quick actions and family</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="My Vault Documents categories with sample data" width="100%"></a><br><sub><strong>Documents</strong><br>Search, favourites and categories</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="My Vault Family profiles with sample data" width="100%"></a><br><sub><strong>Family</strong><br>Every profile at a glance</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/05-add-document.jpg"><img src="docs/store/screenshots/05-add-document.jpg" alt="Add a document with Scan or File" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="My Vault Home with sample family data" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="My Vault Documents categories with sample data" width="100%"></a></td>
   </tr>
   <tr>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/06-profile.jpg"><img src="docs/store/screenshots/06-profile.jpg" alt="My Vault member profile and documents" width="100%"></a><br><sub><strong>Profile</strong><br>Personal details and their documents</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/05-add-document.jpg"><img src="docs/store/screenshots/05-add-document.jpg" alt="Add a document with Scan or File" width="100%"></a><br><sub><strong>Add a document</strong><br>Scan, or choose an image/PDF file</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="My Vault backup and restore screen" width="100%"></a><br><sub><strong>Backup &amp; restore</strong><br>Portable, verified vault files</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="My Vault Family profiles with sample data" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/06-profile.jpg"><img src="docs/store/screenshots/06-profile.jpg" alt="My Vault member profile and documents" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="My Vault backup and restore screen" width="100%"></a></td>
   </tr>
   <tr>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/07-settings.jpg"><img src="docs/store/screenshots/07-settings.jpg" alt="My Vault Settings quick toggles" width="100%"></a><br><sub><strong>Settings</strong><br>Quick toggles for everyday choices</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/08-appearance.jpg"><img src="docs/store/screenshots/08-appearance.jpg" alt="My Vault Appearance themes and colour palettes" width="100%"></a><br><sub><strong>Appearance</strong><br>Themes, wallpaper colours and palettes</sub></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/09-settings-pages.jpg"><img src="docs/store/screenshots/09-settings-pages.jpg" alt="My Vault Settings pages and Creator Space" width="100%"></a><br><sub><strong>Settings pages</strong><br>Dedicated pages, then Creator Space</sub></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/07-settings.jpg"><img src="docs/store/screenshots/07-settings.jpg" alt="My Vault Settings quick toggles" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/08-appearance.jpg"><img src="docs/store/screenshots/08-appearance.jpg" alt="My Vault Appearance themes and colour palettes" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/09-settings-pages.jpg"><img src="docs/store/screenshots/09-settings-pages.jpg" alt="My Vault Settings pages and Creator Space" width="100%"></a></td>
   </tr>
 </table>
 
