@@ -13,6 +13,7 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupManager
 import com.ftsinan.myvault.data.backup.BackupProfileOption
 import com.ftsinan.myvault.data.backup.BackupProtection
+import com.ftsinan.myvault.data.backup.BackupRestoreMode
 import com.ftsinan.myvault.data.backup.BackupSummary
 import com.ftsinan.myvault.data.backup.PreparedBackupRestore
 import kotlinx.coroutines.CancellationException
@@ -38,6 +39,7 @@ data class FirstRunBackupUiState(
     val summary: BackupSummary? = null,
     val profileOptions: List<BackupProfileOption> = emptyList(),
     val selectedOwnerBackupId: Long? = null,
+    val createNewOwnerSelected: Boolean = false,
     @StringRes val messageRes: Int? = null,
     val messageIsError: Boolean = false
 ) {
@@ -49,8 +51,8 @@ data class FirstRunBackupUiState(
 /**
  * First-open restore has no existing vault PIN to confirm yet. The backup
  * password (when the file has one) is therefore the credential verified
- * before anything is staged; committing still uses the same validated,
- * replace-only BackupManager path as Settings.
+ * before anything is staged. It uses the non-destructive merge path so any
+ * partial no-owner data already on the phone is preserved.
  */
 class FirstRunBackupViewModel(
     private val backupManager: BackupManager
@@ -123,7 +125,8 @@ class FirstRunBackupViewModel(
                 profileOptions = prepared.profileOptions,
                 selectedOwnerBackupId = prepared.profileOptions
                     .firstOrNull { it.isOriginalOwner }?.backupMemberId
-                    ?: prepared.profileOptions.firstOrNull()?.backupMemberId
+                    ?: prepared.profileOptions.firstOrNull()?.backupMemberId,
+                createNewOwnerSelected = false
             )
         } catch (_: AEADBadTagException) {
             _uiState.value = FirstRunBackupUiState(
@@ -148,6 +151,19 @@ class FirstRunBackupViewModel(
         if (state.profileOptions.none { it.backupMemberId == backupMemberId }) return
         _uiState.value = state.copy(
             selectedOwnerBackupId = backupMemberId,
+            createNewOwnerSelected = false,
+            messageRes = null,
+            messageIsError = false
+        )
+    }
+
+    fun selectCreateNewOwnerProfile() {
+        val state = _uiState.value
+        if (state.phase != FirstRunBackupPhase.READY) return
+        if (state.profileOptions.isEmpty()) return
+        _uiState.value = state.copy(
+            selectedOwnerBackupId = null,
+            createNewOwnerSelected = true,
             messageRes = null,
             messageIsError = false
         )
@@ -156,13 +172,21 @@ class FirstRunBackupViewModel(
     fun commitRestore() {
         if (_uiState.value.phase != FirstRunBackupPhase.READY) return
         val prepared = preparedRestore ?: return
-        val selectedOwnerBackupId = _uiState.value.selectedOwnerBackupId
-            ?: prepared.profileOptions.firstOrNull { it.isOriginalOwner }?.backupMemberId
-            ?: prepared.profileOptions.firstOrNull()?.backupMemberId
+        val state = _uiState.value
+        val createNewOwner = state.createNewOwnerSelected &&
+            prepared.profileOptions.isNotEmpty()
+        val selectedOwnerBackupId = when {
+            createNewOwner -> null
+            prepared.profileOptions.isEmpty() -> null
+            else -> state.selectedOwnerBackupId
+                ?: prepared.profileOptions.firstOrNull { it.isOriginalOwner }?.backupMemberId
+                ?: prepared.profileOptions.firstOrNull()?.backupMemberId
+        }
         _uiState.value = _uiState.value.copy(
             phase = FirstRunBackupPhase.RESTORING,
             profileOptions = prepared.profileOptions,
             selectedOwnerBackupId = selectedOwnerBackupId,
+            createNewOwnerSelected = createNewOwner,
             messageRes = null,
             messageIsError = false
         )
@@ -171,12 +195,17 @@ class FirstRunBackupViewModel(
             try {
                 backupManager.commitRestore(
                     prepared = prepared,
-                    selectedOwnerBackupMemberId = selectedOwnerBackupId
+                    restoreMode = BackupRestoreMode.ADD_TO_VAULT,
+                    selectedOwnerBackupMemberId = selectedOwnerBackupId,
+                    createNewOwnerProfile = createNewOwner
                 )
                 preparedRestore = null
                 _uiState.value = FirstRunBackupUiState(
                     phase = FirstRunBackupPhase.COMPLETED,
                     summary = prepared.summary,
+                    profileOptions = prepared.profileOptions,
+                    selectedOwnerBackupId = selectedOwnerBackupId,
+                    createNewOwnerSelected = createNewOwner,
                     messageRes = R.string.backup_restored
                 )
             } catch (error: CancellationException) {

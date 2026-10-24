@@ -13,6 +13,7 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupManager
 import com.ftsinan.myvault.data.backup.BackupProfileOption
 import com.ftsinan.myvault.data.backup.BackupProtection
+import com.ftsinan.myvault.data.backup.BackupRestoreMode
 import com.ftsinan.myvault.data.backup.BackupSummary
 import com.ftsinan.myvault.data.backup.PreparedBackupRestore
 import com.ftsinan.myvault.data.repository.DocumentRepository
@@ -51,8 +52,10 @@ data class BackupUiState(
     val phase: BackupPhase = BackupPhase.IDLE,
     val restoreUri: Uri? = null,
     val summary: BackupSummary? = null,
+    val restoreMode: BackupRestoreMode = BackupRestoreMode.ADD_TO_VAULT,
     val profileOptions: List<BackupProfileOption> = emptyList(),
     val selectedOwnerBackupId: Long? = null,
+    val createNewOwnerSelected: Boolean = false,
     @StringRes val messageRes: Int? = null,
     val messageIsError: Boolean = false
 ) {
@@ -244,10 +247,12 @@ class SettingsViewModel(
                 phase = BackupPhase.READY,
                 restoreUri = uri,
                 summary = prepared.summary,
+                restoreMode = BackupRestoreMode.ADD_TO_VAULT,
                 profileOptions = prepared.profileOptions,
                 selectedOwnerBackupId = prepared.profileOptions
                     .firstOrNull { it.isOriginalOwner }?.backupMemberId
-                    ?: prepared.profileOptions.firstOrNull()?.backupMemberId
+                    ?: prepared.profileOptions.firstOrNull()?.backupMemberId,
+                createNewOwnerSelected = false
             )
         } catch (_: AEADBadTagException) {
             _backupState.value = BackupUiState(
@@ -266,29 +271,66 @@ class SettingsViewModel(
         }
     }
 
+    fun selectRestoreMode(mode: BackupRestoreMode) {
+        val state = _backupState.value
+        if (state.phase != BackupPhase.READY) return
+        _backupState.value = state.copy(
+            restoreMode = mode,
+            messageRes = null,
+            messageIsError = false
+        )
+    }
+
     fun selectRestoreOwner(backupMemberId: Long) {
         val state = _backupState.value
         if (state.phase != BackupPhase.READY) return
         if (state.profileOptions.none { it.backupMemberId == backupMemberId }) return
         _backupState.value = state.copy(
             selectedOwnerBackupId = backupMemberId,
+            createNewOwnerSelected = false,
+            messageRes = null,
+            messageIsError = false
+        )
+    }
+
+    fun selectCreateNewOwnerProfile() {
+        val state = _backupState.value
+        if (state.phase != BackupPhase.READY) return
+        if (state.restoreMode != BackupRestoreMode.REPLACE_VAULT) return
+        if (state.profileOptions.isEmpty()) return
+        _backupState.value = state.copy(
+            selectedOwnerBackupId = null,
+            createNewOwnerSelected = true,
             messageRes = null,
             messageIsError = false
         )
     }
 
     fun commitRestore(currentPin: String) {
+        if (_backupState.value.phase != BackupPhase.READY) return
         val prepared = preparedRestore ?: return
         val summary = prepared.summary
         val profileOptions = prepared.profileOptions
-        val selectedOwnerBackupId = _backupState.value.selectedOwnerBackupId
-            ?: profileOptions.firstOrNull { it.isOriginalOwner }?.backupMemberId
-            ?: profileOptions.firstOrNull()?.backupMemberId
+        val state = _backupState.value
+        val restoreMode = state.restoreMode
+        val createNewOwner = restoreMode == BackupRestoreMode.REPLACE_VAULT &&
+            state.createNewOwnerSelected &&
+            profileOptions.isNotEmpty()
+        val selectedOwnerBackupId = when {
+            restoreMode == BackupRestoreMode.ADD_TO_VAULT -> null
+            createNewOwner -> null
+            profileOptions.isEmpty() -> null
+            else -> state.selectedOwnerBackupId
+                ?: profileOptions.firstOrNull { it.isOriginalOwner }?.backupMemberId
+                ?: profileOptions.firstOrNull()?.backupMemberId
+        }
         _backupState.value = BackupUiState(
             phase = BackupPhase.RESTORING,
             summary = summary,
+            restoreMode = restoreMode,
             profileOptions = profileOptions,
-            selectedOwnerBackupId = selectedOwnerBackupId
+            selectedOwnerBackupId = selectedOwnerBackupId,
+            createNewOwnerSelected = createNewOwner
         )
         viewModelScope.launch {
             try {
@@ -296,8 +338,10 @@ class SettingsViewModel(
                     _backupState.value = BackupUiState(
                         phase = BackupPhase.READY,
                         summary = summary,
+                        restoreMode = restoreMode,
                         profileOptions = profileOptions,
                         selectedOwnerBackupId = selectedOwnerBackupId,
+                        createNewOwnerSelected = createNewOwner,
                         messageRes = R.string.settings_current_pin_wrong,
                         messageIsError = true
                     )
@@ -305,12 +349,20 @@ class SettingsViewModel(
                 }
                 backupManager.commitRestore(
                     prepared = prepared,
-                    selectedOwnerBackupMemberId = selectedOwnerBackupId
+                    restoreMode = restoreMode,
+                    selectedOwnerBackupMemberId = selectedOwnerBackupId,
+                    createNewOwnerProfile = createNewOwner
                 )
                 preparedRestore = null
                 _backupState.value = BackupUiState(
-                    messageRes = R.string.backup_restored
+                    messageRes = if (restoreMode == BackupRestoreMode.ADD_TO_VAULT) {
+                        R.string.backup_added
+                    } else {
+                        R.string.backup_restored
+                    }
                 )
+            } catch (error: CancellationException) {
+                throw error
             } catch (_: Exception) {
                 preparedRestore = null
                 _backupState.value = BackupUiState(

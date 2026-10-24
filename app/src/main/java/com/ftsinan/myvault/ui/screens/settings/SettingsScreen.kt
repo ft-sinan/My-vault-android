@@ -143,11 +143,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.BuildConfig
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupProtection
+import com.ftsinan.myvault.data.backup.BackupRestoreMode
 import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.settings.AccentColor
 import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.ui.components.BackupOwnerSelector
+import com.ftsinan.myvault.ui.components.BackupRestoreModeSelector
 import com.ftsinan.myvault.ui.components.ExpressiveChip
 import com.ftsinan.myvault.ui.components.ExpressiveStat
 import com.ftsinan.myvault.ui.components.ExpressiveHeroHeader
@@ -397,9 +399,11 @@ fun SettingsScreen(
                         viewModel.cancelRestore()
                     }
                 },
-                title = { Text(stringResource(R.string.backup_ready_title)) },
+                title = { Text(stringResource(R.string.backup_restore_title)) },
                 text = {
-                    Column {
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
                         Text(
                             text = stringResource(
                                 R.string.backup_summary,
@@ -431,18 +435,35 @@ fun SettingsScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(Modifier.height(12.dp))
-                        Text(
-                            text = stringResource(R.string.backup_ready_body),
-                            style = MaterialTheme.typography.bodyMedium
+                        Spacer(Modifier.height(14.dp))
+                        BackupRestoreModeSelector(
+                            selectedMode = backupState.restoreMode,
+                            enabled = backupState.phase == BackupPhase.READY,
+                            onSelect = viewModel::selectRestoreMode
                         )
-                        if (backupState.profileOptions.size > 1) {
+                        if (
+                            backupState.restoreMode == BackupRestoreMode.REPLACE_VAULT &&
+                            backupState.profileOptions.isNotEmpty()
+                        ) {
                             Spacer(Modifier.height(14.dp))
                             BackupOwnerSelector(
                                 options = backupState.profileOptions,
                                 selectedBackupMemberId = backupState.selectedOwnerBackupId,
+                                createNewProfileSelected = backupState.createNewOwnerSelected,
                                 enabled = backupState.phase == BackupPhase.READY,
-                                onSelect = viewModel::selectRestoreOwner
+                                onSelect = viewModel::selectRestoreOwner,
+                                onCreateNewProfile = viewModel::selectCreateNewOwnerProfile
+                            )
+                        }
+                        if (
+                            backupState.restoreMode == BackupRestoreMode.ADD_TO_VAULT &&
+                            backupState.profileOptions.isNotEmpty()
+                        ) {
+                            Spacer(Modifier.height(10.dp))
+                            Text(
+                                text = stringResource(R.string.backup_merge_owner_note),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Spacer(Modifier.height(14.dp))
@@ -487,10 +508,22 @@ fun SettingsScreen(
                         },
                         enabled = restoreCurrentPin.length == PinManager.PIN_LENGTH &&
                             backupState.phase == BackupPhase.READY &&
-                            (backupState.profileOptions.isEmpty() ||
+                            (backupState.restoreMode == BackupRestoreMode.ADD_TO_VAULT ||
+                                backupState.profileOptions.isEmpty() ||
+                                backupState.createNewOwnerSelected ||
                                 backupState.selectedOwnerBackupId != null)
                     ) {
-                        Text(stringResource(R.string.backup_replace))
+                        Text(
+                            stringResource(
+                                if (backupState.restoreMode ==
+                                    BackupRestoreMode.ADD_TO_VAULT
+                                ) {
+                                    R.string.backup_add_action
+                                } else {
+                                    R.string.backup_replace
+                                }
+                            )
+                        )
                     }
                 },
                 dismissButton = {

@@ -6,7 +6,9 @@ All notable changes to My Vault are documented here.
 
 ### Added
 - First-open setup now asks **“Do you have a backup?”** after language selection. Returning users can restore a `.mvbackup` immediately—including its backup-password check—then create a PIN for the new phone; new users can continue with the existing PIN and profile setup.
-- Restoring a backup with multiple profiles now asks **“Who will use My Vault on this phone?”** The selected profile becomes **My profile** on that device, while all family profiles, documents, pages, and photos are still restored.
+- Restoring a backup with profiles now asks **“Who will use My Vault on this phone?”** The selected profile becomes **My profile** on that device, while all family profiles, documents, pages, and photos are still restored.
+- Settings restore now asks whether to **Add to this vault** or **Replace this vault**, with Add selected by default. Add keeps current profiles and documents, merges profiles only on exact normalized name + date of birth, and does not import exact duplicate documents twice; newer details from a duplicate backup document update the existing copy.
+- The restore profile picker now includes **“I’m not in this backup.”** After restore and PIN creation/confirmation, the normal full profile setup opens and the newly created profile becomes **My profile**; the previous owner remains as a family profile.
 
 ## [1.1.0] - 2026-10-23
 

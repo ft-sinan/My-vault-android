@@ -33,7 +33,8 @@ class AppContainer(context: Context) {
     val backupManager = BackupManager(
         context = context,
         repository = documentRepository,
-        fileManager = fileManager
+        fileManager = fileManager,
+        pinManager = pinManager
     )
     val ocrManager = OcrManager(context)
 }

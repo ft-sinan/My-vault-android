@@ -188,6 +188,16 @@
     <string name="backup_phone_owner_question">Who will use My Vault on this phone?</string>
     <string name="backup_phone_owner_subtitle">Choose your profile. All profiles and documents will be restored.</string>
     <string name="backup_original_owner">Original owner</string>
+    <string name="backup_restore_mode_title">How should this backup be restored?</string>
+    <string name="backup_restore_mode_add">Add to this vault</string>
+    <string name="backup_restore_mode_add_subtitle">Keep current profiles and documents. Exact duplicates will not be added twice.</string>
+    <string name="backup_restore_mode_replace">Replace this vault</string>
+    <string name="backup_restore_mode_replace_subtitle">Remove current profiles and documents, then restore only this backup.</string>
+    <string name="backup_merge_owner_note">Your current My profile will stay unchanged.</string>
+    <string name="backup_create_my_profile_option">I’m not in this backup</string>
+    <string name="backup_create_my_profile_subtitle">Create my profile after restore</string>
+    <string name="backup_add_action">Add to vault</string>
+    <string name="backup_added">Backup added to this vault.</string>
     <string name="backup_summary">%1$d people • %2$d documents • %3$d pages</string>
     <string name="backup_created_on">Backup date: %1$s</string>
     <string name="backup_replace">Replace vault</string>

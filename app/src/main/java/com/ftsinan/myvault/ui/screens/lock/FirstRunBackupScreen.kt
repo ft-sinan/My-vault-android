@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -162,7 +164,9 @@ fun FirstRunBackupScreen(
             },
             title = { Text(stringResource(R.string.backup_restore_title)) },
             text = {
-                Column {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                ) {
                     Text(
                         text = stringResource(
                             R.string.backup_summary,
@@ -194,13 +198,15 @@ fun FirstRunBackupScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    if (uiState.profileOptions.size > 1) {
+                    if (uiState.profileOptions.isNotEmpty()) {
                         Spacer(Modifier.height(14.dp))
                         BackupOwnerSelector(
                             options = uiState.profileOptions,
                             selectedBackupMemberId = uiState.selectedOwnerBackupId,
+                            createNewProfileSelected = uiState.createNewOwnerSelected,
                             enabled = uiState.phase == FirstRunBackupPhase.READY,
-                            onSelect = viewModel::selectRestoreOwner
+                            onSelect = viewModel::selectRestoreOwner,
+                            onCreateNewProfile = viewModel::selectCreateNewOwnerProfile
                         )
                     }
                     Spacer(Modifier.height(12.dp))
@@ -223,6 +229,7 @@ fun FirstRunBackupScreen(
                     onClick = viewModel::commitRestore,
                     enabled = uiState.phase == FirstRunBackupPhase.READY &&
                         (uiState.profileOptions.isEmpty() ||
+                            uiState.createNewOwnerSelected ||
                             uiState.selectedOwnerBackupId != null)
                 ) {
                     Text(stringResource(R.string.backup_restore))

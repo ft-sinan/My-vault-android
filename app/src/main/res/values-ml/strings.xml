@@ -181,6 +181,16 @@
     <string name="backup_phone_owner_question">ഈ ഫോണിൽ My Vault ആരാണ് ഉപയോഗിക്കുന്നത്?</string>
     <string name="backup_phone_owner_subtitle">നിങ്ങളുടെ പ്രൊഫൈൽ തിരഞ്ഞെടുക്കുക. എല്ലാ പ്രൊഫൈലുകളും രേഖകളും റീസ്റ്റോർ ചെയ്യും.</string>
     <string name="backup_original_owner">യഥാർത്ഥ ഉടമ</string>
+    <string name="backup_restore_mode_title">ഈ ബാക്കപ്പ് എങ്ങനെ റീസ്റ്റോർ ചെയ്യണം?</string>
+    <string name="backup_restore_mode_add">ഈ വോൾട്ടിലേക്ക് ചേർക്കുക</string>
+    <string name="backup_restore_mode_add_subtitle">നിലവിലെ പ്രൊഫൈലുകളും രേഖകളും നിലനിർത്തുക. കൃത്യമായ പകർപ്പുകൾ വീണ്ടും ചേർക്കില്ല.</string>
+    <string name="backup_restore_mode_replace">ഈ വോൾട്ട് മാറ്റിസ്ഥാപിക്കുക</string>
+    <string name="backup_restore_mode_replace_subtitle">നിലവിലെ പ്രൊഫൈലുകളും രേഖകളും നീക്കം ചെയ്ത് ഈ ബാക്കപ്പ് മാത്രം റീസ്റ്റോർ ചെയ്യുക.</string>
+    <string name="backup_merge_owner_note">നിങ്ങളുടെ നിലവിലെ എന്റെ പ്രൊഫൈൽ മാറ്റമില്ലാതെ തുടരും.</string>
+    <string name="backup_create_my_profile_option">ഞാൻ ഈ ബാക്കപ്പിൽ ഇല്ല</string>
+    <string name="backup_create_my_profile_subtitle">റീസ്റ്റോറിന് ശേഷം എന്റെ പ്രൊഫൈൽ സൃഷ്ടിക്കുക</string>
+    <string name="backup_add_action">വോൾട്ടിലേക്ക് ചേർക്കുക</string>
+    <string name="backup_added">ബാക്കപ്പ് ഈ വോൾട്ടിലേക്ക് ചേർത്തു.</string>
     <string name="backup_summary">%1$d ആളുകൾ • %2$d രേഖകൾ • %3$d പേജുകൾ</string>
     <string name="backup_created_on">ബാക്കപ്പ് തീയതി: %1$s</string>
     <string name="backup_replace">വോൾട്ട് മാറ്റിസ്ഥാപിക്കുക</string>

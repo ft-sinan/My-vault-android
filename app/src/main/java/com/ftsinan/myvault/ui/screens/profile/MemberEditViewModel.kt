@@ -35,13 +35,18 @@ data class MemberEditUiState(
 class MemberEditViewModel(
     private val repository: DocumentRepository,
     private val memberId: Long?,
-    private val ownerSetup: Boolean
+    private val ownerSetup: Boolean,
+    private val replaceExistingOwner: Boolean = false
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         MemberEditUiState(
-            isOwner = ownerSetup,
-            relation = if (ownerSetup) Relation.SELF else Relation.OTHER
+            isOwner = ownerSetup || replaceExistingOwner,
+            relation = if (ownerSetup || replaceExistingOwner) {
+                Relation.SELF
+            } else {
+                Relation.OTHER
+            }
         )
     )
     val uiState: StateFlow<MemberEditUiState> = _uiState.asStateFlow()
@@ -100,7 +105,11 @@ class MemberEditViewModel(
                     createdAt = existing?.createdAt ?: System.currentTimeMillis(),
                     updatedAt = System.currentTimeMillis()
                 )
-                repository.saveMember(member, state.pendingPhotoUri)
+                if (replaceExistingOwner && existing == null) {
+                    repository.createMemberAndMakeOwner(member, state.pendingPhotoUri)
+                } else {
+                    repository.saveMember(member, state.pendingPhotoUri)
+                }
             }.onSuccess {
                 _uiState.update { it.copy(isSaving = false, isSaved = true) }
             }.onFailure { throwable ->
@@ -115,14 +124,19 @@ class MemberEditViewModel(
     }
 
     companion object {
-        fun factory(memberId: Long?, ownerSetup: Boolean): ViewModelProvider.Factory =
+        fun factory(
+            memberId: Long?,
+            ownerSetup: Boolean,
+            replaceExistingOwner: Boolean = false
+        ): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
                     val app = this[APPLICATION_KEY] as MyVaultApplication
                     MemberEditViewModel(
                         repository = app.container.documentRepository,
                         memberId = memberId,
-                        ownerSetup = ownerSetup
+                        ownerSetup = ownerSetup,
+                        replaceExistingOwner = replaceExistingOwner
                     )
                 }
             }

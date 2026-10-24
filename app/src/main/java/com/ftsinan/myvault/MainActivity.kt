@@ -115,7 +115,8 @@ class MainActivity : FragmentActivity() {
             ) {
                 when {
                     lockState.isLoading || !lockState.isLanguageLoaded ||
-                        !lockState.isProfileLoaded -> VaultStartupScreen()
+                        !lockState.isProfileLoaded ||
+                        !lockState.isRestoreOwnerSetupLoaded -> VaultStartupScreen()
 
                     lockState.language == null -> LanguageSelectionScreen(
                         onLanguageSelected = ::changeLanguage
@@ -141,6 +142,14 @@ class MainActivity : FragmentActivity() {
                     !lockState.isUnlocked -> LockScreen(
                         viewModel = lockViewModel,
                         ownerName = lockState.ownerName
+                    )
+
+                    lockState.needsRestoreOwnerSetup -> MemberEditScreen(
+                        memberId = null,
+                        ownerSetup = true,
+                        replaceExistingOwner = true,
+                        onBack = null,
+                        onSaved = lockViewModel::completeRestoreOwnerSetup
                     )
 
                     !lockState.hasOwnerProfile -> MemberEditScreen(

@@ -63,6 +63,14 @@ class PinManager(private val context: Context) {
         prefs[GLASS_BOTTOM_BAR] ?: true
     }
 
+    /**
+     * Set when a restore recipient chose "I'm not in this backup". The main
+     * entry gate keeps showing profile setup until that new owner is saved.
+     */
+    val pendingRestoreOwnerSetup: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[PENDING_RESTORE_OWNER_SETUP] ?: false
+    }
+
     suspend fun setPin(pin: String) {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
         val hash = hashPin(pin, salt)
@@ -117,6 +125,10 @@ class PinManager(private val context: Context) {
         context.dataStore.edit { it[GLASS_BOTTOM_BAR] = enabled }
     }
 
+    suspend fun setPendingRestoreOwnerSetup(enabled: Boolean) {
+        context.dataStore.edit { it[PENDING_RESTORE_OWNER_SETUP] = enabled }
+    }
+
     private fun hashPin(pin: String, salt: ByteArray): ByteArray {
         val digest = MessageDigest.getInstance("SHA-256")
         digest.update(salt)
@@ -142,5 +154,7 @@ class PinManager(private val context: Context) {
         private val COMPACT_MODE = booleanPreferencesKey("compact_mode")
         private val REDUCE_ANIMATIONS = booleanPreferencesKey("reduce_animations")
         private val GLASS_BOTTOM_BAR = booleanPreferencesKey("glass_bottom_bar")
+        private val PENDING_RESTORE_OWNER_SETUP =
+            booleanPreferencesKey("pending_restore_owner_setup")
     }
 }

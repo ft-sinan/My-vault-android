@@ -73,15 +73,21 @@ import com.ftsinan.myvault.util.FormatUtils
 fun MemberEditScreen(
     memberId: Long?,
     ownerSetup: Boolean = false,
+    replaceExistingOwner: Boolean = false,
     onBack: (() -> Unit)? = null,
     onSaved: () -> Unit,
     viewModel: MemberEditViewModel = viewModel(
-        factory = MemberEditViewModel.factory(memberId, ownerSetup)
+        key = "member-edit:${memberId ?: "new"}:$ownerSetup:$replaceExistingOwner",
+        factory = MemberEditViewModel.factory(
+            memberId = memberId,
+            ownerSetup = ownerSetup,
+            replaceExistingOwner = replaceExistingOwner
+        )
     )
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(memberId, ownerSetup) { viewModel.load() }
+    LaunchedEffect(memberId, ownerSetup, replaceExistingOwner) { viewModel.load() }
     LaunchedEffect(uiState.isSaved) { if (uiState.isSaved) onSaved() }
 
     val photoLauncher = rememberLauncherForActivityResult(
