@@ -551,10 +551,6 @@ fun SettingsScreen(
         }
     }
 
-    fun checkForUpdates() {
-        runUpdateCheck(automatic = false)
-    }
-
     fun runUpdateCheck(automatic: Boolean) {
         if (updateStatus is UpdateStatus.Checking ||
             updateStatus is UpdateStatus.Downloading ||
@@ -1210,7 +1206,7 @@ fun SettingsScreen(
             AppUpdateCard(
                 status = updateStatus,
                 hasDownloadedApk = downloadedUpdate != null,
-                onCheck = ::checkForUpdates,
+                onCheck = { runUpdateCheck(automatic = false) },
                 onDownload = ::downloadUpdate,
                 onAllowInstalls = {
                     runCatching { AppUpdateManager.openInstallPermissionSettings(context) }
