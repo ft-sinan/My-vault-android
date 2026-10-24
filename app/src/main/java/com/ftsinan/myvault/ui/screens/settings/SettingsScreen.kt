@@ -552,10 +552,10 @@ fun SettingsScreen(
     }
 
     fun checkForUpdates() {
-        checkForUpdates(automatic = false)
+        runUpdateCheck(automatic = false)
     }
 
-    fun checkForUpdates(automatic: Boolean) {
+    fun runUpdateCheck(automatic: Boolean) {
         if (updateStatus is UpdateStatus.Checking ||
             updateStatus is UpdateStatus.Downloading ||
             updateStatus is UpdateStatus.Verifying
@@ -635,7 +635,7 @@ fun SettingsScreen(
                 SETTINGS_UPDATE_CHECK_INTERVAL_MILLIS
         ) {
             automaticUpdateCheckStarted = true
-            checkForUpdates(automatic = true)
+            runUpdateCheck(automatic = true)
         }
     }
 
