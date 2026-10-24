@@ -69,9 +69,8 @@
     <string name="docs_title">文件</string>
     <string name="docs_search_hint">搜索 Aadhaar、PAN、名称...</string>
     <string name="docs_categories">类别</string>
-    <string name="docs_all">全部
-显示</string>
-    <string name="docs_shown">%1$d</string>
+    <string name="docs_all">全部</string>
+    <string name="docs_shown">已显示 %1$d 个</string>
     <string name="docs_no_match_title">没有匹配项</string>
     <string name="docs_no_match_subtitle">尝试不同的搜索，或清除过滤器。</string>
     <string name="docs_clear_filters">清除筛选器</string>
@@ -80,9 +79,8 @@
     <string name="pages_count">%1$d 页</string>
     <string name="stat_docs">文档</string>
     <string name="stat_people">人</string>
-    <string name="stat_saved">已保存
-设备上的</string>
-    <string name="stat_on_device">on device</string>
+    <string name="stat_saved">已保存</string>
+    <string name="stat_on_device">设备上</string>
     <string name="add_sheet_title">添加文档</string>
     <string name="add_sheet_subtitle">使用相机扫描页面，或选择图像/PDF 文件</string>
     <string name="add_scan">扫描</string>
@@ -116,12 +114,12 @@
     <string name="detail_document_type">文档类型</string>
     <string name="detail_category">类别</string>
     <string name="detail_belongs_to">属于</string>
-    <string name="detail_document_number">身份证号码</string>
+    <string name="detail_document_number">ID 号</string>
     <string name="detail_pages">页数</string>
     <string name="detail_file_size">文件大小</string>
     <string name="detail_added_on">已添加</string>
     <string name="detail_updated_on">最后更新</string>
-    <string name="detail_page_of">%2$d 页 %1$d</string>
+    <string name="detail_page_of">第 %1$d 页，共 %2$d 页</string>
     <string name="detail_zoom_hint">捏合缩放，拖动平移</string>
     <string name="share_as_pdf">分享为 PDF</string>
     <string name="share_as_images">分享为图像</string>
@@ -133,7 +131,7 @@
     <string name="profile_edit">编辑个人资料</string>
     <string name="profile_documents">文件</string>
     <string name="profile_no_documents">尚未为此配置文件保存任何文档。</string>
-    <string name="profile_age_years">%1$d 年</string>
+    <string name="profile_age_years">%1$d岁</string>
     <string name="manage_members_title">管理家庭成员</string>
     <string name="manage_members_subtitle">编辑姓名和详细信息。拖动手柄进行重新排序。</string>
     <string name="manage_my_profile">我的个人资料</string>
@@ -218,19 +216,19 @@
     <string name="category_vehicle">车辆</string>
     <string name="category_banking">银行与金融</string>
     <string name="category_health">健康</string>
-    <string name="category_property">属性</string>
+    <string name="category_property">房产</string>
     <string name="category_other">其他</string>
-    <string name="relation_self">自我</string>
+    <string name="relation_self">本人</string>
     <string name="relation_spouse">配偶</string>
     <string name="relation_father">父亲</string>
-    <string name="relation_mother">妈妈</string>
+    <string name="relation_mother">母亲</string>
     <string name="relation_son">儿子</string>
     <string name="relation_daughter">女儿</string>
     <string name="relation_family">家庭</string>
     <string name="relation_other">其他</string>
     <string name="group_family">家庭</string>
     <string name="group_vehicle">车辆</string>
-    <string name="group_home">主页 / 物业</string>
+    <string name="group_home">家庭 / 房产</string>
     <string name="group_other">其他</string>
     <string name="action_copied">已复制</string>
     <string name="detail_delete_title">删除该文件？</string>
@@ -253,9 +251,8 @@
     <string name="settings_pin_mismatch_error">新的 PIN 和确认不匹配。</string>
     <string name="settings_current_pin_wrong">当前 PIN 错误。</string>
     <string name="settings_pin_changed">PIN 更改成功。</string>
-    <string name="settings_storage_one">您的保管库中有 1 个文档
-您保管库中的</string>
-    <string name="settings_storage_many">%1$d 文档</string>
+    <string name="settings_storage_one">您的保管库中有 1 个文档</string>
+    <string name="settings_storage_many">您的保管库中有 %1$d 个文档</string>
     <string name="settings_storage_using">在此设备上使用 %1$s</string>
     <string name="settings_safety_body" formatted="false">• 每个文件在保存之前都会使用 AES-256 进行加密。\n• 加密密钥永远不会离开此手机的安全密钥库。\n• 您的保管库可以离线工作。该应用程序仅在“设置”打开（每天最多一次）或手动检查时使用互联网检查更新；文档永远不会上传。\n• 屏幕截图和最近的应用程序预览被阻止。\n• 保管库在后台 1 分钟后自行锁定。\n\n⚠️ 重要提示：如果您忘记了 PIN 并且生物识别功能停止工作，您的文档将无法恢复。也请妥善保管您的原始文件。</string>
     <string name="pin_wrong">错误 PIN</string>
@@ -273,12 +270,12 @@
     <string name="gender_male">男</string>
     <string name="gender_female">女</string>
     <string name="gender_other">其他</string>
-    <string name="gender_prefer_not_to_say">不想说</string>
+    <string name="gender_prefer_not_to_say">不愿透露</string>
     <string name="blood_group_unknown">未知</string>
-    <string name="settings_theme_mode">应用程序主题</string>
+    <string name="settings_theme_mode">应用主题</string>
     <string name="settings_theme_system">系统</string>
-    <string name="settings_theme_light">光</string>
-    <string name="settings_theme_dark">黑暗</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">调色板</string>
     <string name="settings_motion_feel">动作与感觉</string>
@@ -304,7 +301,7 @@
     <string name="accent_orion">Orion</string>
     <string name="settings_quick_toggles">快速切换</string>
     <string name="settings_everything_else">其他一切</string>
-    <string name="settings_quick_biometric">Biometric 解锁</string>
+    <string name="settings_quick_biometric">生物识别解锁</string>
     <string name="settings_quick_wallpaper">壁纸颜色</string>
     <string name="settings_quick_animations">动画</string>
     <string name="settings_toggle_on">开</string>
@@ -357,7 +354,7 @@
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">捆绑在 SIL 开放字体许可证 1.1 下的标题。完整的许可证包含在应用程序中。</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">由 Google 提供的 Compose、Material 3、Room、导航、DataStore 和 Biometric 库，在 Apache License 2.0 下使用。</string>
+    <string name="ack_androidx_body">由 Google 提供的 Compose、Material 3、Room、Navigation、DataStore 和 Biometric 库，在 Apache License 2.0 下使用。</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">文档扫描和拉丁文本识别由 Google ML Kit 和 Google Play services 组件在设备上提供。</string>
     <string name="ack_coil_title">Coil</string>

@@ -37,8 +37,8 @@
     <string name="member_add_title">Aggiungi membro della famiglia</string>
     <string name="member_edit_title">Modifica membro della famiglia</string>
     <string name="field_name">Nome completo *</string>
-    <string name="field_name_hint">Nome come sul tuo ID</string>
-    <string name="field_relation">Relazione</string>
+    <string name="field_name_hint">Nome come sul documento d\'identità</string>
+    <string name="field_relation">Parentela</string>
     <string name="field_dob">Data di nascita</string>
     <string name="field_gender">Sesso</string>
     <string name="field_blood_group">Gruppo sanguigno</string>
@@ -48,8 +48,8 @@
     <string name="date_pick_hint">Tocca per scegliere una data</string>
     <string name="date_pick_action">Scegli una data</string>
     <string name="profile_name_required">Inserisci un nome</string>
-    <string name="tab_home">Casa</string>
-    <string name="tab_docs">Doc</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_docs">Documenti</string>
     <string name="tab_family">Famiglia</string>
     <string name="tab_settings">Impostazioni</string>
     <string name="tab_add">Aggiungi</string>
@@ -70,7 +70,7 @@
     <string name="docs_search_hint">Cerca Aadhaar, PAN, nomi…</string>
     <string name="docs_categories">Categorie</string>
     <string name="docs_all">Tutto</string>
-    <string name="docs_shown">%1$d mostrato</string>
+    <string name="docs_shown">%1$d mostrati</string>
     <string name="docs_no_match_title">Niente corrisponde</string>
     <string name="docs_no_match_subtitle">Prova una ricerca diversa o cancella i filtri.</string>
     <string name="docs_clear_filters">Cancella filtri</string>
@@ -190,7 +190,7 @@
     <string name="backup_added">Backup aggiunto a questo deposito.</string>
     <string name="backup_summary">%1$d persone • %2$d documenti • %3$d pagine</string>
     <string name="backup_created_on">Data del backup: %1$s</string>
-    <string name="backup_replace">Sostituisci il deposito</string>
+    <string name="backup_replace">Sostituisci vault</string>
     <string name="backup_restoring">Ripristino del backup…</string>
     <string name="backup_restored">Backup ripristinato.</string>
     <string name="backup_restore_failed">Impossibile ripristinare il backup. Il tuo deposito attuale non è stato modificato.</string>
@@ -218,7 +218,7 @@
     <string name="category_health">Salute</string>
     <string name="category_property">Proprietà</string>
     <string name="category_other">Altro</string>
-    <string name="relation_self">Auto</string>
+    <string name="relation_self">Io stesso</string>
     <string name="relation_spouse">Coniuge</string>
     <string name="relation_father">Padre</string>
     <string name="relation_mother">Madre</string>
@@ -274,8 +274,8 @@
     <string name="blood_group_unknown">Sconosciuto</string>
     <string name="settings_theme_mode">Tema dell\'app</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_theme_light">Luce</string>
-    <string name="settings_theme_dark">Buio</string>
+    <string name="settings_theme_light">Chiaro</string>
+    <string name="settings_theme_dark">Scuro</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Tavolozza dei colori</string>
     <string name="settings_motion_feel">Movimento e sensazione</string>
@@ -285,7 +285,7 @@
     <string name="settings_haptics_subtitle">La vibrazione tocca i tasti e le scelte</string>
     <string name="settings_compact_mode">Modalità compatta</string>
     <string name="settings_compact_mode_subtitle">Layout leggermente più piccolo e più denso</string>
-    <string name="settings_reduce_animations">Ridurre le animazioni</string>
+    <string name="settings_reduce_animations">Riduci le animazioni</string>
     <string name="settings_reduce_animations_subtitle">Le schermate e gli elenchi cambiano istantaneamente</string>
     <string name="settings_accent_color">Colore in risalto</string>
     <string name="settings_accent_subtitle">Utilizzato quando i colori dello sfondo sono disattivati</string>
@@ -299,9 +299,9 @@
     <string name="accent_slate">Ardesia</string>
     <string name="settings_appearance_preview">Anteprima</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Commuta rapidamente</string>
+    <string name="settings_quick_toggles">Interruttori rapidi</string>
     <string name="settings_everything_else">Tutto il resto</string>
-    <string name="settings_quick_biometric">Biometric sbloccare</string>
+    <string name="settings_quick_biometric">Sblocco biometrico</string>
     <string name="settings_quick_wallpaper">Colori dello sfondo</string>
     <string name="settings_quick_animations">Animazioni</string>
     <string name="settings_toggle_on">Acceso</string>
@@ -354,13 +354,12 @@
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">In bundle per le intestazioni sotto la licenza SIL Open Font 1.1. La licenza completa è inclusa nell\'app.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Componi, le librerie Material 3, Room, Navigazione, DataStore e Biometric di Google, utilizzate sotto la licenza Apache 2.0.</string>
+    <string name="ack_androidx_body">Librerie Compose, Material 3, Room, Navigation, DataStore e Biometric di Google, utilizzate sotto la Licenza Apache 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">La scansione dei documenti e il riconoscimento del testo latino sono forniti sul dispositivo dai componenti Google ML Kit e Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
-    <string name="ack_coil_body">Caricamento di immagini per anteprime di documenti decrittografati, utilizzato sotto la licenza Apache 2.0.
-Il codice sorgente</string>
-    <string name="ack_my_vault_license">My Vault è concesso in licenza sotto GNU GPL-3.0.</string>
+    <string name="ack_coil_body">Caricamento di immagini per anteprime di documenti decrittografati, utilizzato sotto la licenza Apache 2.0.</string>
+    <string name="ack_my_vault_license">Il codice sorgente di My Vault è concesso in licenza sotto GNU GPL-3.0.</string>
     <string name="ack_open_project">Apri progetto</string>
     <string name="creator_email">E-mail</string>
     <string name="creator_website">Sito web</string>

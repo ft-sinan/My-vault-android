@@ -75,9 +75,9 @@ My Vault is an offline-first Android document vault built for Indian family IDs 
 
 Documents can be added by multi-page ML Kit scanning or by choosing an image/PDF file. On-device OCR suggests Aadhaar, PAN and Driving Licence numbers for review before saving. Document pages and profile photos are encrypted on the device with AES-256-GCM using Android Keystore, and the vault is protected by a PIN with optional biometric unlock.
 
-My Vault also includes English and Malayalam, family profiles, personal and shared document groups, search and favourites, clean profile-card sharing, and portable `.mvbackup` backup files. Each backup can use a PBKDF2/AES-256-GCM password or be explicitly created without one after a warning.
+My Vault also includes 15 languages—English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian—plus family profiles, personal and shared document groups, search and favourites, clean profile-card sharing, and portable `.mvbackup` backup files. Each backup can use a PBKDF2/AES-256-GCM password or be explicitly created without one after a warning.
 
-No account. No ads. No document upload. The only network feature is a manual update check that runs only when the user taps it in Settings.
+No account. No ads. No document upload. The only network feature is a GitHub Releases update check when Settings opens (at most once a day) or when the user checks manually; updates never download automatically.
 
 ## While Orion review is pending
 

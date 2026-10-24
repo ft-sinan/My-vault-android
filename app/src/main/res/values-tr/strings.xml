@@ -38,7 +38,7 @@
     <string name="member_edit_title">Aile üyesini düzenle</string>
     <string name="field_name">Tam ad *</string>
     <string name="field_name_hint">Kimliğinizdeki İsim</string>
-    <string name="field_relation">İlişki</string>
+    <string name="field_relation">Akrabalık</string>
     <string name="field_dob">Doğum tarihi</string>
     <string name="field_gender">Cinsiyet</string>
     <string name="field_blood_group">Kan grubu</string>
@@ -75,8 +75,8 @@
     <string name="docs_no_match_subtitle">Farklı bir arama yapmayı deneyin veya filtreleri temizleyin.</string>
     <string name="docs_clear_filters">Filtreleri temizle</string>
     <string name="documents_count_one">1 belge</string>
-    <string name="documents_count_many">%1$d belgeler</string>
-    <string name="pages_count">%1$d sayfalar</string>
+    <string name="documents_count_many">%1$d belge</string>
+    <string name="pages_count">%1$d sayfa</string>
     <string name="stat_docs">dokümanlar</string>
     <string name="stat_people">kişi</string>
     <string name="stat_saved">kaydedildi</string>
@@ -99,9 +99,9 @@
     <string name="field_doc_type">Belge türü *</string>
     <string name="field_doc_type_hint">ör. Aadhaar Kart</string>
     <string name="field_category">Kategori</string>
-    <string name="field_belongs_to">Şuraya aittir: *</string>
+    <string name="field_belongs_to">Sahibi *</string>
     <string name="assignment_person">Kişi</string>
-    <string name="assignment_group">Grubu</string>
+    <string name="assignment_group">Grup</string>
     <string name="field_document_number">Kimlik numarası (isteğe bağlı)</string>
     <string name="field_document_number_hint">Aadhaar / PAN / lisans numarası</string>
     <string name="ocr_looking">Kimlik numarası aranıyor…</string>
@@ -113,7 +113,7 @@
     <string name="detail_stored_securely">Bu cihazda güvenli bir şekilde saklandı</string>
     <string name="detail_document_type">Belge türü</string>
     <string name="detail_category">Kategori</string>
-    <string name="detail_belongs_to">Aittir</string>
+    <string name="detail_belongs_to">Sahibi</string>
     <string name="detail_document_number">kimlik numarası</string>
     <string name="detail_pages">Sayfalar</string>
     <string name="detail_file_size">Dosya boyutu</string>
@@ -141,9 +141,8 @@
     <string name="settings_subtitle">Görünüm, dil, güvenlik ve depolama</string>
     <string name="settings_appearance">Görünüm</string>
     <string name="settings_language">Dil</string>
-    <string name="settings_wallpaper_colors">Duvar kağıdı renklerimi eşleştir
-Duvar kağıdınızdan</string>
-    <string name="settings_wallpaper_colors_subtitle">Material You dinamik renk</string>
+    <string name="settings_wallpaper_colors">Duvar kağıdı renklerimi eşleştir</string>
+    <string name="settings_wallpaper_colors_subtitle">Duvar kağıdınızdan Material You dinamik rengi</string>
     <string name="settings_wallpaper_colors_unavailable">, Android 12 veya daha yenisine ihtiyaç duyar; My Vault paletini kullanarak</string>
     <string name="settings_family">Aile üyeleri</string>
     <string name="settings_family_subtitle">Üyeleri ekleyin, düzenleyin, yeniden adlandırın ve yeniden sıralayın</string>
@@ -189,7 +188,7 @@ Duvar kağıdınızdan</string>
     <string name="backup_create_my_profile_subtitle">Geri yüklemeden sonra profilimi oluştur</string>
     <string name="backup_add_action">Kasaya ekle</string>
     <string name="backup_added">Bu kasaya yedekleme eklendi.</string>
-    <string name="backup_summary">%1$d kişiler • %2$d belgeler • %3$d sayfalar</string>
+    <string name="backup_summary">%1$d kişi • %2$d belge • %3$d sayfa</string>
     <string name="backup_created_on">Yedekleme tarihi: %1$s</string>
     <string name="backup_replace">Kasayı değiştir</string>
     <string name="backup_restoring">Yedekleme geri yükleniyor…</string>
@@ -217,14 +216,14 @@ Duvar kağıdınızdan</string>
     <string name="category_vehicle">Araç</string>
     <string name="category_banking">Bankacılık ve Finans</string>
     <string name="category_health">Sağlık</string>
-    <string name="category_property">Özellik</string>
+    <string name="category_property">Emlak</string>
     <string name="category_other">Diğer</string>
-    <string name="relation_self">Kendisi</string>
+    <string name="relation_self">Kendim</string>
     <string name="relation_spouse">Eş</string>
     <string name="relation_father">Baba</string>
     <string name="relation_mother">Anne</string>
-    <string name="relation_son">Oğlum</string>
-    <string name="relation_daughter">Kızı</string>
+    <string name="relation_son">Erkek çocuk</string>
+    <string name="relation_daughter">Kız çocuk</string>
     <string name="relation_family">Aile</string>
     <string name="relation_other">Diğer</string>
     <string name="group_family">Aile</string>
@@ -252,9 +251,8 @@ Duvar kağıdınızdan</string>
     <string name="settings_pin_mismatch_error">Yeni PIN ve onay eşleşmiyor.</string>
     <string name="settings_current_pin_wrong">Akım PIN yanlış.</string>
     <string name="settings_pin_changed">PIN başarıyla değiştirildi.</string>
-    <string name="settings_storage_one">Kasanızda 1 belge
-Kasanızdaki</string>
-    <string name="settings_storage_many">%1$d belge</string>
+    <string name="settings_storage_one">Kasanızda 1 belge</string>
+    <string name="settings_storage_many">Kasanızda %1$d belge</string>
     <string name="settings_storage_using">Bu cihazda %1$s kullanılıyor</string>
     <string name="settings_safety_body" formatted="false">• Her dosya kaydedilmeden önce AES-256 ile şifrelenir.\n• Şifreleme anahtarı bu telefonun güvenli anahtar deposundan asla ayrılmaz.\n• Kasanız çevrimdışı çalışır. Uygulama interneti yalnızca Ayarlar açıldığında (en fazla günde bir kez) veya manuel olarak kontrol ettiğinizde güncellemeleri kontrol etmek için kullanır; belgeler hiçbir zaman yüklenmez.\n• Ekran görüntüleri ve son uygulamaların önizlemeleri engellenir.\n• Kasa, arka planda 1 dakika sonra kendini kilitler.\n\n⚠️ Önemli: PIN cihazınızı unutursanız ve biyometrik verileriniz çalışmayı durdurursa, belgeleriniz kurtarılamaz. Orijinal belgelerinizi de güvende tutun.</string>
     <string name="pin_wrong">Yanlış PIN</string>
@@ -276,7 +274,7 @@ Kasanızdaki</string>
     <string name="blood_group_unknown">Bilinmiyor</string>
     <string name="settings_theme_mode">Uygulama teması</string>
     <string name="settings_theme_system">Sistem</string>
-    <string name="settings_theme_light">Işık</string>
+    <string name="settings_theme_light">Açık</string>
     <string name="settings_theme_dark">Koyu</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Renk paleti</string>
@@ -301,9 +299,9 @@ Kasanızdaki</string>
     <string name="accent_slate">Arduvaz</string>
     <string name="settings_appearance_preview">Önizleme</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Hızlı geçişler</string>
+    <string name="settings_quick_toggles">Hızlı anahtarlar</string>
     <string name="settings_everything_else">Diğer her şey</string>
-    <string name="settings_quick_biometric">Biometric kilidini aç</string>
+    <string name="settings_quick_biometric">Biyometrik kilit açma</string>
     <string name="settings_quick_wallpaper">Duvar kağıdı renkleri</string>
     <string name="settings_quick_animations">Animasyonlar</string>
     <string name="settings_toggle_on">Açık</string>
@@ -356,7 +354,7 @@ Kasanızdaki</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">SIL Açık Yazı Tipi Lisansı 1.1 kapsamındaki başlıklar için paketlenmiştir. Tam lisans uygulamaya dahildir.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Apache Lisansı 2.0 altında kullanılan Google ile Material 3, Room, Gezinme, DataStore ve Biometric kitaplıklarını oluşturun.</string>
+    <string name="ack_androidx_body">Google\'ın Compose, Material 3, Room, Navigation, DataStore ve Biometric kitaplıkları; Apache Lisansı 2.0 kapsamında kullanılır.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">Belge tarama ve Latince metin tanıma, cihaz üzerinde Google ML Kit ve Google Play services bileşenleri tarafından sağlanır.</string>
     <string name="ack_coil_title">Coil</string>

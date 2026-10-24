@@ -9,7 +9,7 @@
     <string name="action_delete">Löschen</string>
     <string name="action_edit">Bearbeiten</string>
     <string name="action_share">Teilen</string>
-    <string name="action_clear">Klar</string>
+    <string name="action_clear">Leeren</string>
     <string name="action_ok">OK</string>
     <string name="language_choose_title">Wählen Sie Ihre Sprache</string>
     <string name="language_choose_subtitle">Sie können dies später in den Einstellungen ändern</string>
@@ -38,7 +38,7 @@
     <string name="member_edit_title">Familienmitglied bearbeiten</string>
     <string name="field_name">Vollständiger Name *</string>
     <string name="field_name_hint">Name wie auf Ihrem Ausweis</string>
-    <string name="field_relation">Beziehung</string>
+    <string name="field_relation">Verwandtschaft</string>
     <string name="field_dob">Geburtsdatum</string>
     <string name="field_gender">Geschlecht</string>
     <string name="field_blood_group">Blutgruppe</string>
@@ -52,7 +52,7 @@
     <string name="tab_docs">Dokumente</string>
     <string name="tab_family">Familie</string>
     <string name="tab_settings">Einstellungen</string>
-    <string name="tab_add">Hinzugefügt</string>
+    <string name="tab_add">Hinzufügen</string>
     <string name="home_greeting_morning">Guten Morgen</string>
     <string name="home_greeting_afternoon">Guten Tag</string>
     <string name="home_greeting_evening">Guten Abend</string>
@@ -162,7 +162,7 @@
     <string name="backup_confirm_password">Backup-Passwort bestätigen</string>
     <string name="backup_password_min">Verwenden Sie mindestens %1$d Zeichen.</string>
     <string name="backup_password_mismatch">Backup-Passwörter stimmen nicht überein.</string>
-    <string name="backup_choose_location">Standort auswählen</string>
+    <string name="backup_choose_location">Speicherort wählen</string>
     <string name="backup_creating">Backup wird erstellt…</string>
     <string name="backup_created">Sicherung erstellt.</string>
     <string name="backup_share">Backup teilen</string>
@@ -198,7 +198,7 @@
     <string name="backup_wrong_password">Falsches Backup-Passwort.</string>
     <string name="backup_unprotected">Kein Passwortschutz</string>
     <string name="backup_password_protected">Passwortgeschützt</string>
-    <string name="settings_storage">Lagerung</string>
+    <string name="settings_storage">Speicher</string>
     <string name="settings_how_safe">So bleiben Ihre Dokumente sicher</string>
     <string name="settings_lock_now">Tresor jetzt sperren</string>
     <string name="settings_screenshots_title">Temporäre Screenshots</string>
@@ -216,7 +216,7 @@
     <string name="category_vehicle">Fahrzeug</string>
     <string name="category_banking">Bank- und Finanzwesen</string>
     <string name="category_health">Gesundheit</string>
-    <string name="category_property">Eigenschaft</string>
+    <string name="category_property">Immobilien</string>
     <string name="category_other">Sonstiges</string>
     <string name="relation_self">Selbst</string>
     <string name="relation_spouse">Ehepartner</string>
@@ -228,7 +228,7 @@
     <string name="relation_other">Sonstiges</string>
     <string name="group_family">Familie</string>
     <string name="group_vehicle">Fahrzeug</string>
-    <string name="group_home">Startseite / Eigentum</string>
+    <string name="group_home">Zuhause / Immobilien</string>
     <string name="group_other">Sonstiges</string>
     <string name="action_copied">Kopiert</string>
     <string name="detail_delete_title">Dieses Dokument löschen?</string>
@@ -270,16 +270,16 @@
     <string name="gender_male">Männlich</string>
     <string name="gender_female">Weiblich</string>
     <string name="gender_other">Sonstiges</string>
-    <string name="gender_prefer_not_to_say">Sag es lieber nicht</string>
+    <string name="gender_prefer_not_to_say">Keine Angabe</string>
     <string name="blood_group_unknown">Unbekannt</string>
     <string name="settings_theme_mode">App-Theme</string>
     <string name="settings_theme_system">System</string>
-    <string name="settings_theme_light">Licht</string>
+    <string name="settings_theme_light">Hell</string>
     <string name="settings_theme_dark">Dunkel</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Farbpalette</string>
     <string name="settings_motion_feel">Bewegung und Gefühl</string>
-    <string name="settings_glass_bottom_bar">Bodenleiste aus Glas</string>
+    <string name="settings_glass_bottom_bar">Untere Leiste aus Glas</string>
     <string name="settings_glass_bottom_bar_subtitle">Schwebende, leicht durchscheinende Navigationsleiste</string>
     <string name="settings_haptics">Haptisches Feedback</string>
     <string name="settings_haptics_subtitle">Vibration tippt auf Tasten und Auswahlmöglichkeiten</string>
@@ -299,9 +299,9 @@
     <string name="accent_slate">Schiefer</string>
     <string name="settings_appearance_preview">Vorschau</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Schnelles Umschalten</string>
+    <string name="settings_quick_toggles">Schnellschalter</string>
     <string name="settings_everything_else">Alles andere</string>
-    <string name="settings_quick_biometric">Biometric entsperren</string>
+    <string name="settings_quick_biometric">Biometrische Entsperrung</string>
     <string name="settings_quick_wallpaper">Hintergrundfarben</string>
     <string name="settings_quick_animations">Animationen</string>
     <string name="settings_toggle_on">Ein</string>
@@ -354,13 +354,12 @@
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Gebündelt für Überschriften unter der SIL Open Font License 1.1. Die Volllizenz ist in der App enthalten.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Compose, Material 3, Room, Navigation, DataStore und Biometric Bibliotheken von Google, verwendet unter Apache-Lizenz 2.0.</string>
+    <string name="ack_androidx_body">Compose, Material 3, Room, Navigation, DataStore und Biometric-Bibliotheken von Google, verwendet unter der Apache-Lizenz 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">Das Scannen von Dokumenten und die Erkennung lateinischer Texte werden auf dem Gerät durch die Komponenten Google ML Kit und Google Play services bereitgestellt.</string>
     <string name="ack_coil_title">Coil</string>
-    <string name="ack_coil_body">Laden von Bildern für entschlüsselte Dokumentvorschauen, verwendet unter Apache-Lizenz 2.0.
-Der Quellcode von</string>
-    <string name="ack_my_vault_license">My Vault ist unter GNU GPL-3.0 lizenziert.</string>
+    <string name="ack_coil_body">Laden von Bildern für entschlüsselte Dokumentvorschauen, verwendet unter Apache-Lizenz 2.0.</string>
+    <string name="ack_my_vault_license">Der Quellcode von My Vault ist unter GNU GPL-3.0 lizenziert.</string>
     <string name="ack_open_project">Projekt öffnen</string>
     <string name="creator_email">E-Mail</string>
     <string name="creator_website">Website</string>

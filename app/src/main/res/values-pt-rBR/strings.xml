@@ -38,7 +38,7 @@
     <string name="member_edit_title">Editar membro da família</string>
     <string name="field_name">Nome completo *</string>
     <string name="field_name_hint">Nome como em seu documento de identificação</string>
-    <string name="field_relation">Relação</string>
+    <string name="field_relation">Parentesco</string>
     <string name="field_dob">Data de nascimento</string>
     <string name="field_gender">Gênero</string>
     <string name="field_blood_group">Grupo sanguíneo</string>
@@ -48,7 +48,7 @@
     <string name="date_pick_hint">Toque para escolher uma data</string>
     <string name="date_pick_action">Escolha uma data</string>
     <string name="profile_name_required">Insira um nome</string>
-    <string name="tab_home">Página inicial</string>
+    <string name="tab_home">Início</string>
     <string name="tab_docs">Documentos</string>
     <string name="tab_family">Família</string>
     <string name="tab_settings">Configurações</string>
@@ -70,7 +70,7 @@
     <string name="docs_search_hint">Pesquisar Aadhaar, PAN, nomes…</string>
     <string name="docs_categories">Categorias</string>
     <string name="docs_all">Todos</string>
-    <string name="docs_shown">%1$d mostrado</string>
+    <string name="docs_shown">%1$d mostrados</string>
     <string name="docs_no_match_title">Nada corresponde</string>
     <string name="docs_no_match_subtitle">Tente uma pesquisa diferente ou limpe os filtros.</string>
     <string name="docs_clear_filters">Limpar filtros</string>
@@ -218,7 +218,7 @@
     <string name="category_health">Saúde</string>
     <string name="category_property">Propriedade</string>
     <string name="category_other">Outro</string>
-    <string name="relation_self">Próprio</string>
+    <string name="relation_self">Eu</string>
     <string name="relation_spouse">Cônjuge</string>
     <string name="relation_father">Pai</string>
     <string name="relation_mother">Mãe</string>
@@ -274,7 +274,7 @@
     <string name="blood_group_unknown">Desconhecido</string>
     <string name="settings_theme_mode">Tema do aplicativo</string>
     <string name="settings_theme_system">Sistema</string>
-    <string name="settings_theme_light">Luz</string>
+    <string name="settings_theme_light">Claro</string>
     <string name="settings_theme_dark">Escuro</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Paleta de cores</string>
@@ -297,11 +297,11 @@
     <string name="accent_grape">Uva</string>
     <string name="accent_cocoa">Cacau</string>
     <string name="accent_slate">Ardósia</string>
-    <string name="settings_appearance_preview">Visualização</string>
+    <string name="settings_appearance_preview">Pré-visualização</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Alternações rápidas</string>
+    <string name="settings_quick_toggles">Botões rápidos</string>
     <string name="settings_everything_else">Todo o resto</string>
-    <string name="settings_quick_biometric">Biometric desbloquear</string>
+    <string name="settings_quick_biometric">Desbloqueio biométrico</string>
     <string name="settings_quick_wallpaper">Cores do papel de parede</string>
     <string name="settings_quick_animations">Animações</string>
     <string name="settings_toggle_on">Ligado</string>
@@ -354,13 +354,12 @@
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Pacote para títulos sob a licença SIL Open Font 1.1. A licença completa está incluída no aplicativo.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Compose, Material 3, Room, Navigation, DataStore e Biometric bibliotecas por Google, usadas sob a Licença Apache 2.0.</string>
+    <string name="ack_androidx_body">Bibliotecas Compose, Material 3, Room, Navigation, DataStore e Biometric do Google, usadas sob a Licença Apache 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">A digitalização de documentos e o reconhecimento de texto latino são fornecidos no dispositivo pelos componentes Google ML Kit e Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
-    <string name="ack_coil_body">Carregamento de imagem para visualizações de documentos descriptografados, usado sob licença Apache 2.0.
-O código-fonte</string>
-    <string name="ack_my_vault_license">My Vault é licenciado sob GNU GPL-3.0.</string>
+    <string name="ack_coil_body">Carregamento de imagem para visualizações de documentos descriptografados, usado sob licença Apache 2.0.</string>
+    <string name="ack_my_vault_license">O código-fonte do My Vault é licenciado sob a GNU GPL-3.0.</string>
     <string name="ack_open_project">Abrir projeto</string>
     <string name="creator_email">E-mail</string>
     <string name="creator_website">Site</string>

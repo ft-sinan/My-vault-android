@@ -20,7 +20,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/readme/chips-dark.svg">
-    <img src="assets/readme/chips-light.svg" alt="Native Kotlin, Jetpack Compose, AES-256-GCM, offline-first, English and Malayalam, open source" width="980">
+    <img src="assets/readme/chips-light.svg" alt="Native Kotlin, Jetpack Compose, AES-256-GCM, offline-first, 15 languages, open source" width="980">
   </picture>
 </p>
 
@@ -70,7 +70,7 @@ At a glance:
 - **Two ways in only:** Scan, or choose a File image/PDF
 - **On-device OCR suggestions** for Aadhaar, PAN and Driving Licence details
 - **AES-256-GCM encrypted files** protected by Android Keystore
-- **English and Malayalam**, chosen on first open and changeable later
+- **15 languages**, chosen on first open and changeable later: English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian
 - **Portable `.mvbackup` files** for moving to another phone
 
 <p align="center">
@@ -144,7 +144,7 @@ The presentation is expressive and friendly; the storage model underneath stays 
       <img src="assets/readme/feature-personalise.svg" width="72" alt="Colour palette illustration"><br>
       <strong>Personal, local and expressive</strong><br>
       Light theme and wallpaper colours are the friendly defaults, with System/Dark/OLED modes and curated palettes when you want them. Settings is split into focused pages, with a playful Creator Space.<br><br>
-      <code>English + Malayalam</code> <code>Material You</code> <code>Creator Space</code>
+      <code>15 languages</code> <code>Material You</code> <code>Creator Space</code>
     </td>
   </tr>
 </table>
@@ -231,7 +231,7 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 1. Open the [**latest GitHub Release**](https://github.com/ft-sinan/My-vault-android/releases/latest).
 2. Download `MyVault-vX.Y.Z.apk` — and its `.sha256` file if you want to verify the APK yourself.
 3. Install it on an Android 8.0 or newer phone. Android may ask you to allow installs from your browser or file manager.
-4. On first launch, choose **English** or **മലയാളം**. If you already have a `.mvbackup`, restore it and choose which restored profile is yours on this phone—or choose **I’m not in this backup**—then create a PIN for this phone and, when needed, complete your profile setup. Otherwise create a new vault, create a PIN, and add at least your name.
+4. On first launch, choose one of the **15 available languages**. If you already have a `.mvbackup`, restore it and choose which restored profile is yours on this phone—or choose **I’m not in this backup**—then create a PIN for this phone and, when needed, complete your profile setup. Otherwise create a new vault, create a PIN, and add at least your name.
 
 My Vault checks GitHub Releases when Settings opens, at most once a day, and shows an **Update available** popup only when a newer version is found. You can also check manually from **Settings → Storage & privacy → App updates → Check for updates**. Nothing downloads until you choose it. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
 
@@ -328,8 +328,8 @@ My Vault is a single-activity Jetpack Compose app with a manual dependency conta
     <td>Portable <code>.mvbackup</code> format, optional password encryption, checksum validation and staged restore</td>
   </tr>
   <tr>
-    <td><code>data/settings/</code> + <code>res/values(-ml)</code></td>
-    <td>Appearance/language persistence and the English/Malayalam resources</td>
+    <td><code>data/settings/</code> + localized <code>res/values-*</code></td>
+    <td>Appearance/language persistence and resources for all 15 supported languages</td>
   </tr>
   <tr>
     <td><code>util/</code></td>

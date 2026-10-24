@@ -7,7 +7,7 @@
     <string name="action_save">Сохранить</string>
     <string name="action_save_changes">Сохранить изменения</string>
     <string name="action_delete">Удалить</string>
-    <string name="action_edit">Править</string>
+    <string name="action_edit">Изменить</string>
     <string name="action_share">Поделиться</string>
     <string name="action_clear">Очистить</string>
     <string name="action_ok">ОК</string>
@@ -38,7 +38,7 @@
     <string name="member_edit_title">Изменить члена семьи</string>
     <string name="field_name">Полное имя *</string>
     <string name="field_name_hint">Имя, указанное в вашем удостоверении личности.</string>
-    <string name="field_relation">Связь</string>
+    <string name="field_relation">Родство</string>
     <string name="field_dob">Дата рождения</string>
     <string name="field_gender">Пол</string>
     <string name="field_blood_group">Группа крови</string>
@@ -48,7 +48,7 @@
     <string name="date_pick_hint">Нажмите, чтобы выбрать дату</string>
     <string name="date_pick_action">Выберите дату</string>
     <string name="profile_name_required">Пожалуйста, введите имя</string>
-    <string name="tab_home">Главная страница</string>
+    <string name="tab_home">Главная</string>
     <string name="tab_docs">Документы</string>
     <string name="tab_family">Семья</string>
     <string name="tab_settings">Настройки</string>
@@ -74,11 +74,9 @@
     <string name="docs_no_match_title">Ничего не соответствует</string>
     <string name="docs_no_match_subtitle">Попробуйте другой поиск или очистите фильтры.</string>
     <string name="docs_clear_filters">Очистить фильтры</string>
-    <string name="documents_count_one">1 документ
-Документы</string>
-    <string name="documents_count_many">%1$d
-Страницы</string>
-    <string name="pages_count">%1$d</string>
+    <string name="documents_count_one">1 документ</string>
+    <string name="documents_count_many">Документов: %1$d</string>
+    <string name="pages_count">Страниц: %1$d</string>
     <string name="stat_docs">документы</string>
     <string name="stat_people">человек</string>
     <string name="stat_saved">сохранено</string>
@@ -102,9 +100,8 @@
     <string name="field_doc_type_hint">например. Карта Aadhaar</string>
     <string name="field_category">Категория</string>
     <string name="field_belongs_to">Принадлежит *</string>
-    <string name="assignment_person">Человек
-Группа</string>
-    <string name="assignment_group">Group</string>
+    <string name="assignment_person">Человек</string>
+    <string name="assignment_group">Группа</string>
     <string name="field_document_number">Идентификационный номер (необязательно)</string>
     <string name="field_document_number_hint">Aadhaar / PAN / номер лицензии</string>
     <string name="ocr_looking">Ищу идентификационный номер…</string>
@@ -116,7 +113,7 @@
     <string name="detail_stored_securely">Надежно хранится на этом устройстве.</string>
     <string name="detail_document_type">Тип документа</string>
     <string name="detail_category">Категория</string>
-    <string name="detail_belongs_to">принадлежит</string>
+    <string name="detail_belongs_to">Принадлежит</string>
     <string name="detail_document_number">Идентификационный номер</string>
     <string name="detail_pages">Страницы</string>
     <string name="detail_file_size">Размер файла</string>
@@ -161,8 +158,8 @@
     <string name="backup_use_password_subtitle">Рекомендуется • шифрует файл резервной копии.</string>
     <string name="backup_no_password">Нет пароля</string>
     <string name="backup_no_password_warning">Любой, у кого есть этот файл, может открыть ваши документы.</string>
-    <string name="backup_password">Резервный пароль</string>
-    <string name="backup_confirm_password">Подтвердите резервный пароль</string>
+    <string name="backup_password">Пароль резервной копии</string>
+    <string name="backup_confirm_password">Подтвердите пароль резервной копии</string>
     <string name="backup_password_min">Используйте не менее %1$d символов.</string>
     <string name="backup_password_mismatch">Пароли резервного копирования не совпадают.</string>
     <string name="backup_choose_location">Выберите местоположение</string>
@@ -191,7 +188,7 @@
     <string name="backup_create_my_profile_subtitle">Создать мой профиль после восстановления</string>
     <string name="backup_add_action">Добавить в хранилище</string>
     <string name="backup_added">Резервная копия добавлена в это хранилище.</string>
-    <string name="backup_summary">%1$d люди • %2$d документы • %3$d страницы</string>
+    <string name="backup_summary">Людей: %1$d • Документов: %2$d • Страниц: %3$d</string>
     <string name="backup_created_on">Дата резервного копирования: %1$s</string>
     <string name="backup_replace">Заменить хранилище</string>
     <string name="backup_restoring">Восстановление резервной копии…</string>
@@ -213,16 +210,16 @@
     <string name="settings_screenshots_dialog_body">Снимки экрана, запись экрана и предварительный просмотр последних приложений будут разрешены в течение 5 минут. Введите текущий PIN, чтобы продолжить.</string>
     <string name="settings_screenshots_warning">Для публикуемых скриншотов используйте только поддельные документы/образцы документов. Не сохраняйте настоящие Aadhaar, PAN или другие частные документы.</string>
     <string name="settings_screenshots_confirm">Подождите 5 минут.</string>
-    <string name="category_identity">Личность</string>
+    <string name="category_identity">Удостоверение личности</string>
     <string name="category_education">Образование</string>
     <string name="category_certificates">Сертификаты</string>
     <string name="category_vehicle">Транспортное средство</string>
     <string name="category_banking">Банковское дело и финансы</string>
     <string name="category_health">Здоровье</string>
-    <string name="category_property">Свойство</string>
+    <string name="category_property">Недвижимость</string>
     <string name="category_other">Другое</string>
-    <string name="relation_self">Сам</string>
-    <string name="relation_spouse">Супруга</string>
+    <string name="relation_self">Я</string>
+    <string name="relation_spouse">Супруг(а)</string>
     <string name="relation_father">Отец</string>
     <string name="relation_mother">Мать</string>
     <string name="relation_son">Сын</string>
@@ -231,7 +228,7 @@
     <string name="relation_other">Другое</string>
     <string name="group_family">Семья</string>
     <string name="group_vehicle">Транспортное средство</string>
-    <string name="group_home">Главная / Недвижимость</string>
+    <string name="group_home">Дом / недвижимость</string>
     <string name="group_other">Другое</string>
     <string name="action_copied">Скопировано</string>
     <string name="detail_delete_title">Удалить этот документ?</string>
@@ -254,9 +251,8 @@
     <string name="settings_pin_mismatch_error">Новое PIN и подтверждение не совпадают.</string>
     <string name="settings_current_pin_wrong">Текущий параметр PIN неверен.</string>
     <string name="settings_pin_changed">PIN успешно изменено.</string>
-    <string name="settings_storage_one">1 документ в вашем хранилище
-Документы</string>
-    <string name="settings_storage_many">%1$d в вашем хранилище</string>
+    <string name="settings_storage_one">1 документ в вашем хранилище</string>
+    <string name="settings_storage_many">Документов в вашем хранилище: %1$d</string>
     <string name="settings_storage_using">Использование %1$s на этом устройстве</string>
     <string name="settings_safety_body" formatted="false">• Каждый файл шифруется с помощью AES-256 перед сохранением. \n • Ключ шифрования никогда не покидает безопасное хранилище ключей этого телефона. \n • Ваше хранилище работает в автономном режиме. Приложение использует Интернет только для проверки обновлений при открытии «Настройки» (не чаще одного раза в день) или при проверке вручную; документы никогда не загружаются.\n• Скриншоты и предварительный просмотр последних приложений блокируются.\n• Хранилище блокируется через 1 минуту в фоновом режиме.\n\n⚠️ Важно: если вы забудете свой PIN и биометрические данные перестанут работать, ваши документы невозможно будет восстановить. Сохраните оригиналы документов.</string>
     <string name="pin_wrong">Неверно PIN</string>
@@ -271,15 +267,15 @@
     <string name="error_file_required">Сначала сканируйте страницы или выберите файл</string>
     <string name="error_save_failed">Не удалось сохранить. Пожалуйста, попробуйте еще раз.</string>
     <string name="error_profile_save_failed">Не удалось сохранить профиль. Пожалуйста, попробуйте еще раз.</string>
-    <string name="gender_male">Мужчина</string>
+    <string name="gender_male">Мужской</string>
     <string name="gender_female">Женский</string>
     <string name="gender_other">Другое</string>
     <string name="gender_prefer_not_to_say">Предпочитаю не говорить</string>
     <string name="blood_group_unknown">Неизвестно</string>
     <string name="settings_theme_mode">Тема приложения</string>
     <string name="settings_theme_system">Система</string>
-    <string name="settings_theme_light">Свет</string>
-    <string name="settings_theme_dark">Темный</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Цветовая палитра</string>
     <string name="settings_motion_feel">Движение и ощущение</string>
@@ -289,7 +285,7 @@
     <string name="settings_haptics_subtitle">Вибрация при нажатии на клавиши и выбор</string>
     <string name="settings_compact_mode">Компактный режим</string>
     <string name="settings_compact_mode_subtitle">Немного меньше, плотнее макет</string>
-    <string name="settings_reduce_animations">Уменьшите анимацию.</string>
+    <string name="settings_reduce_animations">Уменьшить анимации</string>
     <string name="settings_reduce_animations_subtitle">Экраны и списки меняются мгновенно</string>
     <string name="settings_accent_color">Цвет акцента</string>
     <string name="settings_accent_subtitle">Используется, когда цвета обоев отключены.</string>
@@ -303,9 +299,9 @@
     <string name="accent_slate">Шифер</string>
     <string name="settings_appearance_preview">Предварительный просмотр</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Быстрое переключение</string>
+    <string name="settings_quick_toggles">Быстрые переключатели</string>
     <string name="settings_everything_else">Все остальное</string>
-    <string name="settings_quick_biometric">Biometric разблокировка</string>
+    <string name="settings_quick_biometric">Биометрическая разблокировка</string>
     <string name="settings_quick_wallpaper">Цвета обоев</string>
     <string name="settings_quick_animations">Анимации</string>
     <string name="settings_toggle_on">Вкл.</string>
@@ -354,11 +350,11 @@
     <string name="settings_acknowledgements">Благодарности и лицензии</string>
     <string name="settings_acknowledgements_subtitle">Благодарность людям и проектам с открытым исходным кодом, стоящим за этим приложением.</string>
     <string name="ack_orion_title">Orion Store — вдохновение для дизайна</string>
-    <string name="ack_orion_body">Особая благодарность RookieZ (RookieEnough) и проекту Orion Store за выразительный дизайн интерфейса My Vault. My Vault является независимым проектом, не связанным с [[MVTERM1] и не поддерживаемым им.</string>
+    <string name="ack_orion_body">Особая благодарность RookieZ (RookieEnough) и проекту Orion Store за выразительный дизайн интерфейса My Vault. My Vault является независимым проектом, не связанным с Orion Store и не поддерживаемым им.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">В комплекте для заголовков по лицензии SIL Open Font License 1.1. Полная лицензия включена в приложение.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Compose, Material 3, Room, библиотеки навигации DataStore и Biometric от Google, используемые по лицензии Apache 2.0.</string>
+    <string name="ack_androidx_body">Библиотеки Compose, Material 3, Room, Navigation, DataStore и Biometric от Google, используемые по лицензии Apache 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">Сканирование документов и распознавание латинского текста обеспечиваются на устройстве компонентами Google ML Kit и Google Play services.</string>
     <string name="ack_coil_title">Coil</string>

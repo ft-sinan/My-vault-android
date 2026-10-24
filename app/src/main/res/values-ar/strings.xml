@@ -38,7 +38,7 @@
     <string name="member_edit_title">تحرير فرد من العائلة</string>
     <string name="field_name">الاسم الكامل *</string>
     <string name="field_name_hint">الاسم كما هو موجود في هويتك</string>
-    <string name="field_relation">العلاقة</string>
+    <string name="field_relation">صلة القرابة</string>
     <string name="field_dob">تاريخ الميلاد</string>
     <string name="field_gender">الجنس</string>
     <string name="field_blood_group">فصيلة الدم</string>
@@ -70,17 +70,16 @@
     <string name="docs_search_hint">ابحث عن Aadhaar، PAN، الأسماء...</string>
     <string name="docs_categories">الفئات</string>
     <string name="docs_all">الكل</string>
-    <string name="docs_shown">%1$d معروض</string>
+    <string name="docs_shown">المعروض: %1$d</string>
     <string name="docs_no_match_title">لا يوجد شيء مطابق</string>
     <string name="docs_no_match_subtitle">حاول إجراء بحث مختلف، أو قم بمسح عوامل التصفية.</string>
     <string name="docs_clear_filters">مسح عوامل التصفية</string>
     <string name="documents_count_one">مستند واحد</string>
-    <string name="documents_count_many">%1$d المستندات</string>
-    <string name="pages_count">%1$d صفحات</string>
+    <string name="documents_count_many">المستندات: %1$d</string>
+    <string name="pages_count">الصفحات: %1$d</string>
     <string name="stat_docs">المستندات</string>
-    <string name="stat_people">الأشخاص
-تم حفظ</string>
-    <string name="stat_saved">saved</string>
+    <string name="stat_people">الأشخاص</string>
+    <string name="stat_saved">محفوظة</string>
     <string name="stat_on_device">على الجهاز</string>
     <string name="add_sheet_title">إضافة مستند</string>
     <string name="add_sheet_subtitle">قم بمسح الصفحات ضوئيًا باستخدام الكاميرا، أو اختر ملف صورة/PDF</string>
@@ -122,7 +121,7 @@
     <string name="detail_updated_on">آخر تحديث</string>
     <string name="detail_page_of">صفحة %1$d من %2$d</string>
     <string name="detail_zoom_hint">قم بالتكبير والتصغير، ثم اسحب للتحريك</string>
-    <string name="share_as_pdf">المشاركة باسم PDF</string>
+    <string name="share_as_pdf">المشاركة بتنسيق PDF</string>
     <string name="share_as_images">المشاركة كصور</string>
     <string name="share_choose_format">كيف تريد مشاركة هذا المستند؟</string>
     <string name="family_title">العائلة</string>
@@ -189,7 +188,7 @@
     <string name="backup_create_my_profile_subtitle">قم بإنشاء ملف التعريف الخاص بي بعد الاستعادة</string>
     <string name="backup_add_action">إضافة إلى المخزن</string>
     <string name="backup_added">تمت إضافة النسخة الاحتياطية إلى هذا المخزن.</string>
-    <string name="backup_summary">%1$d الأشخاص • %2$d المستندات • %3$d الصفحات</string>
+    <string name="backup_summary">الأشخاص: %1$d • المستندات: %2$d • الصفحات: %3$d</string>
     <string name="backup_created_on">تاريخ النسخ الاحتياطي: %1$s</string>
     <string name="backup_replace">استبدال المخزن</string>
     <string name="backup_restoring">استعادة النسخة الاحتياطية...</string>
@@ -217,13 +216,13 @@
     <string name="category_vehicle">مركبة</string>
     <string name="category_banking">الخدمات المصرفية والمالية</string>
     <string name="category_health">الصحة</string>
-    <string name="category_property">الخاصية</string>
+    <string name="category_property">العقارات</string>
     <string name="category_other">أخرى</string>
-    <string name="relation_self">ذاتي</string>
-    <string name="relation_spouse">الزوج</string>
+    <string name="relation_self">أنا</string>
+    <string name="relation_spouse">الزوج/الزوجة</string>
     <string name="relation_father">الأب</string>
     <string name="relation_mother">الأم</string>
-    <string name="relation_son">بني</string>
+    <string name="relation_son">ابن</string>
     <string name="relation_daughter">ابنة</string>
     <string name="relation_family">العائلة</string>
     <string name="relation_other">أخرى</string>
@@ -253,7 +252,7 @@
     <string name="settings_current_pin_wrong">التيار PIN غير صحيح.</string>
     <string name="settings_pin_changed">PIN بنجاح.</string>
     <string name="settings_storage_one">مستند واحد في خزنتك</string>
-    <string name="settings_storage_many">%1$d المستندات الموجودة في خزنتك</string>
+    <string name="settings_storage_many">المستندات في خزنتك: %1$d</string>
     <string name="settings_storage_using">استخدام %1$s على هذا الجهاز</string>
     <string name="settings_safety_body" formatted="false">• يتم تشفير كل ملف باستخدام AES-256 قبل حفظه.\n• لا يغادر مفتاح التشفير مخزن المفاتيح الآمن لهذا الهاتف أبدًا.\n• يعمل مخزنك دون اتصال بالإنترنت. يستخدم التطبيق الإنترنت فقط للتحقق من التحديثات عند فتح الإعدادات (مرة واحدة يوميًا على الأكثر) أو عند التحقق يدويًا؛ لا يتم تحميل المستندات مطلقًا.\n• يتم حظر لقطات الشاشة ومعاينات التطبيقات الحديثة.\n• يتم قفل القبو تلقائيًا بعد دقيقة واحدة في الخلفية.\n\n⚠️ هام: إذا نسيت PIN وتوقفت القياسات الحيوية عن العمل، فلا يمكن استرداد مستنداتك. حافظ على مستنداتك الأصلية آمنة أيضًا.</string>
     <string name="pin_wrong">خطأ PIN</string>
@@ -273,9 +272,9 @@
     <string name="gender_other">أخرى</string>
     <string name="gender_prefer_not_to_say">أفضل ألا أقول</string>
     <string name="blood_group_unknown">غير معروف</string>
-    <string name="settings_theme_mode">موضوع التطبيق</string>
+    <string name="settings_theme_mode">سمة التطبيق</string>
     <string name="settings_theme_system">النظام</string>
-    <string name="settings_theme_light">الضوء</string>
+    <string name="settings_theme_light">فاتح</string>
     <string name="settings_theme_dark">داكن</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">لوحة الألوان</string>
@@ -300,10 +299,9 @@
     <string name="accent_slate">لائحة</string>
     <string name="settings_appearance_preview">معاينة</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">تبديل سريع</string>
-    <string name="settings_everything_else">كل شيء آخر
-فتح</string>
-    <string name="settings_quick_biometric">Biometric</string>
+    <string name="settings_quick_toggles">مفاتيح تبديل سريعة</string>
+    <string name="settings_everything_else">كل شيء آخر</string>
+    <string name="settings_quick_biometric">إلغاء القفل بالقياسات الحيوية</string>
     <string name="settings_quick_wallpaper">ألوان ورق الحائط</string>
     <string name="settings_quick_animations">الرسوم المتحركة</string>
     <string name="settings_toggle_on">تشغيل</string>
@@ -354,10 +352,9 @@
     <string name="ack_orion_title">Orion Store — إلهام التصميم</string>
     <string name="ack_orion_body">شكر خاص لـ RookieZ (RookieEnough) ومشروع Orion Store لإلهام التصميم التعبيري وراء واجهة My Vault. My Vault هو مشروع مستقل وليس تابعًا أو معتمدًا لـ Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
-    <string name="ack_space_grotesk_body">مجمعة للعناوين بموجب ترخيص SIL Open Font License 1.1. يتم تضمين الترخيص الكامل مع التطبيق.
-مكتبات</string>
+    <string name="ack_space_grotesk_body">مُجمَّعة للعناوين بموجب ترخيص SIL Open Font License 1.1. يتم تضمين الترخيص الكامل مع التطبيق.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">الإنشاء وMaterial 3 وRoom والتنقل وDataStore وBiometric بواسطة Google، المستخدمة بموجب ترخيص Apache 2.0.</string>
+    <string name="ack_androidx_body">مكتبات Compose وMaterial 3 وRoom وNavigation وDataStore وBiometric من Google، تُستخدم بموجب ترخيص Apache 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">يتم توفير المسح الضوئي للمستندات والتعرف على النص اللاتيني على الجهاز من خلال مكونات Google ML Kit وGoogle Play services.</string>
     <string name="ack_coil_title">Coil</string>

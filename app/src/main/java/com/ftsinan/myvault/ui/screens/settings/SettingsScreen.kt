@@ -1968,7 +1968,7 @@ private fun LanguageOptionRow(
                 wave = 0.13f
             ) {
                 Text(
-                    text = option.code.uppercase(),
+                    text = option.code.substringBefore('-').uppercase(),
                     style = MaterialTheme.typography.labelLarge,
                     color = contentColor,
                     fontWeight = FontWeight.Bold

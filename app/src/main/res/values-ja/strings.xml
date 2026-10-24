@@ -38,20 +38,20 @@
     <string name="member_edit_title">家族メンバーの編集</string>
     <string name="field_name">フルネーム *</string>
     <string name="field_name_hint">ID に記載されている名前</string>
-    <string name="field_relation">関係</string>
+    <string name="field_relation">続柄</string>
     <string name="field_dob">生年月日</string>
     <string name="field_gender">性別</string>
     <string name="field_blood_group">血液型</string>
     <string name="field_photo">プロフィール写真</string>
     <string name="photo_add">写真を追加</string>
-    <string name="photo_change">写真を変更します</string>
+    <string name="photo_change">写真を変更</string>
     <string name="date_pick_hint">タップして日付を選択してください</string>
     <string name="date_pick_action">日付を選択してください</string>
     <string name="profile_name_required">名前を入力してください</string>
     <string name="tab_home">ホーム</string>
     <string name="tab_docs">ドキュメント</string>
     <string name="tab_family">家族</string>
-    <string name="tab_settings">の設定</string>
+    <string name="tab_settings">設定</string>
     <string name="tab_add">追加</string>
     <string name="home_greeting_morning">おはようございます</string>
     <string name="home_greeting_afternoon">こんにちは</string>
@@ -79,9 +79,8 @@
     <string name="pages_count">%1$d ページ</string>
     <string name="stat_docs">ドキュメント</string>
     <string name="stat_people">人</string>
-    <string name="stat_saved">を保存しました
-デバイス上の</string>
-    <string name="stat_on_device">on device</string>
+    <string name="stat_saved">保存済み</string>
+    <string name="stat_on_device">デバイス上</string>
     <string name="add_sheet_title">ドキュメントの追加</string>
     <string name="add_sheet_subtitle">カメラでページをスキャンするか、画像/PDF ファイルを選択します</string>
     <string name="add_scan">スキャン</string>
@@ -100,7 +99,7 @@
     <string name="field_doc_type">ドキュメント タイプ *</string>
     <string name="field_doc_type_hint">例: Aadhaar カード</string>
     <string name="field_category">カテゴリ</string>
-    <string name="field_belongs_to">* に属します</string>
+    <string name="field_belongs_to">所属先 *</string>
     <string name="assignment_person">人</string>
     <string name="assignment_group">グループ</string>
     <string name="field_document_number">ID番号(オプション)</string>
@@ -118,9 +117,9 @@
     <string name="detail_document_number">ID番号</string>
     <string name="detail_pages">ページ</string>
     <string name="detail_file_size">ファイルサイズ</string>
-    <string name="detail_added_on">追加</string>
+    <string name="detail_added_on">追加日</string>
     <string name="detail_updated_on">最終更新日</string>
-    <string name="detail_page_of">ページ %1$d / %2$d</string>
+    <string name="detail_page_of">%2$d ページ中 %1$d ページ目</string>
     <string name="detail_zoom_hint">ピンチしてズーム、ドラッグしてパン</string>
     <string name="share_as_pdf">PDF として共有</string>
     <string name="share_as_images">画像として共有</string>
@@ -132,7 +131,7 @@
     <string name="profile_edit">プロフィールの編集</string>
     <string name="profile_documents">ドキュメント</string>
     <string name="profile_no_documents">このプロファイルにはまだドキュメントが保存されていません。</string>
-    <string name="profile_age_years">%1$d 年</string>
+    <string name="profile_age_years">%1$d歳</string>
     <string name="manage_members_title">家族メンバーを管理する</string>
     <string name="manage_members_subtitle">名前と詳細を編集します。ハンドルをドラッグして並べ替えます。</string>
     <string name="manage_my_profile">私のプロフィール</string>
@@ -191,7 +190,7 @@
     <string name="backup_added">バックアップがこのコンテナーに追加されました。</string>
     <string name="backup_summary">%1$d 人 • %2$d ドキュメント • %3$d ページ</string>
     <string name="backup_created_on">バックアップ日: %1$s</string>
-    <string name="backup_replace">ボールトを交換する</string>
+    <string name="backup_replace">保管庫を置き換える</string>
     <string name="backup_restoring">バックアップを復元しています…</string>
     <string name="backup_restored">バックアップが復元されました。</string>
     <string name="backup_restore_failed">バックアップを復元できませんでした。現在のボールトは変更されていません。</string>
@@ -211,17 +210,17 @@
     <string name="settings_screenshots_dialog_body">スクリーンショット、画面録画、最近使用したアプリのプレビューは 5 分間許可されます。続行するには、現在の PIN を入力してください。</string>
     <string name="settings_screenshots_warning">公開されたスクリーンショットには偽の/サンプル ドキュメントのみを使用してください。本物の Aadhaar、PAN、またはその他のプライベート文書をキャプチャしないでください。</string>
     <string name="settings_screenshots_confirm">5 分間待ちます</string>
-    <string name="category_identity">アイデンティティ</string>
+    <string name="category_identity">身分証明</string>
     <string name="category_education">教育</string>
     <string name="category_certificates">証明書</string>
     <string name="category_vehicle">車両</string>
     <string name="category_banking">銀行および金融</string>
     <string name="category_health">健康</string>
-    <string name="category_property">プロパティ</string>
+    <string name="category_property">不動産</string>
     <string name="category_other">その他</string>
-    <string name="relation_self">セルフ</string>
+    <string name="relation_self">本人</string>
     <string name="relation_spouse">配偶者</string>
-    <string name="relation_father">お父さん</string>
+    <string name="relation_father">父</string>
     <string name="relation_mother">母</string>
     <string name="relation_son">息子</string>
     <string name="relation_daughter">娘</string>
@@ -229,7 +228,7 @@
     <string name="relation_other">その他</string>
     <string name="group_family">家族</string>
     <string name="group_vehicle">車両</string>
-    <string name="group_home">ホーム / プロパティ</string>
+    <string name="group_home">自宅 / 不動産</string>
     <string name="group_other">その他</string>
     <string name="action_copied">コピーしました</string>
     <string name="detail_delete_title">このドキュメントを削除しますか?</string>
@@ -252,9 +251,8 @@
     <string name="settings_pin_mismatch_error">新しい PIN と確認が一致しません。</string>
     <string name="settings_current_pin_wrong">現在の PIN は間違っています。</string>
     <string name="settings_pin_changed">PIN は正常に変更されました。</string>
-    <string name="settings_storage_one">保管庫内の 1 つのドキュメント
-保管庫内の</string>
-    <string name="settings_storage_many">%1$d ドキュメント</string>
+    <string name="settings_storage_one">保管庫内の 1 つのドキュメント</string>
+    <string name="settings_storage_many">保管庫内の %1$d 件のドキュメント</string>
     <string name="settings_storage_using">このデバイスで %1$s を使用する</string>
     <string name="settings_safety_body" formatted="false">• すべてのファイルは保存前に AES-256 で暗号化されます。\n• 暗号化キーがこの携帯電話の安全なキーストアから離れることはありません。\n• 保管庫はオフラインで動作します。アプリは、設定を開いたとき (最大で 1 日に 1 回)、または手動で確認するときにのみインターネットを使用して更新を確認します。ドキュメントはアップロードされません。\n• スクリーンショットと最近使用したアプリのプレビューはブロックされます。\n• バックグラウンドで 1 分後に金庫が自動的にロックされます。\n\n⚠️ 重要: PIN を忘れて生体認証が機能しなくなった場合、ドキュメントは復元できません。原本の書類も安全に保管してください。</string>
     <string name="pin_wrong">間違っています PIN</string>
@@ -272,7 +270,7 @@
     <string name="gender_male">男性</string>
     <string name="gender_female">女性</string>
     <string name="gender_other">その他</string>
-    <string name="gender_prefer_not_to_say">言わない方がいいです</string>
+    <string name="gender_prefer_not_to_say">回答しない</string>
     <string name="blood_group_unknown">不明</string>
     <string name="settings_theme_mode">アプリのテーマ</string>
     <string name="settings_theme_system">システム</string>
@@ -303,7 +301,7 @@
     <string name="accent_orion">Orion</string>
     <string name="settings_quick_toggles">クイックトグル</string>
     <string name="settings_everything_else">その他すべて</string>
-    <string name="settings_quick_biometric">Biometric ロック解除</string>
+    <string name="settings_quick_biometric">生体認証ロック解除</string>
     <string name="settings_quick_wallpaper">壁紙の色</string>
     <string name="settings_quick_animations">アニメーション</string>
     <string name="settings_toggle_on">オン</string>
@@ -356,7 +354,7 @@
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">SIL オープン フォント ライセンス 1.1 に基づく見出し用にバンドルされています。完全なライセンスはアプリに含まれています。</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Compose、Material 3、Room、ナビゲーション、DataStore、および Biometric ライブラリ (Google による)。Apache License 2.0 に基づいて使用されます。</string>
+    <string name="ack_androidx_body">Google の Compose、Material 3、Room、Navigation、DataStore、Biometric ライブラリ。Apache License 2.0 に基づいて使用されます。</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">ドキュメント スキャンとラテン語テキスト認識は、Google ML Kit および Google Play services コンポーネントによってデバイス上で提供されます。</string>
     <string name="ack_coil_title">Coil</string>

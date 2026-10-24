@@ -19,9 +19,8 @@
     <string name="pin_create_title">Créez votre PIN</string>
     <string name="pin_create_subtitle">Choisissez un PIN à 4 chiffres pour votre coffre-fort.\nMémorisez-le : il ne peut pas être récupéré.</string>
     <string name="pin_confirm_title">Confirmez votre PIN</string>
-    <string name="pin_confirm_subtitle">Saisissez à nouveau le même PIN pour confirmer.
-Les</string>
-    <string name="pin_mismatch">PIN ne correspondent pas. S\'il vous plaît, recommencez.</string>
+    <string name="pin_confirm_subtitle">Saisissez à nouveau le même PIN pour confirmer.</string>
+    <string name="pin_mismatch">Les codes PIN ne correspondent pas. Veuillez recommencer.</string>
     <string name="first_run_backup_question">Avez-vous une sauvegarde ?</string>
     <string name="first_run_backup_subtitle">Si vous avez déjà utilisé My Vault, restaurez votre fichier .mvbackup pour récupérer vos profils et documents.</string>
     <string name="first_run_restore_backup">Oui, restaurer ma sauvegarde</string>
@@ -39,9 +38,9 @@ Les</string>
     <string name="member_edit_title">Modifier un membre de la famille</string>
     <string name="field_name">Nom complet *</string>
     <string name="field_name_hint">Nom tel que sur votre pièce d\'identité</string>
-    <string name="field_relation">Relation</string>
+    <string name="field_relation">Lien de parenté</string>
     <string name="field_dob">Date de naissance</string>
-    <string name="field_gender">Sexe</string>
+    <string name="field_gender">Genre</string>
     <string name="field_blood_group">Groupe sanguin</string>
     <string name="field_photo">Photo de profil</string>
     <string name="photo_add">Ajouter une photo</string>
@@ -71,24 +70,22 @@ Les</string>
     <string name="docs_search_hint">Rechercher Aadhaar, PAN, noms…</string>
     <string name="docs_categories">Catégories</string>
     <string name="docs_all">Tous</string>
-    <string name="docs_shown">%1$d affiché</string>
+    <string name="docs_shown">%1$d affichés</string>
     <string name="docs_no_match_title">Rien ne correspond</string>
     <string name="docs_no_match_subtitle">Essayez une autre recherche ou supprimez les filtres.</string>
     <string name="docs_clear_filters">Effacer les filtres</string>
     <string name="documents_count_one">1 document</string>
     <string name="documents_count_many">%1$d documents</string>
-    <string name="pages_count">%1$d pages
-Documents</string>
-    <string name="stat_docs">docs</string>
+    <string name="pages_count">%1$d pages</string>
+    <string name="stat_docs">documents</string>
     <string name="stat_people">personnes</string>
     <string name="stat_saved">enregistré</string>
     <string name="stat_on_device">sur l\'appareil</string>
     <string name="add_sheet_title">Ajouter un document</string>
     <string name="add_sheet_subtitle">Numérisez des pages avec l\'appareil photo ou choisissez une image/PDF fichier</string>
-    <string name="add_scan">Numérisation</string>
-    <string name="add_scan_subtitle">Scanner de documents multipages
-Fichier</string>
-    <string name="add_file">File</string>
+    <string name="add_scan">Numériser</string>
+    <string name="add_scan_subtitle">Scanner de documents multipages</string>
+    <string name="add_file">Fichier</string>
     <string name="add_file_subtitle">Choisissez une image ou PDF</string>
     <string name="add_title">Ajouter un document</string>
     <string name="edit_title">Modifier le document</string>
@@ -103,9 +100,8 @@ Fichier</string>
     <string name="field_doc_type_hint">par ex. Carte Aadhaar</string>
     <string name="field_category">Catégorie</string>
     <string name="field_belongs_to">Appartient à *</string>
-    <string name="assignment_person">Personne
-Groupe</string>
-    <string name="assignment_group">Group</string>
+    <string name="assignment_person">Personne</string>
+    <string name="assignment_group">Groupe</string>
     <string name="field_document_number">Numéro d\'identification (facultatif)</string>
     <string name="field_document_number_hint">Aadhaar / PAN / numéro de licence</string>
     <string name="ocr_looking">Recherche d\'un numéro d\'identification…</string>
@@ -219,11 +215,10 @@ Groupe</string>
     <string name="category_certificates">Certificats</string>
     <string name="category_vehicle">Véhicule</string>
     <string name="category_banking">Banque et Finance</string>
-    <string name="category_health">Santé
-Propriété</string>
-    <string name="category_property">Property</string>
+    <string name="category_health">Santé</string>
+    <string name="category_property">Propriété</string>
     <string name="category_other">Autre</string>
-    <string name="relation_self">Soi</string>
+    <string name="relation_self">Moi-même</string>
     <string name="relation_spouse">Conjoint</string>
     <string name="relation_father">Père</string>
     <string name="relation_mother">Mère</string>
@@ -233,7 +228,7 @@ Propriété</string>
     <string name="relation_other">Autre</string>
     <string name="group_family">Famille</string>
     <string name="group_vehicle">Véhicule</string>
-    <string name="group_home">Accueil / Propriété</string>
+    <string name="group_home">Maison / Propriété</string>
     <string name="group_other">Autre</string>
     <string name="action_copied">Copié</string>
     <string name="detail_delete_title">Supprimer ce document ?</string>
@@ -279,7 +274,7 @@ Propriété</string>
     <string name="blood_group_unknown">Inconnu</string>
     <string name="settings_theme_mode">Thème de l\'application</string>
     <string name="settings_theme_system">Système</string>
-    <string name="settings_theme_light">Lumière</string>
+    <string name="settings_theme_light">Clair</string>
     <string name="settings_theme_dark">Sombre</string>
     <string name="settings_theme_oled">OLED</string>
     <string name="settings_colour_palette">Palette de couleurs</string>
@@ -292,7 +287,7 @@ Propriété</string>
     <string name="settings_compact_mode_subtitle">Disposition légèrement plus petite et plus dense</string>
     <string name="settings_reduce_animations">Réduire les animations</string>
     <string name="settings_reduce_animations_subtitle">Les écrans et les listes changent instantanément</string>
-    <string name="settings_accent_color">Couleur d\'accentuation</string>
+    <string name="settings_accent_color">Couleur d\'accent</string>
     <string name="settings_accent_subtitle">Utilisé lorsque les couleurs du papier peint sont désactivées</string>
     <string name="accent_teal">Sarcelle</string>
     <string name="accent_navy">Marine</string>
@@ -304,9 +299,9 @@ Propriété</string>
     <string name="accent_slate">Ardoise</string>
     <string name="settings_appearance_preview">Aperçu</string>
     <string name="accent_orion">Orion</string>
-    <string name="settings_quick_toggles">Basculements rapides</string>
+    <string name="settings_quick_toggles">Réglages rapides</string>
     <string name="settings_everything_else">Tout le reste</string>
-    <string name="settings_quick_biometric">Biometric déverrouillage</string>
+    <string name="settings_quick_biometric">Déverrouillage biométrique</string>
     <string name="settings_quick_wallpaper">Couleurs du papier peint</string>
     <string name="settings_quick_animations">Animations</string>
     <string name="settings_toggle_on">Activé</string>
@@ -359,13 +354,12 @@ Propriété</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Regroupé pour les titres sous la licence SIL Open Font License 1.1. La licence complète est incluse avec l\'application.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
-    <string name="ack_androidx_body">Bibliothèques Compose, Material 3, Room, Navigation, DataStore et Biometric par Google, utilisées sous licence Apache 2.0.</string>
+    <string name="ack_androidx_body">Bibliothèques Compose, Material 3, Room, Navigation, DataStore et Biometric de Google, utilisées sous licence Apache 2.0.</string>
     <string name="ack_mlkit_title">Google ML Kit</string>
     <string name="ack_mlkit_body">La numérisation de documents et la reconnaissance de texte latin sont fournies sur l\'appareil par les composants Google ML Kit et Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
-    <string name="ack_coil_body">Chargement d\'images pour les aperçus de documents décryptés, utilisé sous licence Apache 2.0.
-Le code source de</string>
-    <string name="ack_my_vault_license">My Vault est sous licence GNU GPL-3.0.</string>
+    <string name="ack_coil_body">Chargement d\'images pour les aperçus de documents décryptés, utilisé sous licence Apache 2.0.</string>
+    <string name="ack_my_vault_license">Le code source de My Vault est sous licence GNU GPL-3.0.</string>
     <string name="ack_open_project">Ouvrir le projet</string>
     <string name="creator_email">E-mail</string>
     <string name="creator_website">Site Web</string>

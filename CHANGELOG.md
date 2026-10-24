@@ -11,6 +11,7 @@ All notable changes to My Vault are documented here.
 - The restore profile picker now includes **“I’m not in this backup.”** After restore and PIN creation/confirmation, the normal full profile setup opens and the newly created profile becomes **My profile**; the previous owner remains as a family profile.
 - After a backup is created, a **Share backup** button now appears under the success message. It shares the saved `.mvbackup` directly through Android’s share sheet and warns again when that backup has no password.
 - Settings now checks GitHub Releases when it opens, at most once a day, and shows an **Update available** popup only when a newer version exists. The manual **Check for updates** action remains available; nothing is downloaded automatically and failed automatic checks stay silent.
+- My Vault now supports **15 languages**: English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian. The first-open language picker now scrolls so every language remains easy to reach.
 
 ## [1.1.0] - 2026-10-23
 
