@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Base64
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.ftsinan.myvault.data.settings.AccentColor
@@ -63,6 +64,19 @@ class PinManager(private val context: Context) {
         prefs[GLASS_BOTTOM_BAR] ?: true
     }
 
+    /**
+     * Set when a restore recipient chose "I'm not in this backup". The main
+     * entry gate keeps showing profile setup until that new owner is saved.
+     */
+    val pendingRestoreOwnerSetup: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[PENDING_RESTORE_OWNER_SETUP] ?: false
+    }
+
+    /** Last Settings update-check attempt; 0 means no check has been recorded. */
+    val lastSettingsUpdateCheckAt: Flow<Long> = context.dataStore.data.map { prefs ->
+        prefs[LAST_SETTINGS_UPDATE_CHECK_AT] ?: 0L
+    }
+
     suspend fun setPin(pin: String) {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }
         val hash = hashPin(pin, salt)
@@ -117,6 +131,14 @@ class PinManager(private val context: Context) {
         context.dataStore.edit { it[GLASS_BOTTOM_BAR] = enabled }
     }
 
+    suspend fun setPendingRestoreOwnerSetup(enabled: Boolean) {
+        context.dataStore.edit { it[PENDING_RESTORE_OWNER_SETUP] = enabled }
+    }
+
+    suspend fun setLastSettingsUpdateCheckAt(timestampMillis: Long) {
+        context.dataStore.edit { it[LAST_SETTINGS_UPDATE_CHECK_AT] = timestampMillis }
+    }
+
     private fun hashPin(pin: String, salt: ByteArray): ByteArray {
         val digest = MessageDigest.getInstance("SHA-256")
         digest.update(salt)
@@ -142,5 +164,9 @@ class PinManager(private val context: Context) {
         private val COMPACT_MODE = booleanPreferencesKey("compact_mode")
         private val REDUCE_ANIMATIONS = booleanPreferencesKey("reduce_animations")
         private val GLASS_BOTTOM_BAR = booleanPreferencesKey("glass_bottom_bar")
+        private val PENDING_RESTORE_OWNER_SETUP =
+            booleanPreferencesKey("pending_restore_owner_setup")
+        private val LAST_SETTINGS_UPDATE_CHECK_AT =
+            longPreferencesKey("last_settings_update_check_at")
     }
 }

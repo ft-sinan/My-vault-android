@@ -9,7 +9,20 @@ import java.util.Locale
 
 enum class AppLanguage(val code: String, val englishName: String, val nativeName: String) {
     ENGLISH("en", "English", "English"),
-    MALAYALAM("ml", "Malayalam", "മലയാളം");
+    MALAYALAM("ml", "Malayalam", "മലയാളം"),
+    HINDI("hi", "Hindi", "हिन्दी"),
+    SPANISH("es", "Spanish", "Español"),
+    FRENCH("fr", "French", "Français"),
+    ARABIC("ar", "Arabic", "العربية"),
+    RUSSIAN("ru", "Russian", "Русский"),
+    PORTUGUESE_BRAZIL("pt-BR", "Portuguese (Brazil)", "Português (Brasil)"),
+    CHINESE_SIMPLIFIED("zh-CN", "Chinese (Simplified)", "简体中文"),
+    INDONESIAN("id", "Indonesian", "Bahasa Indonesia"),
+    GERMAN("de", "German", "Deutsch"),
+    JAPANESE("ja", "Japanese", "日本語"),
+    KOREAN("ko", "Korean", "한국어"),
+    TURKISH("tr", "Turkish", "Türkçe"),
+    ITALIAN("it", "Italian", "Italiano");
 
     companion object {
         fun fromCode(code: String?): AppLanguage? =
@@ -50,7 +63,7 @@ class LanguageManager(context: Context) {
         /** Returns a context whose resources use the saved language, if any. */
         fun wrap(base: Context): Context {
             val language = read(base) ?: return base
-            val locale = Locale(language.code)
+            val locale = Locale.forLanguageTag(language.code)
             Locale.setDefault(locale)
             val config = Configuration(base.resources.configuration)
             config.setLocale(locale)

@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
@@ -45,21 +48,21 @@ fun LanguageSelectionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 28.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 28.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(modifier = Modifier.size(124.dp), contentAlignment = Alignment.Center) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Box(modifier = Modifier.size(104.dp), contentAlignment = Alignment.Center) {
                 MorphingShapeBox(
-                    modifier = Modifier.size(124.dp),
+                    modifier = Modifier.size(104.dp),
                     color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.52f),
                     lobes = 12,
                     wave = 0.19f,
                     spinMillis = 24_000
                 )
-                VaultMark(size = 88.dp)
+                VaultMark(size = 74.dp)
             }
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "My Vault",
                 style = MaterialTheme.typography.displaySmall,
@@ -72,9 +75,14 @@ fun LanguageSelectionScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            AppLanguage.entries.forEach { language ->
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 4.dp)
+            ) {
+                items(AppLanguage.entries, key = { it.code }) { language ->
                 Card(
                     onClick = { onLanguageSelected(language) },
                     shape = RoundedCornerShape(26.dp),
@@ -119,7 +127,7 @@ fun LanguageSelectionScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))

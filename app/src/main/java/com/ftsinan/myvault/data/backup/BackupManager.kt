@@ -11,9 +11,11 @@ import com.ftsinan.myvault.data.model.Relation
 import com.ftsinan.myvault.data.model.VaultDocument
 import com.ftsinan.myvault.data.repository.DocumentRepository
 import com.ftsinan.myvault.data.repository.VaultRestoreData
+import com.ftsinan.myvault.data.security.PinManager
 import com.ftsinan.myvault.data.storage.BackupStagedFile
 import com.ftsinan.myvault.data.storage.VaultFileManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -36,12 +38,86 @@ data class BackupSummary(
     val totalBytes: Long
 )
 
+/** One profile from a prepared backup that can become this phone's owner. */
+data class BackupProfileOption(
+    val backupMemberId: Long,
+    val name: String,
+    val isOriginalOwner: Boolean
+)
+
+/** How a prepared backup should be committed. */
+enum class BackupRestoreMode {
+    ADD_TO_VAULT,
+    REPLACE_VAULT
+}
+
+/** Counts describing what a restore or merge actually changed. */
+data class BackupRestoreResult(
+    val mode: BackupRestoreMode,
+    val addedMemberCount: Int,
+    val matchedMemberCount: Int,
+    val addedDocumentCount: Int,
+    val addedPageCount: Int,
+    val duplicateDocumentCount: Int,
+    val updatedDocumentCount: Int
+)
+
 /** A validated restore whose files are staged but not yet committed. */
 class PreparedBackupRestore internal constructor(
     val summary: BackupSummary,
+    val profileOptions: List<BackupProfileOption>,
     internal val restoreData: VaultRestoreData,
     internal val stagedFileNames: List<String>
 )
+
+/**
+ * Reassigns only the device-local phone-owner role inside a full restore.
+ * Every profile, document and page remains; the previous owner becomes a
+ * normal family profile. Other members' saved relations are left for the
+ * new phone user to review because they cannot be inferred reliably.
+ */
+internal fun VaultRestoreData.withPhoneOwner(
+    selectedBackupMemberId: Long
+): VaultRestoreData {
+    val selected = members.firstOrNull { it.id == selectedBackupMemberId }
+        ?: throw IllegalArgumentException("Selected profile is not in this backup")
+    val originalOwnerId = members.firstOrNull { it.isOwner }?.id
+
+    val updatedMembers = members.map { member ->
+        when {
+            member.id == selected.id -> member.copy(
+                isOwner = true,
+                relation = Relation.SELF
+            )
+            member.isOwner -> member.copy(
+                isOwner = false,
+                relation = Relation.FAMILY
+            )
+            else -> member
+        }
+    }.sortedWith(
+        compareByDescending<MemberProfile> { it.isOwner }
+            .thenBy { it.sortOrder }
+            .thenBy { it.id }
+    )
+    require(updatedMembers.count { it.isOwner } == 1) {
+        "Backup must contain exactly one phone owner"
+    }
+
+    val updatedDocuments = documents.map { document ->
+        val memberId = document.memberId ?: return@map document
+        when (memberId) {
+            selected.id -> document.copy(relation = Relation.SELF)
+            originalOwnerId -> document.copy(relation = Relation.FAMILY)
+            else -> document
+        }
+    }
+
+    return copy(
+        members = updatedMembers,
+        documents = updatedDocuments
+    )
+}
 
 /**
  * Creates and restores portable `.mvbackup` files.
@@ -55,7 +131,8 @@ class PreparedBackupRestore internal constructor(
 class BackupManager(
     private val context: Context,
     private val repository: DocumentRepository,
-    private val fileManager: VaultFileManager
+    private val fileManager: VaultFileManager,
+    private val pinManager: PinManager
 ) {
 
     suspend fun createBackup(
@@ -286,6 +363,13 @@ class BackupManager(
             )
             PreparedBackupRestore(
                 summary = summary,
+                profileOptions = restoreData.members.map { member ->
+                    BackupProfileOption(
+                        backupMemberId = member.id,
+                        name = member.name,
+                        isOriginalOwner = member.isOwner
+                    )
+                },
                 restoreData = restoreData,
                 stagedFileNames = staged.values.map { it.encryptedFileName }
             )
@@ -297,23 +381,89 @@ class BackupManager(
         }
     }
 
-    suspend fun commitRestore(prepared: PreparedBackupRestore) {
-        try {
-            val oldFileNames = repository.restoreVault(prepared.restoreData)
-            withContext(Dispatchers.IO) {
-                fileManager.deleteEncryptedFiles(
-                    oldFileNames.filterNot { it in prepared.stagedFileNames }
-                )
+    suspend fun commitRestore(
+        prepared: PreparedBackupRestore,
+        restoreMode: BackupRestoreMode = BackupRestoreMode.REPLACE_VAULT,
+        selectedOwnerBackupMemberId: Long? = null,
+        createNewOwnerProfile: Boolean = false
+    ): BackupRestoreResult {
+        var databaseCommitted = false
+        return try {
+            require(!createNewOwnerProfile || selectedOwnerBackupMemberId == null) {
+                "Choose either an existing backup profile or create a new one"
+            }
+            val restoreData = selectedOwnerBackupMemberId?.let { selectedId ->
+                prepared.restoreData.withPhoneOwner(selectedId)
+            } ?: prepared.restoreData
+
+            when (restoreMode) {
+                BackupRestoreMode.ADD_TO_VAULT -> {
+                    val mergeResult = repository.mergeVault(restoreData)
+                    databaseCommitted = true
+                    markRestoreOwnerSetupPending(createNewOwnerProfile)
+                    deleteEncryptedFilesBestEffort(
+                        prepared.stagedFileNames.filterNot {
+                            it in mergeResult.usedStagedFileNames
+                        }
+                    )
+                    BackupRestoreResult(
+                        mode = restoreMode,
+                        addedMemberCount = mergeResult.addedMemberCount,
+                        matchedMemberCount = mergeResult.matchedMemberCount,
+                        addedDocumentCount = mergeResult.addedDocumentCount,
+                        addedPageCount = mergeResult.addedPageCount,
+                        duplicateDocumentCount = mergeResult.duplicateDocumentCount,
+                        updatedDocumentCount = mergeResult.updatedDocumentCount
+                    )
+                }
+
+                BackupRestoreMode.REPLACE_VAULT -> {
+                    val oldFileNames = repository.restoreVault(restoreData)
+                    databaseCommitted = true
+                    markRestoreOwnerSetupPending(createNewOwnerProfile)
+                    deleteEncryptedFilesBestEffort(
+                        oldFileNames.filterNot { it in prepared.stagedFileNames }
+                    )
+                    BackupRestoreResult(
+                        mode = restoreMode,
+                        addedMemberCount = restoreData.members.size,
+                        matchedMemberCount = 0,
+                        addedDocumentCount = restoreData.documents.size,
+                        addedPageCount = restoreData.pages.size,
+                        duplicateDocumentCount = 0,
+                        updatedDocumentCount = 0
+                    )
+                }
             }
         } catch (error: Throwable) {
-            discardRestore(prepared)
+            // Once Room has committed, staged names may be live vault files.
+            // Never let post-commit cleanup or cancellation delete them.
+            if (!databaseCommitted) discardRestore(prepared)
             throw error
         }
     }
 
     suspend fun discardRestore(prepared: PreparedBackupRestore) {
-        withContext(Dispatchers.IO) {
-            fileManager.deleteEncryptedFiles(prepared.stagedFileNames)
+        deleteEncryptedFilesBestEffort(prepared.stagedFileNames)
+    }
+
+    /**
+     * Records the recipient's create-profile step as the first action after
+     * the Room transaction commits, before any file cleanup can be cancelled
+     * or the process can die in the ViewModel layer.
+     */
+    private suspend fun markRestoreOwnerSetupPending(createNewOwnerProfile: Boolean) {
+        if (!createNewOwnerProfile) return
+        withContext(NonCancellable) {
+            pinManager.setPendingRestoreOwnerSetup(true)
+        }
+    }
+
+    /** File deletion after a commit is housekeeping only; failures orphan files safely. */
+    private suspend fun deleteEncryptedFilesBestEffort(fileNames: Collection<String>) {
+        if (fileNames.isEmpty()) return
+        withContext(NonCancellable + Dispatchers.IO) {
+            runCatching { fileManager.deleteEncryptedFiles(fileNames) }
         }
     }
 
@@ -330,6 +480,7 @@ class BackupManager(
         require(documentArray.length() <= MAX_DOCUMENTS) { "Backup has too many documents" }
 
         val referencedEntries = mutableSetOf<String>()
+        val fileSha256ByEncryptedName = mutableMapOf<String, String>()
         fun requireStaged(entry: String, expectedSize: Long?, expectedSha: String?): BackupStagedFile {
             require(referencedEntries.add(entry)) { "Backup reuses a file entry" }
             val file = staged[entry] ?: error("Backup file is missing: $entry")
@@ -341,6 +492,7 @@ class BackupManager(
                     "Backup file checksum does not match"
                 }
             }
+            fileSha256ByEncryptedName[file.encryptedFileName] = file.sha256.lowercase()
             return file
         }
 
@@ -461,7 +613,8 @@ class BackupManager(
                     .thenBy { it.id }
             ),
             documents = documents,
-            pages = pages
+            pages = pages,
+            fileSha256ByEncryptedName = fileSha256ByEncryptedName
         )
     }
 

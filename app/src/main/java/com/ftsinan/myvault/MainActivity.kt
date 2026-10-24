@@ -18,10 +18,12 @@ import com.ftsinan.myvault.data.settings.AppLanguage
 import com.ftsinan.myvault.data.settings.LanguageManager
 import com.ftsinan.myvault.data.settings.ThemeMode
 import com.ftsinan.myvault.ui.navigation.MyVaultNavGraph
+import com.ftsinan.myvault.ui.screens.lock.FirstRunBackupScreen
 import com.ftsinan.myvault.ui.screens.lock.LanguageSelectionScreen
 import com.ftsinan.myvault.ui.screens.lock.LockScreen
 import com.ftsinan.myvault.ui.screens.lock.LockViewModel
 import com.ftsinan.myvault.ui.screens.lock.SetupPinScreen
+import com.ftsinan.myvault.ui.screens.lock.shouldShowFirstRunBackupPrompt
 import com.ftsinan.myvault.ui.screens.lock.VaultStartupScreen
 import com.ftsinan.myvault.ui.screens.lock.VaultUnlockAnimationScreen
 import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
@@ -33,8 +35,11 @@ import kotlinx.coroutines.delay
  *
  * Must be a [FragmentActivity] because BiometricPrompt needs one.
  *
- * Entry flow: choose language -> create/enter PIN -> create owner
- * profile (name required, rest optional) -> vault.
+ * Entry flow: choose language -> on first setup, restore a backup or start
+ * a new vault -> create/enter PIN -> create owner profile when needed
+ * (name required, rest optional) -> vault. A restored backup already has an
+ * owner profile; its backup intentionally does not carry the old vault PIN,
+ * so the user creates one for this phone next.
  *
  * Security behaviours:
  *  - FLAG_SECURE is on by default so vault content does not appear in
@@ -110,10 +115,21 @@ class MainActivity : FragmentActivity() {
             ) {
                 when {
                     lockState.isLoading || !lockState.isLanguageLoaded ||
-                        !lockState.isProfileLoaded -> VaultStartupScreen()
+                        !lockState.isProfileLoaded ||
+                        !lockState.isRestoreOwnerSetupLoaded -> VaultStartupScreen()
 
                     lockState.language == null -> LanguageSelectionScreen(
                         onLanguageSelected = ::changeLanguage
+                    )
+
+                    shouldShowFirstRunBackupPrompt(
+                        isPinSet = lockState.isPinSet,
+                        hasOwnerProfile = lockState.hasOwnerProfile,
+                        hasSelectedInitialSetupPath =
+                            lockState.hasSelectedInitialSetupPath
+                    ) -> FirstRunBackupScreen(
+                        onCreateNewVault = lockViewModel::selectNewVaultSetup,
+                        onRestoreComplete = lockViewModel::markInitialBackupRestored
                     )
 
                     !lockState.isPinSet -> SetupPinScreen(lockViewModel)
@@ -126,6 +142,14 @@ class MainActivity : FragmentActivity() {
                     !lockState.isUnlocked -> LockScreen(
                         viewModel = lockViewModel,
                         ownerName = lockState.ownerName
+                    )
+
+                    lockState.needsRestoreOwnerSetup -> MemberEditScreen(
+                        memberId = null,
+                        ownerSetup = true,
+                        replaceExistingOwner = true,
+                        onBack = null,
+                        onSaved = lockViewModel::completeRestoreOwnerSetup
                     )
 
                     !lockState.hasOwnerProfile -> MemberEditScreen(

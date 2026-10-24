@@ -20,7 +20,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/readme/chips-dark.svg">
-    <img src="assets/readme/chips-light.svg" alt="Native Kotlin, Jetpack Compose, AES-256-GCM, offline-first, English and Malayalam, open source" width="980">
+    <img src="assets/readme/chips-light.svg" alt="Native Kotlin, Jetpack Compose, AES-256-GCM, offline-first, 15 languages, open source" width="980">
   </picture>
 </p>
 
@@ -44,7 +44,7 @@
 
 My Vault keeps your document files on your phone. There is no My Vault account, no advertising SDK and no background document sync.
 
-The only network feature is the **manual update check** in Settings. It runs only after you tap it, talks to GitHub Releases, and never uploads document data. Backups are created only when you explicitly export a `.mvbackup` file.
+The only network feature is the **update check** in Settings. It can run when Settings opens—at most once a day—or whenever you tap **Check for updates**. It talks only to GitHub Releases, never uploads document data, and never downloads an update automatically. Backups are created only when you explicitly export a `.mvbackup` file.
 
 </details>
 
@@ -70,7 +70,7 @@ At a glance:
 - **Two ways in only:** Scan, or choose a File image/PDF
 - **On-device OCR suggestions** for Aadhaar, PAN and Driving Licence details
 - **AES-256-GCM encrypted files** protected by Android Keystore
-- **English and Malayalam**, chosen on first open and changeable later
+- **15 languages**, chosen on first open and changeable later: English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian
 - **Portable `.mvbackup` files** for moving to another phone
 
 <p align="center">
@@ -129,7 +129,7 @@ The presentation is expressive and friendly; the storage model underneath stays 
     <td width="50%" valign="top">
       <img src="assets/readme/feature-backup.svg" width="72" alt="Backup and restore illustration"><br>
       <strong>Backup that can move house</strong><br>
-      Export the whole vault as one portable <code>.mvbackup</code>. Protect it with a PBKDF2/AES-256-GCM password, or explicitly choose no password after a warning. Restores verify checksums before anything is replaced.<br><br>
+      Export the whole vault as one portable <code>.mvbackup</code>. Protect it with a PBKDF2/AES-256-GCM password, or explicitly choose no password after a warning. Restores verify checksums before committing. In Settings you can <strong>Add to this vault</strong> without deleting current profiles or documents, or explicitly choose <strong>Replace this vault</strong>; exact duplicate documents are not imported twice. A recipient can choose their existing profile as <strong>My profile</strong>, or choose <strong>I’m not in this backup</strong> and create one after restore.<br><br>
       <code>.mvbackup</code> <code>600k PBKDF2</code> <code>Verified restore</code>
     </td>
   </tr>
@@ -144,14 +144,14 @@ The presentation is expressive and friendly; the storage model underneath stays 
       <img src="assets/readme/feature-personalise.svg" width="72" alt="Colour palette illustration"><br>
       <strong>Personal, local and expressive</strong><br>
       Light theme and wallpaper colours are the friendly defaults, with System/Dark/OLED modes and curated palettes when you want them. Settings is split into focused pages, with a playful Creator Space.<br><br>
-      <code>English + Malayalam</code> <code>Material You</code> <code>Creator Space</code>
+      <code>15 languages</code> <code>Material You</code> <code>Creator Space</code>
     </td>
   </tr>
 </table>
 
 ### And a few thoughtful details
 
-- First open is **language → PIN → profile**; only the profile name is required.
+- First open is **language → backup choice → PIN → profile**; returning users can restore a `.mvbackup` before creating a PIN for the new phone. Restore asks **“Who will use My Vault on this phone?”** A family member can choose their restored profile as **My profile**, or choose **“I’m not in this backup”** and complete the normal profile setup after creating the phone PIN.
 - Long document titles expand inside the document card, without opening the document.
 - Document numbers are masked until you choose to reveal or copy them.
 - Shared profile-card images include available profile details **except relation**.
@@ -231,9 +231,9 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 1. Open the [**latest GitHub Release**](https://github.com/ft-sinan/My-vault-android/releases/latest).
 2. Download `MyVault-vX.Y.Z.apk` — and its `.sha256` file if you want to verify the APK yourself.
 3. Install it on an Android 8.0 or newer phone. Android may ask you to allow installs from your browser or file manager.
-4. On first launch, choose **English** or **മലയാളം**, create a PIN, then add at least your name.
+4. On first launch, choose one of the **15 available languages**. If you already have a `.mvbackup`, restore it and choose which restored profile is yours on this phone—or choose **I’m not in this backup**—then create a PIN for this phone and, when needed, complete your profile setup. Otherwise create a new vault, create a PIN, and add at least your name.
 
-Later versions can be checked manually from **Settings → Storage & privacy → App updates → Check for updates**. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
+My Vault checks GitHub Releases when Settings opens, at most once a day, and shows an **Update available** popup only when a newer version is found. You can also check manually from **Settings → Storage & privacy → App updates → Check for updates**. Nothing downloads until you choose it. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
 
 > **Remember your PIN.** A forgotten PIN is not recoverable by design if biometric unlock also becomes unavailable. Keep your original documents safe.
 
@@ -270,11 +270,11 @@ The ML Kit scanner requires Google Play services. If the scanner cannot open on 
   </tr>
   <tr>
     <td><strong>Portable backups</strong></td>
-    <td>Password backups use PBKDF2-HMAC-SHA256 at 600,000 iterations plus AES-256-GCM. Restore is staged and checksum-verified before replacement.</td>
+    <td>Password backups use PBKDF2-HMAC-SHA256 at 600,000 iterations plus AES-256-GCM. Restore is staged and checksum-verified before an Add or Replace operation is committed.</td>
   </tr>
   <tr>
     <td><strong>Network</strong></td>
-    <td>Manual GitHub Releases update checks only. No account, ads, analytics upload or document sync.</td>
+    <td>GitHub Releases update checks when Settings opens (at most once a day) or on demand. No account, ads, analytics upload, automatic download or document sync.</td>
   </tr>
 </table>
 
@@ -328,12 +328,12 @@ My Vault is a single-activity Jetpack Compose app with a manual dependency conta
     <td>Portable <code>.mvbackup</code> format, optional password encryption, checksum validation and staged restore</td>
   </tr>
   <tr>
-    <td><code>data/settings/</code> + <code>res/values(-ml)</code></td>
-    <td>Appearance/language persistence and the English/Malayalam resources</td>
+    <td><code>data/settings/</code> + localized <code>res/values-*</code></td>
+    <td>Appearance/language persistence and resources for all 15 supported languages</td>
   </tr>
   <tr>
     <td><code>util/</code></td>
-    <td>Formatting/masking, on-device OCR, profile-card generation and the manual GitHub update checker</td>
+    <td>Formatting/masking, on-device OCR, profile-card generation and the GitHub Releases update checker</td>
   </tr>
 </table>
 

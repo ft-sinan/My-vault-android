@@ -24,6 +24,14 @@
     <string name="pin_confirm_title">Confirm your PIN</string>
     <string name="pin_confirm_subtitle">Enter the same PIN once more to confirm.</string>
     <string name="pin_mismatch">PINs don\'t match. Please start again.</string>
+    <string name="first_run_backup_question">Do you have a backup?</string>
+    <string name="first_run_backup_subtitle">If you have used My Vault before, restore your .mvbackup file to bring back your profiles and documents.</string>
+    <string name="first_run_restore_backup">Yes, restore my backup</string>
+    <string name="first_run_restore_backup_subtitle">Choose a .mvbackup file</string>
+    <string name="first_run_create_new_vault">No, create a new vault</string>
+    <string name="first_run_create_new_vault_subtitle">Create a PIN and set up your profile</string>
+    <string name="first_run_backup_ready_body">Restore these profiles and documents to this phone. Next, you will create a PIN for this phone — your vault PIN is not stored in the backup.</string>
+    <string name="first_run_backup_restore_failed">Could not restore the backup. Please try again.</string>
     <string name="lock_trust_pill">Offline  •  Encrypted  •  Private</string>
     <string name="lock_unlocked">Vault unlocked</string>
     <string name="profile_setup_title">Set up your profile</string>
@@ -170,6 +178,9 @@
     <string name="backup_choose_location">Choose location</string>
     <string name="backup_creating">Creating backup…</string>
     <string name="backup_created">Backup created.</string>
+    <string name="backup_share">Share backup</string>
+    <string name="backup_share_title">Share My Vault backup</string>
+    <string name="backup_share_no_password_warning">This backup has no password. Only share it with someone you fully trust.</string>
     <string name="backup_create_failed">Could not create the backup. Please try again.</string>
     <string name="backup_restore_title">Restore backup</string>
     <string name="backup_restore_password_body">Enter this backup’s password so My Vault can verify it.</string>
@@ -177,6 +188,19 @@
     <string name="backup_preparing">Checking backup…</string>
     <string name="backup_ready_title">Replace this vault?</string>
     <string name="backup_ready_body">All current profiles and documents will be replaced by the contents of this backup.</string>
+    <string name="backup_phone_owner_question">Who will use My Vault on this phone?</string>
+    <string name="backup_phone_owner_subtitle">Choose your profile. All profiles and documents will be restored.</string>
+    <string name="backup_original_owner">Original owner</string>
+    <string name="backup_restore_mode_title">How should this backup be restored?</string>
+    <string name="backup_restore_mode_add">Add to this vault</string>
+    <string name="backup_restore_mode_add_subtitle">Keep current profiles and documents. Exact duplicates will not be added twice.</string>
+    <string name="backup_restore_mode_replace">Replace this vault</string>
+    <string name="backup_restore_mode_replace_subtitle">Remove current profiles and documents, then restore only this backup.</string>
+    <string name="backup_merge_owner_note">Your current My profile will stay unchanged.</string>
+    <string name="backup_create_my_profile_option">I’m not in this backup</string>
+    <string name="backup_create_my_profile_subtitle">Create my profile after restore</string>
+    <string name="backup_add_action">Add to vault</string>
+    <string name="backup_added">Backup added to this vault.</string>
     <string name="backup_summary">%1$d people • %2$d documents • %3$d pages</string>
     <string name="backup_created_on">Backup date: %1$s</string>
     <string name="backup_replace">Replace vault</string>
@@ -247,7 +271,7 @@
     <string name="settings_storage_one">1 document in your vault</string>
     <string name="settings_storage_many">%1$d documents in your vault</string>
     <string name="settings_storage_using">Using %1$s on this device</string>
-    <string name="settings_safety_body" formatted="false">• Every file is encrypted with AES-256 before it is saved.\n• The encryption key never leaves this phone\'s secure keystore.\n• Your vault works offline. The app only uses the internet if you manually check for an update in Settings; documents are never uploaded.\n• Screenshots and recent-apps previews are blocked.\n• The vault locks itself after 1 minute in the background.\n\n⚠️ Important: if you forget your PIN and biometrics stop working, your documents cannot be recovered. Keep your original documents safe too.</string>
+    <string name="settings_safety_body" formatted="false">• Every file is encrypted with AES-256 before it is saved.\n• The encryption key never leaves this phone\'s secure keystore.\n• Your vault works offline. The app uses the internet only to check for updates when Settings opens (at most once a day) or when you check manually; documents are never uploaded.\n• Screenshots and recent-apps previews are blocked.\n• The vault locks itself after 1 minute in the background.\n\n⚠️ Important: if you forget your PIN and biometrics stop working, your documents cannot be recovered. Keep your original documents safe too.</string>
     <string name="pin_wrong">Wrong PIN</string>
     <string name="biometric_title">Unlock My Vault</string>
     <string name="biometric_subtitle">Use your fingerprint or face to open your vault</string>
@@ -317,16 +341,18 @@
     <string name="settings_page_motion_subtitle">Touch, spacing, glass and animation</string>
     <string name="settings_page_security_subtitle">PIN, biometric unlock and locking</string>
     <string name="settings_page_language_subtitle">Choose the language used across the app</string>
-    <string name="settings_page_storage_subtitle">Storage, privacy and manual app updates</string>
+    <string name="settings_page_storage_subtitle">Storage, privacy and app updates</string>
     <string name="settings_page_continue">Open</string>
     <string name="settings_language_selected_note">The whole app restarts in the selected language.</string>
     <string name="settings_updates_title">App updates</string>
-    <string name="settings_updates_subtitle">Manual check only — My Vault never checks in the background.</string>
+    <string name="settings_updates_subtitle">Checks when you open Settings, at most once a day. Nothing downloads automatically.</string>
     <string name="settings_updates_current">Current version: v%1$s</string>
     <string name="settings_updates_check">Check for updates</string>
     <string name="settings_updates_checking">Checking GitHub Releases…</string>
     <string name="settings_updates_up_to_date">You\'re up to date.</string>
+    <string name="settings_updates_available_title">Update available</string>
     <string name="settings_updates_available">Version %1$s is available.</string>
+    <string name="settings_updates_later">Later</string>
     <string name="settings_updates_download">Download &amp; install</string>
     <string name="settings_updates_downloading">Downloading… %1$d%%</string>
     <string name="settings_updates_downloading_unknown">Downloading update…</string>
@@ -362,7 +388,7 @@
     <string name="creator_badge_offline">Offline vault</string>
     <string name="creator_badge_creator_desc">Designed and built end-to-end by Sinan — product, UI, encryption and every little animation.</string>
     <string name="creator_badge_privacy_desc">No account, no cloud sync and no tracking. Your documents stay encrypted on your phone.</string>
-    <string name="creator_badge_offline_desc">The vault works offline. Internet is touched only when you manually check for an app update.</string>
+    <string name="creator_badge_offline_desc">The vault works offline. Internet is touched only for update checks when Settings opens or when you check manually.</string>
     <string name="creator_badge_code_desc">Native Kotlin with Jetpack Compose, Room and Android Keystore-backed AES-GCM encryption.</string>
     <string name="creator_long_press_copy">Long-press a tile to copy</string>
     <string name="creator_acknowledgements">Acknowledgements &amp; licences</string>

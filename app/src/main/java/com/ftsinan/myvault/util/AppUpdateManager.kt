@@ -59,8 +59,9 @@ data class UpdateRelease(
 )
 
 /**
- * Manual, user-initiated update support backed by the public GitHub Releases
- * page. Nothing in this object is called automatically or in the background.
+ * GitHub Releases update support. Settings may run a lightweight foreground
+ * check when it opens (at most once a day), and users can always check
+ * manually. Downloads and installs still require an explicit user action.
  */
 object AppUpdateManager {
     private const val LATEST_RELEASE_URL =
