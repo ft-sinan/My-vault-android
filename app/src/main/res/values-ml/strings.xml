@@ -171,6 +171,9 @@
     <string name="backup_choose_location">സ്ഥലം തിരഞ്ഞെടുക്കുക</string>
     <string name="backup_creating">ബാക്കപ്പ് ഉണ്ടാക്കുന്നു…</string>
     <string name="backup_created">ബാക്കപ്പ് സൃഷ്ടിച്ചു.</string>
+    <string name="backup_share">ബാക്കപ്പ് പങ്കിടുക</string>
+    <string name="backup_share_title">My Vault ബാക്കപ്പ് പങ്കിടുക</string>
+    <string name="backup_share_no_password_warning">ഈ ബാക്കപ്പിന് പാസ്‌വേഡ് ഇല്ല. നിങ്ങൾ പൂർണ്ണമായി വിശ്വസിക്കുന്ന ഒരാൾക്ക് മാത്രം ഇത് പങ്കിടുക.</string>
     <string name="backup_create_failed">ബാക്കപ്പ് ഉണ്ടാക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.</string>
     <string name="backup_restore_title">ബാക്കപ്പ് റീസ്റ്റോർ ചെയ്യുക</string>
     <string name="backup_restore_password_body">My Vault-ന് പരിശോധിക്കാൻ ഈ ബാക്കപ്പിന്റെ പാസ്‌വേഡ് നൽകുക.</string>
@@ -260,7 +263,7 @@
     <string name="settings_storage_one">നിങ്ങളുടെ വോൾട്ടിൽ 1 രേഖ</string>
     <string name="settings_storage_many">നിങ്ങളുടെ വോൾട്ടിൽ %1$d രേഖകൾ</string>
     <string name="settings_storage_using">ഈ ഫോണിൽ %1$s ഉപയോഗിക്കുന്നു</string>
-    <string name="settings_safety_body" formatted="false">• ഓരോ ഫയലും സേവ് ചെയ്യുന്നതിന് മുമ്പ് AES-256 ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യും.\n• എൻക്രിപ്ഷൻ കീ ഈ ഫോണിന്റെ സുരക്ഷിത കീസ്റ്റോറിൽ നിന്ന് പുറത്തുപോകില്ല.\n• വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. ക്രമീകരണങ്ങളിൽ നിങ്ങൾ സ്വയം അപ്‌ഡേറ്റ് പരിശോധിക്കുമ്പോൾ മാത്രമേ ആപ്പ് ഇന്റർനെറ്റ് ഉപയോഗിക്കൂ; രേഖകൾ ഒരിക്കലും അപ്‌ലോഡ് ചെയ്യില്ല.\n• സ്ക്രീൻഷോട്ടുകളും സമീപകാല ആപ്പുകളുടെ പ്രിവ്യൂവും തടഞ്ഞിരിക്കുന്നു.\n• പശ്ചാത്തലത്തിൽ 1 മിനിറ്റിന് ശേഷം വോൾട്ട് സ്വയം ലോക്ക് ചെയ്യും.\n\n⚠️ പ്രധാനം: PIN മറക്കുകയും ബയോമെട്രിക്സ് പ്രവർത്തിക്കാതിരിക്കുകയും ചെയ്താൽ രേഖകൾ വീണ്ടെടുക്കാൻ കഴിയില്ല. യഥാർത്ഥ രേഖകളും സുരക്ഷിതമായി സൂക്ഷിക്കുക.</string>
+    <string name="settings_safety_body" formatted="false">• ഓരോ ഫയലും സേവ് ചെയ്യുന്നതിന് മുമ്പ് AES-256 ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യും.\n• എൻക്രിപ്ഷൻ കീ ഈ ഫോണിന്റെ സുരക്ഷിത കീസ്റ്റോറിൽ നിന്ന് പുറത്തുപോകില്ല.\n• വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. Settings തുറക്കുമ്പോൾ (ദിവസത്തിൽ പരമാവധി ഒരു തവണ) അല്ലെങ്കിൽ നിങ്ങൾ സ്വയം പരിശോധിക്കുമ്പോൾ മാത്രമേ ആപ്പ് ഇന്റർനെറ്റ് ഉപയോഗിക്കൂ; രേഖകൾ ഒരിക്കലും അപ്‌ലോഡ് ചെയ്യില്ല.\n• സ്ക്രീൻഷോട്ടുകളും സമീപകാല ആപ്പുകളുടെ പ്രിവ്യൂവും തടഞ്ഞിരിക്കുന്നു.\n• പശ്ചാത്തലത്തിൽ 1 മിനിറ്റിന് ശേഷം വോൾട്ട് സ്വയം ലോക്ക് ചെയ്യും.\n\n⚠️ പ്രധാനം: PIN മറക്കുകയും ബയോമെട്രിക്സ് പ്രവർത്തിക്കാതിരിക്കുകയും ചെയ്താൽ രേഖകൾ വീണ്ടെടുക്കാൻ കഴിയില്ല. യഥാർത്ഥ രേഖകളും സുരക്ഷിതമായി സൂക്ഷിക്കുക.</string>
     <string name="pin_wrong">PIN തെറ്റാണ്</string>
     <string name="biometric_title">My Vault അൺലോക്ക് ചെയ്യുക</string>
     <string name="biometric_subtitle">വോൾട്ട് തുറക്കാൻ ഫിംഗർപ്രിന്റോ ഫേസോ ഉപയോഗിക്കുക</string>
@@ -330,16 +333,18 @@
     <string name="settings_page_motion_subtitle">സ്പർശം, അകലം, ഗ്ലാസും അനിമേഷനും</string>
     <string name="settings_page_security_subtitle">PIN, ബയോമെട്രിക് അൺലോക്കും ലോക്കിംഗും</string>
     <string name="settings_page_language_subtitle">ആപ്പിൽ എല്ലായിടത്തും ഉപയോഗിക്കുന്ന ഭാഷ തിരഞ്ഞെടുക്കുക</string>
-    <string name="settings_page_storage_subtitle">സ്റ്റോറേജ്, സ്വകാര്യതയും മാനുവൽ അപ്‌ഡേറ്റുകളും</string>
+    <string name="settings_page_storage_subtitle">സ്റ്റോറേജ്, സ്വകാര്യതയും ആപ്പ് അപ്‌ഡേറ്റുകളും</string>
     <string name="settings_page_continue">തുറക്കുക</string>
     <string name="settings_language_selected_note">തിരഞ്ഞെടുത്ത ഭാഷയിൽ ആപ്പ് മുഴുവൻ വീണ്ടും ആരംഭിക്കും.</string>
     <string name="settings_updates_title">ആപ്പ് അപ്‌ഡേറ്റുകൾ</string>
-    <string name="settings_updates_subtitle">മാനുവൽ പരിശോധന മാത്രം — My Vault പശ്ചാത്തലത്തിൽ പരിശോധിക്കില്ല.</string>
+    <string name="settings_updates_subtitle">നിങ്ങൾ Settings തുറക്കുമ്പോൾ, ദിവസത്തിൽ പരമാവധി ഒരു തവണ പരിശോധിക്കും. ഒന്നും സ്വയമേവ ഡൗൺലോഡ് ചെയ്യില്ല.</string>
     <string name="settings_updates_current">നിലവിലെ പതിപ്പ്: v%1$s</string>
     <string name="settings_updates_check">അപ്‌ഡേറ്റുകൾ പരിശോധിക്കുക</string>
     <string name="settings_updates_checking">GitHub Releases പരിശോധിക്കുന്നു…</string>
     <string name="settings_updates_up_to_date">നിങ്ങൾ ഏറ്റവും പുതിയ പതിപ്പിലാണ്.</string>
+    <string name="settings_updates_available_title">അപ്‌ഡേറ്റ് ലഭ്യമാണ്</string>
     <string name="settings_updates_available">%1$s പതിപ്പ് ലഭ്യമാണ്.</string>
+    <string name="settings_updates_later">പിന്നീട്</string>
     <string name="settings_updates_download">ഡൗൺലോഡ് ചെയ്ത് ഇൻസ്റ്റാൾ ചെയ്യുക</string>
     <string name="settings_updates_downloading">ഡൗൺലോഡ് ചെയ്യുന്നു… %1$d%%</string>
     <string name="settings_updates_downloading_unknown">അപ്‌ഡേറ്റ് ഡൗൺലോഡ് ചെയ്യുന്നു…</string>
@@ -375,7 +380,7 @@
     <string name="creator_badge_offline">ഓഫ്‌ലൈൻ വോൾട്ട്</string>
     <string name="creator_badge_creator_desc">പ്രോഡക്റ്റ്, UI, എൻക്രിപ്ഷനും ഓരോ ചെറിയ അനിമേഷനും ഉൾപ്പെടെ സിനാൻ തന്നെ രൂപകൽപ്പന ചെയ്ത് നിർമ്മിച്ചത്.</string>
     <string name="creator_badge_privacy_desc">അക്കൗണ്ടും ക്ലൗഡ് സിങ്കും ട്രാക്കിംഗും ഇല്ല. നിങ്ങളുടെ രേഖകൾ ഫോണിൽ എൻക്രിപ്റ്റ് ചെയ്ത് തന്നെ ഇരിക്കും.</string>
-    <string name="creator_badge_offline_desc">വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. നിങ്ങൾ സ്വയം അപ്‌ഡേറ്റ് പരിശോധിക്കുമ്പോൾ മാത്രമാണ് ഇന്റർനെറ്റ് ഉപയോഗിക്കുന്നത്.</string>
+    <string name="creator_badge_offline_desc">വോൾട്ട് ഓഫ്‌ലൈനായി പ്രവർത്തിക്കുന്നു. Settings തുറക്കുമ്പോഴോ നിങ്ങൾ സ്വയം പരിശോധിക്കുമ്പോഴോ ഉള്ള അപ്‌ഡേറ്റ് പരിശോധനയ്ക്ക് മാത്രമാണ് ഇന്റർനെറ്റ് ഉപയോഗിക്കുന്നത്.</string>
     <string name="creator_badge_code_desc">Jetpack Compose, Room, Android Keystore പിന്തുണയുള്ള AES-GCM എൻക്രിപ്ഷനോടുകൂടിയ നേറ്റീവ് Kotlin.</string>
     <string name="creator_long_press_copy">പകർത്താൻ ടൈൽ അമർത്തിപ്പിടിക്കുക</string>
     <string name="creator_acknowledgements">കൃതജ്ഞതയും ലൈസൻസുകളും</string>

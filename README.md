@@ -44,7 +44,7 @@
 
 My Vault keeps your document files on your phone. There is no My Vault account, no advertising SDK and no background document sync.
 
-The only network feature is the **manual update check** in Settings. It runs only after you tap it, talks to GitHub Releases, and never uploads document data. Backups are created only when you explicitly export a `.mvbackup` file.
+The only network feature is the **update check** in Settings. It can run when Settings opens—at most once a day—or whenever you tap **Check for updates**. It talks only to GitHub Releases, never uploads document data, and never downloads an update automatically. Backups are created only when you explicitly export a `.mvbackup` file.
 
 </details>
 
@@ -233,7 +233,7 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 3. Install it on an Android 8.0 or newer phone. Android may ask you to allow installs from your browser or file manager.
 4. On first launch, choose **English** or **മലയാളം**. If you already have a `.mvbackup`, restore it and choose which restored profile is yours on this phone—or choose **I’m not in this backup**—then create a PIN for this phone and, when needed, complete your profile setup. Otherwise create a new vault, create a PIN, and add at least your name.
 
-Later versions can be checked manually from **Settings → Storage & privacy → App updates → Check for updates**. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
+My Vault checks GitHub Releases when Settings opens, at most once a day, and shows an **Update available** popup only when a newer version is found. You can also check manually from **Settings → Storage & privacy → App updates → Check for updates**. Nothing downloads until you choose it. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
 
 > **Remember your PIN.** A forgotten PIN is not recoverable by design if biometric unlock also becomes unavailable. Keep your original documents safe.
 
@@ -274,7 +274,7 @@ The ML Kit scanner requires Google Play services. If the scanner cannot open on 
   </tr>
   <tr>
     <td><strong>Network</strong></td>
-    <td>Manual GitHub Releases update checks only. No account, ads, analytics upload or document sync.</td>
+    <td>GitHub Releases update checks when Settings opens (at most once a day) or on demand. No account, ads, analytics upload, automatic download or document sync.</td>
   </tr>
 </table>
 
@@ -333,7 +333,7 @@ My Vault is a single-activity Jetpack Compose app with a manual dependency conta
   </tr>
   <tr>
     <td><code>util/</code></td>
-    <td>Formatting/masking, on-device OCR, profile-card generation and the manual GitHub update checker</td>
+    <td>Formatting/masking, on-device OCR, profile-card generation and the GitHub Releases update checker</td>
   </tr>
 </table>
 

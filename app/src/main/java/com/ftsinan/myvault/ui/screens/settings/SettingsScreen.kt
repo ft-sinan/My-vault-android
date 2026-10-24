@@ -1,5 +1,7 @@
 package com.ftsinan.myvault.ui.screens.settings
 
+import android.content.ClipData
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -46,6 +48,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -66,6 +69,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material.icons.filled.Code
@@ -201,6 +205,8 @@ private sealed interface UpdateStatus {
     data class Failed(@StringRes val messageRes: Int) : UpdateStatus
 }
 
+private const val SETTINGS_UPDATE_CHECK_INTERVAL_MILLIS = 24 * 60 * 60 * 1000L
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(
@@ -219,6 +225,8 @@ fun SettingsScreen(
     val compactMode by viewModel.compactMode.collectAsStateWithLifecycle()
     val reduceAnimations by viewModel.reduceAnimations.collectAsStateWithLifecycle()
     val glassBottomBar by viewModel.glassBottomBar.collectAsStateWithLifecycle()
+    val lastSettingsUpdateCheckAt by viewModel.lastSettingsUpdateCheckAt
+        .collectAsStateWithLifecycle()
     val selectionHaptic = localSelectionHaptic()
     val language by viewModel.language.collectAsStateWithLifecycle()
     val documentCount by viewModel.documentCount.collectAsStateWithLifecycle()
@@ -277,6 +285,8 @@ fun SettingsScreen(
 
     var updateStatus by remember { mutableStateOf<UpdateStatus>(UpdateStatus.Idle) }
     var downloadedUpdate by remember { mutableStateOf<File?>(null) }
+    var showUpdateAvailableDialog by remember { mutableStateOf(false) }
+    var automaticUpdateCheckStarted by remember { mutableStateOf(false) }
 
     var showCreateBackupDialog by remember { mutableStateOf(false) }
     var showScreenshotAllowanceDialog by remember { mutableStateOf(false) }
@@ -542,10 +552,16 @@ fun SettingsScreen(
     }
 
     fun checkForUpdates() {
+        checkForUpdates(automatic = false)
+    }
+
+    fun checkForUpdates(automatic: Boolean) {
         if (updateStatus is UpdateStatus.Checking ||
             updateStatus is UpdateStatus.Downloading ||
             updateStatus is UpdateStatus.Verifying
         ) return
+
+        viewModel.markSettingsUpdateChecked(System.currentTimeMillis())
         coroutineScope.launch {
             updateStatus = UpdateStatus.Checking
             runCatching { AppUpdateManager.fetchLatestRelease() }
@@ -553,12 +569,17 @@ fun SettingsScreen(
                     if (UpdateVersion.isNewer(release.versionName, BuildConfig.VERSION_NAME)) {
                         downloadedUpdate = null
                         updateStatus = UpdateStatus.Available(release)
+                        if (automatic) showUpdateAvailableDialog = true
                     } else {
                         updateStatus = UpdateStatus.UpToDate
                     }
                 }
                 .onFailure {
-                    updateStatus = UpdateStatus.Failed(R.string.settings_updates_failed)
+                    updateStatus = if (automatic) {
+                        UpdateStatus.Idle
+                    } else {
+                        UpdateStatus.Failed(R.string.settings_updates_failed)
+                    }
                 }
         }
     }
@@ -604,6 +625,67 @@ fun SettingsScreen(
                 updateStatus = UpdateStatus.Failed(R.string.settings_updates_download_failed)
             }
         }
+    }
+
+    LaunchedEffect(lastSettingsUpdateCheckAt) {
+        val lastCheck = lastSettingsUpdateCheckAt ?: return@LaunchedEffect
+        if (!automaticUpdateCheckStarted &&
+            updateStatus == UpdateStatus.Idle &&
+            System.currentTimeMillis() - lastCheck >=
+                SETTINGS_UPDATE_CHECK_INTERVAL_MILLIS
+        ) {
+            automaticUpdateCheckStarted = true
+            checkForUpdates(automatic = true)
+        }
+    }
+
+    val updateAvailableRelease =
+        (updateStatus as? UpdateStatus.Available)?.release
+    if (showUpdateAvailableDialog && updateAvailableRelease != null) {
+        AlertDialog(
+            onDismissRequest = { showUpdateAvailableDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.SystemUpdate,
+                    contentDescription = null
+                )
+            },
+            title = {
+                Text(stringResource(R.string.settings_updates_available_title))
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .heightIn(max = 360.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    UpdateReleaseDetails(updateAvailableRelease)
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showUpdateAvailableDialog = false
+                        page = SettingsPage.STORAGE
+                        downloadUpdate(updateAvailableRelease)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Download,
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.settings_updates_download))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showUpdateAvailableDialog = false }
+                ) {
+                    Text(stringResource(R.string.settings_updates_later))
+                }
+            }
+        )
     }
 
     Box(
@@ -1031,6 +1113,50 @@ fun SettingsScreen(
                                 MaterialTheme.colorScheme.primary
                             }
                         )
+
+                        val createdBackupUri = backupState.createdBackupUri
+                        if (!backupState.messageIsError && createdBackupUri != null) {
+                            if (backupState.createdBackupProtection ==
+                                BackupProtection.NONE
+                            ) {
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = stringResource(
+                                        R.string.backup_share_no_password_warning
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            val backupShareTitle =
+                                stringResource(R.string.backup_share_title)
+                            Spacer(modifier = Modifier.height(10.dp))
+                            OutlinedButton(
+                                onClick = {
+                                    runCatching {
+                                        shareBackupFile(
+                                            context = context,
+                                            uri = createdBackupUri,
+                                            chooserTitle = backupShareTitle
+                                        )
+                                    }.onFailure {
+                                        Toast.makeText(
+                                            context,
+                                            R.string.share_failed,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Share,
+                                    contentDescription = null
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(stringResource(R.string.backup_share))
+                            }
+                        }
                     }
                 }
                 if (backupState.isBusy) {
@@ -1886,6 +2012,20 @@ private fun LanguageOptionRow(
             }
         }
     }
+}
+
+/** Shares the SAF document created for a backup without making a cache copy. */
+private fun shareBackupFile(context: Context, uri: Uri, chooserTitle: String) {
+    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "application/octet-stream"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        clipData = ClipData.newRawUri(chooserTitle, uri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    val chooser = Intent.createChooser(sendIntent, chooserTitle).apply {
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    context.startActivity(chooser)
 }
 
 @Composable

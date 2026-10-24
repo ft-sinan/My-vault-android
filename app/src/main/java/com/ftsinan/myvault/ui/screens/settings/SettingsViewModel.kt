@@ -56,6 +56,8 @@ data class BackupUiState(
     val profileOptions: List<BackupProfileOption> = emptyList(),
     val selectedOwnerBackupId: Long? = null,
     val createNewOwnerSelected: Boolean = false,
+    val createdBackupUri: Uri? = null,
+    val createdBackupProtection: BackupProtection? = null,
     @StringRes val messageRes: Int? = null,
     val messageIsError: Boolean = false
 ) {
@@ -99,6 +101,11 @@ class SettingsViewModel(
 
     val glassBottomBar: StateFlow<Boolean> = pinManager.glassBottomBar
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), true)
+
+    /** Null until DataStore has loaded; 0 means Settings has never checked. */
+    val lastSettingsUpdateCheckAt: StateFlow<Long?> =
+        pinManager.lastSettingsUpdateCheckAt
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     val documentCount: StateFlow<Int> = repository.documentCount
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
@@ -156,6 +163,12 @@ class SettingsViewModel(
         viewModelScope.launch { pinManager.setGlassBottomBar(enabled) }
     }
 
+    fun markSettingsUpdateChecked(checkedAtMillis: Long) {
+        viewModelScope.launch {
+            pinManager.setLastSettingsUpdateCheckAt(checkedAtMillis)
+        }
+    }
+
     suspend fun verifyCurrentPin(pin: String): Boolean = pinManager.verifyPin(pin)
 
     /** Call only after the current PIN has been verified in the UI. */
@@ -186,6 +199,8 @@ class SettingsViewModel(
                     }
                 )
                 _backupState.value = BackupUiState(
+                    createdBackupUri = destination,
+                    createdBackupProtection = protection,
                     messageRes = R.string.backup_created
                 )
             } catch (error: CancellationException) {
