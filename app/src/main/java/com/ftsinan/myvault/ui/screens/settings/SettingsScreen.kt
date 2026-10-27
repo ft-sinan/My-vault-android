@@ -314,7 +314,7 @@ fun SettingsScreen(
 
     fun suggestedBackupFileName(): String {
         val stamp = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-        return "My-Vault-Backup-$stamp.mvbackup"
+        return "FT-Vault-Backup-$stamp.mvbackup"
     }
 
     if (showScreenshotAllowanceDialog) {
@@ -2235,7 +2235,7 @@ private fun AcknowledgementsContent(modifier: Modifier = Modifier) {
             url = "https://coil-kt.github.io/coil/"
         )
         AcknowledgementCard(
-            title = "My Vault · GPL-3.0",
+            title = "FT Vault · GPL-3.0",
             body = stringResource(R.string.ack_my_vault_license),
             icon = Icons.Filled.WorkspacePremium,
             url = "https://github.com/ft-sinan/My-vault-android/blob/main/LICENSE"
@@ -2350,7 +2350,7 @@ private fun SettingsHubHeader(
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "My Vault v${BuildConfig.VERSION_NAME} · " + if (documentCount == 1) {
+            text = "FT Vault v${BuildConfig.VERSION_NAME} · " + if (documentCount == 1) {
                 stringResource(R.string.settings_storage_one)
             } else {
                 stringResource(R.string.settings_storage_many, documentCount)

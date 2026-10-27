@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Ваши удостоверения личности и сертификаты в безопасности в одном месте</string>
     <string name="action_back">Назад</string>
     <string name="action_cancel">Отмена</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Вы можете изменить это позже в настройках.</string>
     <string name="lock_welcome_back">С возвращением, %1$s</string>
     <string name="lock_enter_pin">Введите свой PIN, чтобы разблокировать</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Создайте свой PIN</string>
     <string name="pin_create_subtitle">Выберите 4-значный номер PIN для своего хранилища.\nЗапомните его — его невозможно восстановить.</string>
     <string name="pin_confirm_title">Подтвердите свой PIN</string>
     <string name="pin_confirm_subtitle">Введите тот же PIN еще раз для подтверждения.</string>
     <string name="pin_mismatch">PIN не совпадают. Пожалуйста, начните снова.</string>
     <string name="first_run_backup_question">У вас есть резервная копия?</string>
-    <string name="first_run_backup_subtitle">Если вы использовали My Vault ранее, восстановите файл .mvbackup, чтобы вернуть свои профили и документы.</string>
+    <string name="first_run_backup_subtitle">Если вы использовали FT Vault ранее, восстановите файл .mvbackup, чтобы вернуть свои профили и документы.</string>
     <string name="first_run_restore_backup">Да, восстановить мою резервную копию</string>
     <string name="first_run_restore_backup_subtitle">Выберите файл .mvbackup</string>
     <string name="first_run_create_new_vault">Нет, создать новое хранилище</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Язык</string>
     <string name="settings_wallpaper_colors">Подберите цвета моих обоев</string>
     <string name="settings_wallpaper_colors_subtitle">Material You динамический цвет ваших обоев</string>
-    <string name="settings_wallpaper_colors_unavailable">Требуется Android 12 или новее; используя палитру My Vault</string>
+    <string name="settings_wallpaper_colors_unavailable">Требуется Android 12 или новее; используя палитру FT Vault</string>
     <string name="settings_family">Члены семьи</string>
     <string name="settings_family_subtitle">Добавляйте, редактируйте, переименовывайте и меняйте порядок участников.</string>
     <string name="settings_security">Безопасность</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Создать резервную копию</string>
     <string name="backup_restore">Восстановить резервную копию</string>
     <string name="backup_create_title">Защитите эту резервную копию</string>
-    <string name="backup_create_body">Выберите защиту для этой конкретной резервной копии. Резервный пароль никогда не сохраняется в My Vault.</string>
+    <string name="backup_create_body">Выберите защиту для этой конкретной резервной копии. Резервный пароль никогда не сохраняется в FT Vault.</string>
     <string name="backup_current_pin_body">Подтвердите текущее хранилище PIN, чтобы продолжить.</string>
     <string name="backup_use_password">Используйте пароль</string>
     <string name="backup_use_password_subtitle">Рекомендуется • шифрует файл резервной копии.</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Создание резервной копии…</string>
     <string name="backup_created">Резервная копия создана.</string>
     <string name="backup_share">Резервная копия общего доступа</string>
-    <string name="backup_share_title">Поделиться резервной копией My Vault</string>
+    <string name="backup_share_title">Поделиться резервной копией FT Vault</string>
     <string name="backup_share_no_password_warning">Эта резервная копия не имеет пароля. Делитесь этим только с тем, кому вы полностью доверяете.</string>
     <string name="backup_create_failed">Не удалось создать резервную копию. Пожалуйста, попробуйте еще раз.</string>
     <string name="backup_restore_title">Восстановить резервную копию</string>
-    <string name="backup_restore_password_body">Введите пароль этой резервной копии, чтобы My Vault мог его проверить.</string>
+    <string name="backup_restore_password_body">Введите пароль этой резервной копии, чтобы FT Vault мог его проверить.</string>
     <string name="backup_check">Проверьте резервную копию</string>
     <string name="backup_preparing">Проверка резервной копии…</string>
     <string name="backup_ready_title">Заменить это хранилище?</string>
     <string name="backup_ready_body">Все текущие профили и документы будут заменены содержимым этой резервной копии.</string>
-    <string name="backup_phone_owner_question">Кто будет использовать My Vault на этом телефоне?</string>
+    <string name="backup_phone_owner_question">Кто будет использовать FT Vault на этом телефоне?</string>
     <string name="backup_phone_owner_subtitle">Выберите свой профиль. Все профили и документы будут восстановлены.</string>
     <string name="backup_original_owner">Первоначальный владелец</string>
     <string name="backup_restore_mode_title">Как восстановить эту резервную копию?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Восстановление резервной копии…</string>
     <string name="backup_restored">Резервная копия восстановлена.</string>
     <string name="backup_restore_failed">Не удалось восстановить резервную копию. Ваше текущее хранилище не было изменено.</string>
-    <string name="backup_invalid_file">Это недействительная резервная копия My Vault, или файл поврежден.</string>
+    <string name="backup_invalid_file">Это недействительная резервная копия FT Vault, или файл поврежден.</string>
     <string name="backup_wrong_password">Неправильный резервный пароль.</string>
     <string name="backup_unprotected">Нет защиты паролем</string>
     <string name="backup_password_protected">Защищено паролем</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Использование %1$s на этом устройстве</string>
     <string name="settings_safety_body" formatted="false">• Каждый файл шифруется с помощью AES-256 перед сохранением. \n • Ключ шифрования никогда не покидает безопасное хранилище ключей этого телефона. \n • Ваше хранилище работает в автономном режиме. Приложение использует Интернет только для проверки обновлений при открытии «Настройки» (не чаще одного раза в день) или при проверке вручную; документы никогда не загружаются.\n• Скриншоты и предварительный просмотр последних приложений блокируются.\n• Хранилище блокируется через 1 минуту в фоновом режиме.\n\n⚠️ Важно: если вы забудете свой PIN и биометрические данные перестанут работать, ваши документы невозможно будет восстановить. Сохраните оригиналы документов.</string>
     <string name="pin_wrong">Неверно PIN</string>
-    <string name="biometric_title">Разблокировать My Vault</string>
+    <string name="biometric_title">Разблокировать FT Vault</string>
     <string name="biometric_subtitle">Используйте отпечаток пальца или лицо, чтобы открыть хранилище</string>
     <string name="biometric_use_pin">Используйте PIN</string>
     <string name="pin_biometric_content_description">Разблокировка с помощью отпечатка пальца</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">Пространство для авторов</string>
     <string name="creator_role">Разработан и создан</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">Я создал My Vault для обеспечения конфиденциальности, зашифрования и постоянного хранения семейных документов на устройстве — без учетной записи, без облака и отслеживания.</string>
+    <string name="creator_bio">Я создал FT Vault для обеспечения конфиденциальности, зашифрования и постоянного хранения семейных документов на устройстве — без учетной записи, без облака и отслеживания.</string>
     <string name="creator_badge_creator">Создатель</string>
     <string name="creator_badge_privacy">Конфиденциальность прежде всего</string>
     <string name="creator_connect">Подключиться</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">Не удалось проверить наличие обновлений. Проверьте подключение и повторите попытку.</string>
     <string name="settings_updates_download_failed">Не удалось безопасно загрузить обновление.</string>
     <string name="settings_updates_checksum_failed">Проверка загрузки не удалась, поэтому APK не был открыт.</string>
-    <string name="settings_updates_allow_install">Android требуется разрешение на установку обновлений с My Vault. Нажмите, чтобы открыть настройку, разрешите ее, а затем вернитесь сюда.</string>
+    <string name="settings_updates_allow_install">Android требуется разрешение на установку обновлений с FT Vault. Нажмите, чтобы открыть настройку, разрешите ее, а затем вернитесь сюда.</string>
     <string name="settings_updates_allow_install_action">Разрешить установку</string>
     <string name="settings_updates_release_notes">Примечания к выпуску</string>
     <string name="settings_updates_no_notes">Примечания к выпуску не предоставлены.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Благодарности и лицензии</string>
     <string name="settings_acknowledgements_subtitle">Благодарность людям и проектам с открытым исходным кодом, стоящим за этим приложением.</string>
     <string name="ack_orion_title">Orion Store — вдохновение для дизайна</string>
-    <string name="ack_orion_body">Особая благодарность RookieZ (RookieEnough) и проекту Orion Store за выразительный дизайн интерфейса My Vault. My Vault является независимым проектом, не связанным с Orion Store и не поддерживаемым им.</string>
+    <string name="ack_orion_body">Особая благодарность RookieZ (RookieEnough) и проекту Orion Store за выразительный дизайн интерфейса FT Vault. FT Vault является независимым проектом, не связанным с Orion Store и не поддерживаемым им.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">В комплекте для заголовков по лицензии SIL Open Font License 1.1. Полная лицензия включена в приложение.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">Сканирование документов и распознавание латинского текста обеспечиваются на устройстве компонентами Google ML Kit и Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Загрузка изображений для предварительного просмотра расшифрованных документов, используемая в соответствии с лицензией Apache 2.0.</string>
-    <string name="ack_my_vault_license">Исходный код My Vault распространяется под лицензией GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">Исходный код FT Vault распространяется под лицензией GNU GPL-3.0.</string>
     <string name="ack_open_project">Открыть проект</string>
     <string name="creator_email">Электронная почта</string>
     <string name="creator_website">Веб-сайт</string>

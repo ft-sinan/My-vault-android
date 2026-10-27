@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/readme/hero-dark.svg">
-    <img src="assets/readme/hero-light.svg" alt="My Vault — every family document, safe on your phone" width="100%">
+    <img src="assets/readme/hero-light.svg" alt="FT Vault — every family document, safe on your phone" width="100%">
   </picture>
 </p>
 
@@ -18,6 +18,10 @@
 </p>
 
 <p align="center">
+  <em>Formerly <strong>My Vault</strong> (v1.2.0 and earlier) — same app, same package, same <code>.mvbackup</code> backups, now the first member of the FT app family.</em>
+</p>
+
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/readme/chips-dark.svg">
     <img src="assets/readme/chips-light.svg" alt="Native Kotlin, Jetpack Compose, AES-256-GCM, offline-first, 15 languages, open source" width="980">
@@ -25,8 +29,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ft-sinan/My-vault-android/releases/latest"><img src="https://img.shields.io/github/v/release/ft-sinan/My-vault-android?style=for-the-badge&logo=github&label=Latest%20release&color=173F35&labelColor=C8F169" alt="Latest My Vault release"></a>
-  <a href="https://github.com/ft-sinan/My-vault-android/releases"><img src="https://img.shields.io/github/downloads/ft-sinan/My-vault-android/total?style=for-the-badge&logo=cloud&label=Downloads&color=494BD6&labelColor=DED8FF" alt="Total My Vault downloads"></a>
+  <a href="https://github.com/ft-sinan/My-vault-android/releases/latest"><img src="https://img.shields.io/github/v/release/ft-sinan/My-vault-android?style=for-the-badge&logo=github&label=Latest%20release&color=173F35&labelColor=C8F169" alt="Latest FT Vault release"></a>
+  <a href="https://github.com/ft-sinan/My-vault-android/releases"><img src="https://img.shields.io/github/downloads/ft-sinan/My-vault-android/total?style=for-the-badge&logo=cloud&label=Downloads&color=494BD6&labelColor=DED8FF" alt="Total FT Vault downloads"></a>
   <a href="#get-the-app"><img src="https://img.shields.io/badge/Android-8.0%2B-2E7D4F?style=for-the-badge&logo=android&logoColor=white" alt="Android 8.0 and newer"></a>
 </p>
 
@@ -42,7 +46,7 @@
 <details>
 <summary><b>🔒 The short privacy answer</b></summary>
 
-My Vault keeps your document files on your phone. There is no My Vault account, no advertising SDK and no background document sync.
+FT Vault keeps your document files on your phone. There is no FT Vault account, no advertising SDK and no background document sync.
 
 The only network feature is the **update check** in Settings. It can run when Settings opens—at most once a day—or whenever you tap **Check for updates**. It talks only to GitHub Releases, never uploads document data, and never downloads an update automatically. Backups are created only when you explicitly export a `.mvbackup` file.
 
@@ -58,7 +62,7 @@ The only network feature is the **update check** in Settings. It can run when Se
 <a id="overview"></a>
 ## <img src="assets/readme/shape-1.svg" height="26" align="top" alt=""> Overview
 
-My Vault is a native Android document vault made for families who keep more than one person's important papers on a single phone. Instead of dropping everything into one anonymous folder, it organises documents around **people first**: an owner profile, family-member profiles, and shared groups for the home, vehicle and other household papers.
+FT Vault is a native Android document vault made for families who keep more than one person's important papers on a single phone. Instead of dropping everything into one anonymous folder, it organises documents around **people first**: an owner profile, family-member profiles, and shared groups for the home, vehicle and other household papers.
 
 Store Aadhaar cards, PAN cards, passports, driving licences, SSLC and degree certificates, birth certificates, RC books, insurance and property papers, and any other image or PDF that matters.
 
@@ -80,9 +84,9 @@ At a glance:
   </picture>
 </p>
 
-## <img src="assets/readme/shape-2.svg" height="26" align="top" alt=""> What makes My Vault different
+## <img src="assets/readme/shape-2.svg" height="26" align="top" alt=""> What makes FT Vault different
 
-Most document apps either behave like a generic cloud folder or make a family share one flat list. My Vault is built around how these papers are actually used at home: one phone may hold documents for parents, children, a vehicle and the house, and the right page is often needed quickly.
+Most document apps either behave like a generic cloud folder or make a family share one flat list. FT Vault is built around how these papers are actually used at home: one phone may hold documents for parents, children, a vehicle and the house, and the right page is often needed quickly.
 
 That is why the app keeps the model deliberately small:
 
@@ -151,7 +155,7 @@ The presentation is expressive and friendly; the storage model underneath stays 
 
 ### And a few thoughtful details
 
-- First open is **language → backup choice → PIN → profile**; returning users can restore a `.mvbackup` before creating a PIN for the new phone. Restore asks **“Who will use My Vault on this phone?”** A family member can choose their restored profile as **My profile**, or choose **“I’m not in this backup”** and complete the normal profile setup after creating the phone PIN.
+- First open is **language → backup choice → PIN → profile**; returning users can restore a `.mvbackup` before creating a PIN for the new phone. Restore asks **“Who will use FT Vault on this phone?”** A family member can choose their restored profile as **My profile**, or choose **“I’m not in this backup”** and complete the normal profile setup after creating the phone PIN.
 - Long document titles expand inside the document card, without opening the document.
 - Document numbers are masked until you choose to reveal or copy them.
 - Shared profile-card images include available profile details **except relation**.
@@ -173,18 +177,18 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 <table>
   <tr>
     <td width="33.33%" align="center"><a href="docs/store/screenshots/05-add-document.jpg"><img src="docs/store/screenshots/05-add-document.jpg" alt="Add a document with Scan or File" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="My Vault Home with sample family data" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="My Vault Documents categories with sample data" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/01-home.png"><img src="docs/store/screenshots/01-home.png" alt="FT Vault Home with sample family data" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/02-documents.png"><img src="docs/store/screenshots/02-documents.png" alt="FT Vault Documents categories with sample data" width="100%"></a></td>
   </tr>
   <tr>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="My Vault Family profiles with sample data" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/06-profile.jpg"><img src="docs/store/screenshots/06-profile.jpg" alt="My Vault member profile and documents" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="My Vault backup and restore screen" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/03-family.png"><img src="docs/store/screenshots/03-family.png" alt="FT Vault Family profiles with sample data" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/06-profile.jpg"><img src="docs/store/screenshots/06-profile.jpg" alt="FT Vault member profile and documents" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/04-backup.png"><img src="docs/store/screenshots/04-backup.png" alt="FT Vault backup and restore screen" width="100%"></a></td>
   </tr>
   <tr>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/07-settings.jpg"><img src="docs/store/screenshots/07-settings.jpg" alt="My Vault Settings quick toggles" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/08-appearance.jpg"><img src="docs/store/screenshots/08-appearance.jpg" alt="My Vault Appearance themes and colour palettes" width="100%"></a></td>
-    <td width="33.33%" align="center"><a href="docs/store/screenshots/09-settings-pages.jpg"><img src="docs/store/screenshots/09-settings-pages.jpg" alt="My Vault Settings pages and Creator Space" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/07-settings.jpg"><img src="docs/store/screenshots/07-settings.jpg" alt="FT Vault Settings quick toggles" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/08-appearance.jpg"><img src="docs/store/screenshots/08-appearance.jpg" alt="FT Vault Appearance themes and colour palettes" width="100%"></a></td>
+    <td width="33.33%" align="center"><a href="docs/store/screenshots/09-settings-pages.jpg"><img src="docs/store/screenshots/09-settings-pages.jpg" alt="FT Vault Settings pages and Creator Space" width="100%"></a></td>
   </tr>
 </table>
 
@@ -233,7 +237,7 @@ Real device screenshots from the Orion Store submission, captured with the ficti
 3. Install it on an Android 8.0 or newer phone. Android may ask you to allow installs from your browser or file manager.
 4. On first launch, choose one of the **15 available languages**. If you already have a `.mvbackup`, restore it and choose which restored profile is yours on this phone—or choose **I’m not in this backup**—then create a PIN for this phone and, when needed, complete your profile setup. Otherwise create a new vault, create a PIN, and add at least your name.
 
-My Vault checks GitHub Releases when Settings opens, at most once a day, and shows an **Update available** popup only when a newer version is found. You can also check manually from **Settings → Storage & privacy → App updates → Check for updates**. Nothing downloads until you choose it. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
+FT Vault checks GitHub Releases when Settings opens, at most once a day, and shows an **Update available** popup only when a newer version is found. You can also check manually from **Settings → Storage & privacy → App updates → Check for updates**. Nothing downloads until you choose it. When a release includes a checksum file, the downloaded APK is verified before Android's installer opens.
 
 > **Remember your PIN.** A forgotten PIN is not recoverable by design if biometric unlock also becomes unavailable. Keep your original documents safe.
 
@@ -254,7 +258,7 @@ The ML Kit scanner requires Google Play services. If the scanner cannot open on 
 <table>
   <tr>
     <th align="left">Area</th>
-    <th align="left">How My Vault handles it</th>
+    <th align="left">How FT Vault handles it</th>
   </tr>
   <tr>
     <td><strong>Vault access</strong></td>
@@ -300,7 +304,7 @@ The ML Kit scanner requires Google Play services. If the scanner cannot open on 
 <a id="project-structure"></a>
 ## <img src="assets/readme/shape-8.svg" height="26" align="top" alt=""> How the project is structured
 
-My Vault is a single-activity Jetpack Compose app with a manual dependency container and MVVM-style screens.
+FT Vault is a single-activity Jetpack Compose app with a manual dependency container and MVVM-style screens.
 
 <table>
   <tr>
@@ -389,7 +393,7 @@ Use Android Studio with **JDK 17**, open the repository, let Gradle sync, and ru
 
 Ideas currently being explored:
 
-- **Share to My Vault** from other apps
+- **Share to FT Vault** from other apps
 - **Trash & Undo Delete** for safer cleanup
 - **Smarter Scan Autofill** beyond the current ID-number suggestions
 - **App Icon Shortcuts** for Scan and favourite documents
@@ -409,9 +413,9 @@ For UI work, start in `ui/screens/` and `ui/components/`. For storage or restore
 <a id="acknowledgements"></a>
 ## <img src="assets/readme/shape-2.svg" height="26" align="top" alt=""> Acknowledgements
 
-Special thanks to **[RookieZ / RookieEnough](https://github.com/RookieEnough)** and the **[Orion Store](https://github.com/RookieEnough/Orion-Store)** project. Orion's expressive capsule headers, pastel bento surfaces, floating dock, creator energy and shape-led README presentation helped inspire My Vault's look and feel. My Vault's artwork, copy and implementation are its own.
+Special thanks to **[RookieZ / RookieEnough](https://github.com/RookieEnough)** and the **[Orion Store](https://github.com/RookieEnough/Orion-Store)** project. Orion's expressive capsule headers, pastel bento surfaces, floating dock, creator energy and shape-led README presentation helped inspire FT Vault's look and feel. FT Vault's artwork, copy and implementation are its own.
 
-My Vault is an independent open-source project and is **not affiliated with or endorsed by Orion Store**.
+FT Vault is an independent open-source project and is **not affiliated with or endorsed by Orion Store**.
 
 Other credits:
 
@@ -422,7 +426,7 @@ Other credits:
 
 ## Licence
 
-My Vault is free software licensed under the **GNU General Public License v3.0**. See [`LICENSE`](LICENSE) for the full text.
+FT Vault is free software licensed under the **GNU General Public License v3.0**. See [`LICENSE`](LICENSE) for the full text.
 
 <p align="center">
   <picture>

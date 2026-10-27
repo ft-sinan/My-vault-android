@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Vos preuves d\'identité et certificats, en sécurité au même endroit</string>
     <string name="action_back">Retour</string>
     <string name="action_cancel">Annuler</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Vous pourrez modifier cela ultérieurement dans Paramètres</string>
     <string name="lock_welcome_back">Bienvenue à nouveau, %1$s</string>
     <string name="lock_enter_pin">Entrez votre PIN pour déverrouiller</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Créez votre PIN</string>
     <string name="pin_create_subtitle">Choisissez un PIN à 4 chiffres pour votre coffre-fort.\nMémorisez-le : il ne peut pas être récupéré.</string>
     <string name="pin_confirm_title">Confirmez votre PIN</string>
     <string name="pin_confirm_subtitle">Saisissez à nouveau le même PIN pour confirmer.</string>
     <string name="pin_mismatch">Les codes PIN ne correspondent pas. Veuillez recommencer.</string>
     <string name="first_run_backup_question">Avez-vous une sauvegarde ?</string>
-    <string name="first_run_backup_subtitle">Si vous avez déjà utilisé My Vault, restaurez votre fichier .mvbackup pour récupérer vos profils et documents.</string>
+    <string name="first_run_backup_subtitle">Si vous avez déjà utilisé FT Vault, restaurez votre fichier .mvbackup pour récupérer vos profils et documents.</string>
     <string name="first_run_restore_backup">Oui, restaurer ma sauvegarde</string>
     <string name="first_run_restore_backup_subtitle">Choisissez un fichier .mvbackup</string>
     <string name="first_run_create_new_vault">Non, créez un nouveau coffre-fort</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Langue</string>
     <string name="settings_wallpaper_colors">Faire correspondre les couleurs de mon papier peint</string>
     <string name="settings_wallpaper_colors_subtitle">Material You couleur dynamique de votre fond d\'écran</string>
-    <string name="settings_wallpaper_colors_unavailable">Nécessite Android 12 ou version ultérieure ; en utilisant la palette My Vault</string>
+    <string name="settings_wallpaper_colors_unavailable">Nécessite Android 12 ou version ultérieure ; en utilisant la palette FT Vault</string>
     <string name="settings_family">Membres de la famille</string>
     <string name="settings_family_subtitle">Ajouter, modifier, renommer et réorganiser les membres</string>
     <string name="settings_security">Sécurité</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Créer une sauvegarde</string>
     <string name="backup_restore">Restaurer la sauvegarde</string>
     <string name="backup_create_title">Protéger cette sauvegarde</string>
-    <string name="backup_create_body">Choisissez la protection pour cette sauvegarde spécifique. Un mot de passe de sauvegarde n\'est jamais stocké par My Vault.</string>
+    <string name="backup_create_body">Choisissez la protection pour cette sauvegarde spécifique. Un mot de passe de sauvegarde n\'est jamais stocké par FT Vault.</string>
     <string name="backup_current_pin_body">Confirmez votre coffre-fort actuel PIN pour continuer.</string>
     <string name="backup_use_password">Utiliser un mot de passe</string>
     <string name="backup_use_password_subtitle">Recommandé • chiffre le fichier de sauvegarde</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Création d\'une sauvegarde…</string>
     <string name="backup_created">Sauvegarde créée.</string>
     <string name="backup_share">Partager la sauvegarde</string>
-    <string name="backup_share_title">Partager la sauvegarde My Vault</string>
+    <string name="backup_share_title">Partager la sauvegarde FT Vault</string>
     <string name="backup_share_no_password_warning">Cette sauvegarde n\'a pas de mot de passe. Partagez-le uniquement avec une personne en qui vous avez pleinement confiance.</string>
     <string name="backup_create_failed">Impossible de créer la sauvegarde. Veuillez réessayer.</string>
     <string name="backup_restore_title">Restaurer la sauvegarde</string>
-    <string name="backup_restore_password_body">Saisissez le mot de passe de cette sauvegarde afin que My Vault puisse le vérifier.</string>
+    <string name="backup_restore_password_body">Saisissez le mot de passe de cette sauvegarde afin que FT Vault puisse le vérifier.</string>
     <string name="backup_check">Vérifier la sauvegarde</string>
     <string name="backup_preparing">Vérification de la sauvegarde…</string>
     <string name="backup_ready_title">Remplacer ce coffre-fort ?</string>
     <string name="backup_ready_body">Tous les profils et documents actuels seront remplacés par le contenu de cette sauvegarde.</string>
-    <string name="backup_phone_owner_question">Qui utilisera My Vault sur ce téléphone ?</string>
+    <string name="backup_phone_owner_question">Qui utilisera FT Vault sur ce téléphone ?</string>
     <string name="backup_phone_owner_subtitle">Choisissez votre profil. Tous les profils et documents seront restaurés.</string>
     <string name="backup_original_owner">Propriétaire d\'origine</string>
     <string name="backup_restore_mode_title">Comment restaurer cette sauvegarde ?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Restauration de la sauvegarde…</string>
     <string name="backup_restored">Sauvegarde restaurée.</string>
     <string name="backup_restore_failed">Impossible de restaurer la sauvegarde. Votre coffre-fort actuel n\'a pas été modifié.</string>
-    <string name="backup_invalid_file">Il ne s\'agit pas d\'une sauvegarde My Vault valide ou le fichier est endommagé.</string>
+    <string name="backup_invalid_file">Il ne s\'agit pas d\'une sauvegarde FT Vault valide ou le fichier est endommagé.</string>
     <string name="backup_wrong_password">Mot de passe de sauvegarde incorrect.</string>
     <string name="backup_unprotected">Aucune protection par mot de passe</string>
     <string name="backup_password_protected">Protégé par mot de passe</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Utilisation de %1$s sur cet appareil</string>
     <string name="settings_safety_body" formatted="false">• Chaque fichier est chiffré avec AES-256 avant d\'être enregistré.\n• La clé de chiffrement ne quitte jamais le magasin de clés sécurisé de ce téléphone.\n• Votre coffre-fort fonctionne hors ligne. L\'application utilise Internet uniquement pour vérifier les mises à jour lorsque les paramètres s\'ouvrent (au maximum une fois par jour) ou lorsque vous vérifiez manuellement ; les documents ne sont jamais téléchargés.\n• Les captures d\'écran et les aperçus des applications récentes sont bloqués.\n• Le coffre-fort se verrouille après 1 minute en arrière-plan.\n\n⚠️ Important : si vous oubliez votre PIN et que la biométrie cesse de fonctionner, vos documents ne peuvent pas être récupérés. Conservez également vos documents originaux en sécurité.</string>
     <string name="pin_wrong">Mauvais PIN</string>
-    <string name="biometric_title">Déverrouiller My Vault</string>
+    <string name="biometric_title">Déverrouiller FT Vault</string>
     <string name="biometric_subtitle">Utilisez votre empreinte digitale ou votre visage pour ouvrir votre coffre-fort</string>
     <string name="biometric_use_pin">Utiliser PIN</string>
     <string name="pin_biometric_content_description">Déverrouiller avec empreinte digitale</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">Espace créateur</string>
     <string name="creator_role">Conçu et construit par</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">J\'ai créé My Vault pour que les documents familiaux restent privés, cryptés et toujours sur l\'appareil : pas de compte, pas de cloud, pas de suivi.</string>
+    <string name="creator_bio">J\'ai créé FT Vault pour que les documents familiaux restent privés, cryptés et toujours sur l\'appareil : pas de compte, pas de cloud, pas de suivi.</string>
     <string name="creator_badge_creator">Créateur</string>
     <string name="creator_badge_privacy">La confidentialité avant tout</string>
     <string name="creator_connect">Connecter</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">Impossible de rechercher les mises à jour. Vérifiez votre connexion et réessayez.</string>
     <string name="settings_updates_download_failed">La mise à jour n\'a pas pu être téléchargée en toute sécurité.</string>
     <string name="settings_updates_checksum_failed">La vérification du téléchargement a échoué, donc le APK n\'a pas été ouvert.</string>
-    <string name="settings_updates_allow_install">Android a besoin d\'une autorisation pour installer les mises à jour à partir de My Vault. Appuyez pour ouvrir le paramètre, autorisez-le, puis revenez ici.</string>
+    <string name="settings_updates_allow_install">Android a besoin d\'une autorisation pour installer les mises à jour à partir de FT Vault. Appuyez pour ouvrir le paramètre, autorisez-le, puis revenez ici.</string>
     <string name="settings_updates_allow_install_action">Autoriser les installations</string>
     <string name="settings_updates_release_notes">Notes de version</string>
     <string name="settings_updates_no_notes">Aucune note de version n\'a été fournie.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Remerciements et licences</string>
     <string name="settings_acknowledgements_subtitle">Crédits pour les personnes et les projets open source derrière cette application</string>
     <string name="ack_orion_title">Orion Store — inspiration de conception</string>
-    <string name="ack_orion_body">Un merci spécial à RookieZ (RookieEnough) et au projet Orion Store pour l\'inspiration expressive du design derrière l\'interface de My Vault. My Vault est un projet indépendant et n\'est ni affilié ni approuvé par Orion Store.</string>
+    <string name="ack_orion_body">Un merci spécial à RookieZ (RookieEnough) et au projet Orion Store pour l\'inspiration expressive du design derrière l\'interface de FT Vault. FT Vault est un projet indépendant et n\'est ni affilié ni approuvé par Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Regroupé pour les titres sous la licence SIL Open Font License 1.1. La licence complète est incluse avec l\'application.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">La numérisation de documents et la reconnaissance de texte latin sont fournies sur l\'appareil par les composants Google ML Kit et Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Chargement d\'images pour les aperçus de documents décryptés, utilisé sous licence Apache 2.0.</string>
-    <string name="ack_my_vault_license">Le code source de My Vault est sous licence GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">Le code source de FT Vault est sous licence GNU GPL-3.0.</string>
     <string name="ack_open_project">Ouvrir le projet</string>
     <string name="creator_email">E-mail</string>
     <string name="creator_website">Site Web</string>

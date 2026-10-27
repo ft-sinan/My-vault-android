@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Tus pruebas de identificación y certificados, seguros en un solo lugar</string>
     <string name="action_back">Atrás</string>
     <string name="action_cancel">Cancelar</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Puedes cambiar esto más tarde en Configuración</string>
     <string name="lock_welcome_back">Bienvenido de nuevo, %1$s</string>
     <string name="lock_enter_pin">Ingresa tu PIN para desbloquear</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Crea tu PIN</string>
     <string name="pin_create_subtitle">Elija un PIN de 4 dígitos para su bóveda.\nRecuérdelo: no se puede recuperar.</string>
     <string name="pin_confirm_title">Confirma tu PIN</string>
     <string name="pin_confirm_subtitle">Ingresa el mismo PIN una vez más para confirmar.</string>
     <string name="pin_mismatch">PINlos no coinciden. Por favor, empieza de nuevo.</string>
     <string name="first_run_backup_question">¿Tienes una copia de seguridad?</string>
-    <string name="first_run_backup_subtitle">Si ha utilizado My Vault antes, restaure su archivo .mvbackup para recuperar sus perfiles y documentos.</string>
+    <string name="first_run_backup_subtitle">Si ha utilizado FT Vault antes, restaure su archivo .mvbackup para recuperar sus perfiles y documentos.</string>
     <string name="first_run_restore_backup">Sí, restaurar mi copia de seguridad</string>
     <string name="first_run_restore_backup_subtitle">Elige un archivo .mvbackup</string>
     <string name="first_run_create_new_vault">No, crear una nueva bóveda</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Idioma</string>
     <string name="settings_wallpaper_colors">Combinar los colores de mi fondo de pantalla</string>
     <string name="settings_wallpaper_colors_subtitle">Material You color dinámico desde tu fondo de pantalla</string>
-    <string name="settings_wallpaper_colors_unavailable">Necesita Android 12 o más reciente; usando la paleta My Vault</string>
+    <string name="settings_wallpaper_colors_unavailable">Necesita Android 12 o más reciente; usando la paleta FT Vault</string>
     <string name="settings_family">Familiares</string>
     <string name="settings_family_subtitle">Agregar, editar, renombrar y reordenar miembros</string>
     <string name="settings_security">Seguridad</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Crear copia de seguridad</string>
     <string name="backup_restore">Restaurar copia de seguridad</string>
     <string name="backup_create_title">Proteger esta copia de seguridad</string>
-    <string name="backup_create_body">Elija protección para esta copia de seguridad específica. My Vault nunca almacena una contraseña de respaldo.</string>
+    <string name="backup_create_body">Elija protección para esta copia de seguridad específica. FT Vault nunca almacena una contraseña de respaldo.</string>
     <string name="backup_current_pin_body">Confirma tu bóveda actual PIN para continuar.</string>
     <string name="backup_use_password">Usar una contraseña</string>
     <string name="backup_use_password_subtitle">Recomendado • cifra el archivo de respaldo</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Creando copia de seguridad…</string>
     <string name="backup_created">Copia de seguridad creada.</string>
     <string name="backup_share">Compartir copia de seguridad</string>
-    <string name="backup_share_title">Compartir copia de seguridad de My Vault</string>
+    <string name="backup_share_title">Compartir copia de seguridad de FT Vault</string>
     <string name="backup_share_no_password_warning">Esta copia de seguridad no tiene contraseña. Compártelo solo con alguien en quien confíes plenamente.</string>
     <string name="backup_create_failed">No se pudo crear la copia de seguridad. Por favor inténtalo de nuevo.</string>
     <string name="backup_restore_title">Restaurar copia de seguridad</string>
-    <string name="backup_restore_password_body">Ingresa la contraseña de esta copia de seguridad para que My Vault pueda verificarla.</string>
+    <string name="backup_restore_password_body">Ingresa la contraseña de esta copia de seguridad para que FT Vault pueda verificarla.</string>
     <string name="backup_check">Verificar copia de seguridad</string>
     <string name="backup_preparing">Comprobando copia de seguridad…</string>
     <string name="backup_ready_title">¿Reemplazar esta bóveda?</string>
     <string name="backup_ready_body">Todos los perfiles y documentos actuales serán reemplazados por el contenido de esta copia de seguridad.</string>
-    <string name="backup_phone_owner_question">¿Quién usará My Vault en este teléfono?</string>
+    <string name="backup_phone_owner_question">¿Quién usará FT Vault en este teléfono?</string>
     <string name="backup_phone_owner_subtitle">Elige tu perfil. Todos los perfiles y documentos serán restaurados.</string>
     <string name="backup_original_owner">Propietario original</string>
     <string name="backup_restore_mode_title">¿Cómo se debe restaurar esta copia de seguridad?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Restaurando copia de seguridad…</string>
     <string name="backup_restored">Copia de seguridad restaurada.</string>
     <string name="backup_restore_failed">No se pudo restaurar la copia de seguridad. Su bóveda actual no fue modificada.</string>
-    <string name="backup_invalid_file">Esta no es una copia de seguridad My Vault válida o el archivo está dañado.</string>
+    <string name="backup_invalid_file">Esta no es una copia de seguridad FT Vault válida o el archivo está dañado.</string>
     <string name="backup_wrong_password">Contraseña de respaldo incorrecta.</string>
     <string name="backup_unprotected">Sin protección con contraseña</string>
     <string name="backup_password_protected">Protegido con contraseña</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Usando %1$s en este dispositivo</string>
     <string name="settings_safety_body" formatted="false">• Cada archivo se cifra con AES-256 antes de guardarlo.\n• La clave de cifrado nunca sale del almacén de claves seguro de este teléfono.\n• Su bóveda funciona sin conexión. La aplicación utiliza Internet solo para buscar actualizaciones cuando se abre la Configuración (como máximo una vez al día) o cuando la verifica manualmente; los documentos nunca se cargan.\n• Las capturas de pantalla y las vistas previas de aplicaciones recientes están bloqueadas.\n• La bóveda se bloquea sola después de 1 minuto en segundo plano.\n\n⚠️ Importante: si olvidas tu PIN y los datos biométricos dejan de funcionar, tus documentos no se pueden recuperar. Mantenga sus documentos originales seguros también.</string>
     <string name="pin_wrong">Incorrecto PIN</string>
-    <string name="biometric_title">Desbloquear My Vault</string>
+    <string name="biometric_title">Desbloquear FT Vault</string>
     <string name="biometric_subtitle">Usa tu huella digital o tu rostro para abrir tu bóveda</string>
     <string name="biometric_use_pin">Utilice PIN</string>
     <string name="pin_biometric_content_description">Desbloqueo con huella digital</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">Espacio creador</string>
     <string name="creator_role">Diseñado y construido por</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">Creé My Vault para mantener los documentos familiares privados, cifrados y siempre en el dispositivo: sin cuenta, sin nube, sin seguimiento.</string>
+    <string name="creator_bio">Creé FT Vault para mantener los documentos familiares privados, cifrados y siempre en el dispositivo: sin cuenta, sin nube, sin seguimiento.</string>
     <string name="creator_badge_creator">Creador</string>
     <string name="creator_badge_privacy">Privacidad primero</string>
     <string name="creator_connect">Conectar</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">No se pudo buscar actualizaciones. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="settings_updates_download_failed">La actualización no se pudo descargar de forma segura.</string>
     <string name="settings_updates_checksum_failed">La verificación de descarga falló, por lo que APK no se abrió.</string>
-    <string name="settings_updates_allow_install">Android necesita permiso para instalar actualizaciones desde My Vault. Toque para abrir la configuración, permítala y luego regrese aquí.</string>
+    <string name="settings_updates_allow_install">Android necesita permiso para instalar actualizaciones desde FT Vault. Toque para abrir la configuración, permítala y luego regrese aquí.</string>
     <string name="settings_updates_allow_install_action">Permitir instalaciones</string>
     <string name="settings_updates_release_notes">Notas de la versión</string>
     <string name="settings_updates_no_notes">No se proporcionaron notas de la versión.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Reconocimientos y licencias</string>
     <string name="settings_acknowledgements_subtitle">Créditos para las personas y los proyectos de código abierto detrás de esta aplicación.</string>
     <string name="ack_orion_title">Orion Store — inspiración de diseño</string>
-    <string name="ack_orion_body">Un agradecimiento especial a RookieZ (RookieEnough) y al proyecto Orion Store por la expresiva inspiración del diseño detrás de la interfaz de My Vault. My Vault es un proyecto independiente y no está afiliado ni respaldado por Orion Store.</string>
+    <string name="ack_orion_body">Un agradecimiento especial a RookieZ (RookieEnough) y al proyecto Orion Store por la expresiva inspiración del diseño detrás de la interfaz de FT Vault. FT Vault es un proyecto independiente y no está afiliado ni respaldado por Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Incluido para encabezados bajo la licencia SIL Open Font 1.1. La licencia completa está incluida con la aplicación.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">El escaneo de documentos y el reconocimiento de texto latino se proporcionan en el dispositivo mediante los componentes Google ML Kit y Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Carga de imágenes para vistas previas de documentos descifrados, utilizadas bajo Licencia Apache 2.0.</string>
-    <string name="ack_my_vault_license">El código fuente de My Vault está licenciado bajo GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">El código fuente de FT Vault está licenciado bajo GNU GPL-3.0.</string>
     <string name="ack_open_project">Abrir proyecto</string>
     <string name="creator_email">Correo electrónico</string>
     <string name="creator_website">Sitio web</string>

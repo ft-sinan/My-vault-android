@@ -110,7 +110,7 @@ object BackupCrypto {
         val data = DataInputStream(input)
         val magic = ByteArray(MAGIC.size)
         data.readFully(magic)
-        require(magic.contentEquals(MAGIC)) { "Not a My Vault backup file" }
+        require(magic.contentEquals(MAGIC)) { "Not an FT Vault backup file" }
         val version = data.readUnsignedByte()
         require(version == FORMAT_VERSION) { "Unsupported backup version: $version" }
         val protection = when (data.readUnsignedByte()) {

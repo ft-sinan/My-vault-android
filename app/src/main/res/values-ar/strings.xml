@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">إثباتات الهوية والشهادات الخاصة بك، آمنة في مكان واحد</string>
     <string name="action_back">العودة</string>
     <string name="action_cancel">إلغاء</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">يمكنك تغيير هذا لاحقًا في الإعدادات</string>
     <string name="lock_welcome_back">مرحبًا بعودتك، %1$s</string>
     <string name="lock_enter_pin">أدخل PIN لإلغاء القفل</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">قم بإنشاء PIN الخاص بك</string>
     <string name="pin_create_subtitle">اختر PIN المكون من 4 أرقام لخزنتك.\nتذكره - لا يمكن استرداده.</string>
     <string name="pin_confirm_title">قم بتأكيد PIN الخاص بك</string>
     <string name="pin_confirm_subtitle">أدخل نفس PIN مرة أخرى للتأكيد.</string>
     <string name="pin_mismatch">PIN غير متطابقة. يرجى البدء من جديد.</string>
     <string name="first_run_backup_question">هل لديك نسخة احتياطية؟</string>
-    <string name="first_run_backup_subtitle">إذا كنت قد استخدمت My Vault من قبل، فاستعد ملف .mvbackup لاستعادة ملفات التعريف والمستندات الخاصة بك.</string>
+    <string name="first_run_backup_subtitle">إذا كنت قد استخدمت FT Vault من قبل، فاستعد ملف .mvbackup لاستعادة ملفات التعريف والمستندات الخاصة بك.</string>
     <string name="first_run_restore_backup">نعم، قم باستعادة النسخة الاحتياطية</string>
     <string name="first_run_restore_backup_subtitle">اختر ملف .mvbackup.</string>
     <string name="first_run_create_new_vault">لا، قم بإنشاء مخزن جديد</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">اللغة</string>
     <string name="settings_wallpaper_colors">مطابقة ألوان ورق الحائط الخاص بي</string>
     <string name="settings_wallpaper_colors_subtitle">Material You لون ديناميكي من ورق الحائط الخاص بك</string>
-    <string name="settings_wallpaper_colors_unavailable">يحتاج إلى Android 12 أو أحدث؛ باستخدام لوحة My Vault</string>
+    <string name="settings_wallpaper_colors_unavailable">يحتاج إلى Android 12 أو أحدث؛ باستخدام لوحة FT Vault</string>
     <string name="settings_family">أفراد العائلة</string>
     <string name="settings_family_subtitle">إضافة وتحرير وإعادة تسمية وإعادة ترتيب الأعضاء</string>
     <string name="settings_security">الأمان</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">إنشاء نسخة احتياطية</string>
     <string name="backup_restore">استعادة النسخة الاحتياطية</string>
     <string name="backup_create_title">قم بحماية هذه النسخة الاحتياطية</string>
-    <string name="backup_create_body">اختر الحماية لهذه النسخة الاحتياطية المحددة. لا يتم تخزين كلمة المرور الاحتياطية مطلقًا بواسطة My Vault.</string>
+    <string name="backup_create_body">اختر الحماية لهذه النسخة الاحتياطية المحددة. لا يتم تخزين كلمة المرور الاحتياطية مطلقًا بواسطة FT Vault.</string>
     <string name="backup_current_pin_body">قم بتأكيد خزنتك الحالية PIN للمتابعة.</string>
     <string name="backup_use_password">استخدم كلمة المرور</string>
     <string name="backup_use_password_subtitle">يوصى به • يقوم بتشفير ملف النسخة الاحتياطية</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">جارٍ إنشاء نسخة احتياطية...</string>
     <string name="backup_created">تم إنشاء نسخة احتياطية.</string>
     <string name="backup_share">مشاركة النسخة الاحتياطية</string>
-    <string name="backup_share_title">مشاركة النسخة الاحتياطية My Vault</string>
+    <string name="backup_share_title">مشاركة النسخة الاحتياطية FT Vault</string>
     <string name="backup_share_no_password_warning">لا تحتوي هذه النسخة الاحتياطية على كلمة مرور. شاركها فقط مع شخص تثق به تمامًا.</string>
     <string name="backup_create_failed">تعذر إنشاء النسخة الاحتياطية. يرجى المحاولة مرة أخرى.</string>
     <string name="backup_restore_title">استعادة النسخة الاحتياطية</string>
-    <string name="backup_restore_password_body">أدخل كلمة مرور هذه النسخة الاحتياطية حتى يتمكن My Vault من التحقق منها.</string>
+    <string name="backup_restore_password_body">أدخل كلمة مرور هذه النسخة الاحتياطية حتى يتمكن FT Vault من التحقق منها.</string>
     <string name="backup_check">التحقق من النسخة الاحتياطية</string>
     <string name="backup_preparing">جارٍ التحقق من النسخة الاحتياطية...</string>
     <string name="backup_ready_title">هل تريد استبدال هذا المخزن؟</string>
     <string name="backup_ready_body">سيتم استبدال كافة ملفات التعريف والمستندات الحالية بمحتويات هذه النسخة الاحتياطية.</string>
-    <string name="backup_phone_owner_question">من سيستخدم My Vault على هذا الهاتف؟</string>
+    <string name="backup_phone_owner_question">من سيستخدم FT Vault على هذا الهاتف؟</string>
     <string name="backup_phone_owner_subtitle">اختر ملف التعريف الخاص بك. ستتم استعادة جميع الملفات الشخصية والمستندات.</string>
     <string name="backup_original_owner">المالك الأصلي</string>
     <string name="backup_restore_mode_title">كيف يجب استعادة هذه النسخة الاحتياطية؟</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">استعادة النسخة الاحتياطية...</string>
     <string name="backup_restored">تمت استعادة النسخة الاحتياطية.</string>
     <string name="backup_restore_failed">تعذر استعادة النسخة الاحتياطية. لم يتم تغيير قبو الحالي الخاص بك.</string>
-    <string name="backup_invalid_file">هذه ليست نسخة احتياطية صالحة لـ My Vault، أو أن الملف تالف.</string>
+    <string name="backup_invalid_file">هذه ليست نسخة احتياطية صالحة لـ FT Vault، أو أن الملف تالف.</string>
     <string name="backup_wrong_password">كلمة مرور النسخ الاحتياطي خاطئة.</string>
     <string name="backup_unprotected">لا توجد حماية بكلمة مرور</string>
     <string name="backup_password_protected">محمي بكلمة مرور</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">استخدام %1$s على هذا الجهاز</string>
     <string name="settings_safety_body" formatted="false">• يتم تشفير كل ملف باستخدام AES-256 قبل حفظه.\n• لا يغادر مفتاح التشفير مخزن المفاتيح الآمن لهذا الهاتف أبدًا.\n• يعمل مخزنك دون اتصال بالإنترنت. يستخدم التطبيق الإنترنت فقط للتحقق من التحديثات عند فتح الإعدادات (مرة واحدة يوميًا على الأكثر) أو عند التحقق يدويًا؛ لا يتم تحميل المستندات مطلقًا.\n• يتم حظر لقطات الشاشة ومعاينات التطبيقات الحديثة.\n• يتم قفل القبو تلقائيًا بعد دقيقة واحدة في الخلفية.\n\n⚠️ هام: إذا نسيت PIN وتوقفت القياسات الحيوية عن العمل، فلا يمكن استرداد مستنداتك. حافظ على مستنداتك الأصلية آمنة أيضًا.</string>
     <string name="pin_wrong">خطأ PIN</string>
-    <string name="biometric_title">فتح My Vault</string>
+    <string name="biometric_title">فتح FT Vault</string>
     <string name="biometric_subtitle">استخدم بصمة إصبعك أو وجهك لفتح مخزنك</string>
     <string name="biometric_use_pin">استخدم PIN</string>
     <string name="pin_biometric_content_description">فتح القفل ببصمة الإصبع</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">مساحة المنشئ</string>
     <string name="creator_role">تم تصميمه وبنائه بواسطة</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">لقد صممت My Vault للحفاظ على خصوصية مستندات العائلة، وتشفيرها، وبقائها دائمًا على الجهاز - بدون حساب، ولا سحابة، ولا تتبع.</string>
+    <string name="creator_bio">لقد صممت FT Vault للحفاظ على خصوصية مستندات العائلة، وتشفيرها، وبقائها دائمًا على الجهاز - بدون حساب، ولا سحابة، ولا تتبع.</string>
     <string name="creator_badge_creator">منشئ</string>
     <string name="creator_badge_privacy">الخصوصية أولاً</string>
     <string name="creator_connect">الاتصال</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">تعذر التحقق من وجود تحديثات. تحقق من اتصالك وحاول مرة أخرى.</string>
     <string name="settings_updates_download_failed">لا يمكن تنزيل التحديث بأمان.</string>
     <string name="settings_updates_checksum_failed">فشل التحقق من التنزيل، لذا لم يتم فتح APK.</string>
-    <string name="settings_updates_allow_install">يحتاج Android إلى إذن لتثبيت التحديثات من My Vault. انقر لفتح الإعداد، واسمح له، ثم ارجع إلى هنا.</string>
+    <string name="settings_updates_allow_install">يحتاج Android إلى إذن لتثبيت التحديثات من FT Vault. انقر لفتح الإعداد، واسمح له، ثم ارجع إلى هنا.</string>
     <string name="settings_updates_allow_install_action">السماح بالتثبيت</string>
     <string name="settings_updates_release_notes">ملاحظات الإصدار</string>
     <string name="settings_updates_no_notes">لم يتم تقديم ملاحظات الإصدار.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">الشكر والتقدير والتراخيص</string>
     <string name="settings_acknowledgements_subtitle">أرصدة للأشخاص والمشاريع مفتوحة المصدر التي تقف وراء هذا التطبيق</string>
     <string name="ack_orion_title">Orion Store — إلهام التصميم</string>
-    <string name="ack_orion_body">شكر خاص لـ RookieZ (RookieEnough) ومشروع Orion Store لإلهام التصميم التعبيري وراء واجهة My Vault. My Vault هو مشروع مستقل وليس تابعًا أو معتمدًا لـ Orion Store.</string>
+    <string name="ack_orion_body">شكر خاص لـ RookieZ (RookieEnough) ومشروع Orion Store لإلهام التصميم التعبيري وراء واجهة FT Vault. FT Vault هو مشروع مستقل وليس تابعًا أو معتمدًا لـ Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">مُجمَّعة للعناوين بموجب ترخيص SIL Open Font License 1.1. يتم تضمين الترخيص الكامل مع التطبيق.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">يتم توفير المسح الضوئي للمستندات والتعرف على النص اللاتيني على الجهاز من خلال مكونات Google ML Kit وGoogle Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">تحميل الصور لمعاينات المستندات التي تم فك تشفيرها، المستخدمة بموجب ترخيص Apache 2.0.</string>
-    <string name="ack_my_vault_license">My Vault كود المصدر مرخص بموجب GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">FT Vault كود المصدر مرخص بموجب GNU GPL-3.0.</string>
     <string name="ack_open_project">مشروع مفتوح</string>
     <string name="creator_email">البريد الإلكتروني</string>
     <string name="creator_website">موقع الويب</string>

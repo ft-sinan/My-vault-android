@@ -64,7 +64,7 @@ fun LanguageSelectionScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "My Vault",
+                text = "FT Vault",
                 style = MaterialTheme.typography.displaySmall,
                 textAlign = TextAlign.Center
             )

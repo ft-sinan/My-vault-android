@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="520" viewBox="0 0 1400 520" role="img" aria-labelledby="title desc">
-<title id="title">My Vault — Android family document vault</title>
+<title id="title">FT Vault — Android family document vault</title>
 <desc id="desc">A premium offline-first vault for Indian family IDs and certificates.</desc>
 <defs>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -31,7 +31,7 @@
 <circle cx="54" cy="45" r="5.2" fill="#173F35"/>
 <path d="M49.5 48 H58.5 L61 61 H47 Z" fill="#173F35"/>
 </g>
-<text x="968" y="119" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">My Vault</text>
+<text x="968" y="119" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">FT Vault</text>
 <circle cx="1214" cy="111" r="20" fill="#DED8FF"/>
 <text x="1214" y="119" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="800" fill="#494BD6" text-anchor="middle" opacity="1">A</text>
 <rect x="898" y="158" width="354" height="54" rx="18" fill="#C8F169"/>
@@ -59,7 +59,7 @@
 <!-- Left copy -->
 <rect x="78" y="62" width="422" height="42" rx="21" fill="#173F35"/>
 <text x="289" y="90" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" fill="#F2EFE3" text-anchor="middle" opacity="1" letter-spacing="1">ANDROID FAMILY DOCUMENT VAULT</text>
-<text x="76" y="190" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="900" fill="#17211C" text-anchor="start" opacity="1">My Vault</text>
+<text x="76" y="190" font-family="Arial, Helvetica, sans-serif" font-size="112" font-weight="900" fill="#17211C" text-anchor="start" opacity="1">FT Vault</text>
 <text x="80" y="249" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">Every family document,</text>
 <text x="80" y="298" font-family="Arial, Helvetica, sans-serif" font-size="43" font-weight="800" fill="#17211C" text-anchor="start" opacity="1">safe on your phone.</text>
 <text x="82" y="342" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="400" fill="#536158" text-anchor="start" opacity="1">Aadhaar, PAN, certificates, passports and more —</text>

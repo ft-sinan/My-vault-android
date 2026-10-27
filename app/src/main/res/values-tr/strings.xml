@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Kimlik belgeleriniz ve sertifikalarınız tek bir yerde güvende</string>
     <string name="action_back">Geri</string>
     <string name="action_cancel">İptal</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Bunu daha sonra Ayarlar\'dan değiştirebilirsiniz</string>
     <string name="lock_welcome_back">Tekrar hoş geldiniz, %1$s</string>
     <string name="lock_enter_pin">Kilidi açmak için PIN\'ınızı girin</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">PIN\'ınızı oluşturun</string>
     <string name="pin_create_subtitle">Kasanız için 4 basamaklı bir PIN seçin.\nUnutmayın; kurtarılamaz.</string>
     <string name="pin_confirm_title">PIN\'ınızı onaylayın</string>
     <string name="pin_confirm_subtitle">Onaylamak için aynı PIN\'ı bir kez daha girin.</string>
     <string name="pin_mismatch">PIN\'ler eşleşmiyor. Lütfen yeniden başlayın.</string>
     <string name="first_run_backup_question">Yedeğiniz var mı?</string>
-    <string name="first_run_backup_subtitle">Daha önce My Vault kullandıysanız, profillerinizi ve belgelerinizi geri getirmek için .mvbackup dosyanızı geri yükleyin.</string>
+    <string name="first_run_backup_subtitle">Daha önce FT Vault kullandıysanız, profillerinizi ve belgelerinizi geri getirmek için .mvbackup dosyanızı geri yükleyin.</string>
     <string name="first_run_restore_backup">Evet, yedeklememi geri yükle</string>
     <string name="first_run_restore_backup_subtitle">Bir .mvbackup dosyası seçin</string>
     <string name="first_run_create_new_vault">Hayır, yeni bir kasa oluştur</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Dil</string>
     <string name="settings_wallpaper_colors">Duvar kağıdı renklerimi eşleştir</string>
     <string name="settings_wallpaper_colors_subtitle">Duvar kağıdınızdan Material You dinamik rengi</string>
-    <string name="settings_wallpaper_colors_unavailable">, Android 12 veya daha yenisine ihtiyaç duyar; My Vault paletini kullanarak</string>
+    <string name="settings_wallpaper_colors_unavailable">, Android 12 veya daha yenisine ihtiyaç duyar; FT Vault paletini kullanarak</string>
     <string name="settings_family">Aile üyeleri</string>
     <string name="settings_family_subtitle">Üyeleri ekleyin, düzenleyin, yeniden adlandırın ve yeniden sıralayın</string>
     <string name="settings_security">Güvenlik</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Yedek oluştur</string>
     <string name="backup_restore">Yedeği geri yükle</string>
     <string name="backup_create_title">Bu yedeği koruyun</string>
-    <string name="backup_create_body">Bu özel yedekleme için korumayı seçin. Yedekleme şifresi hiçbir zaman My Vault tarafından saklanmaz.</string>
+    <string name="backup_create_body">Bu özel yedekleme için korumayı seçin. Yedekleme şifresi hiçbir zaman FT Vault tarafından saklanmaz.</string>
     <string name="backup_current_pin_body">Devam etmek için mevcut kasanızı PIN onaylayın.</string>
     <string name="backup_use_password">Bir şifre kullan</string>
     <string name="backup_use_password_subtitle">Önerilen • yedekleme dosyasını şifreler</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Yedekleme oluşturuluyor…</string>
     <string name="backup_created">Yedekleme oluşturuldu.</string>
     <string name="backup_share">Yedeği paylaş</string>
-    <string name="backup_share_title">My Vault yedeklemesini paylaş</string>
+    <string name="backup_share_title">FT Vault yedeklemesini paylaş</string>
     <string name="backup_share_no_password_warning">Bu yedeklemenin şifresi yok. Yalnızca tamamen güvendiğiniz biriyle paylaşın.</string>
     <string name="backup_create_failed">Yedekleme oluşturulamadı. Lütfen tekrar deneyin.</string>
     <string name="backup_restore_title">Yedeği geri yükle</string>
-    <string name="backup_restore_password_body">Bu yedeğin şifresini girin, böylece My Vault bunu doğrulayabilir.</string>
+    <string name="backup_restore_password_body">Bu yedeğin şifresini girin, böylece FT Vault bunu doğrulayabilir.</string>
     <string name="backup_check">Yedeklemeyi kontrol et</string>
     <string name="backup_preparing">Yedekleme kontrol ediliyor…</string>
     <string name="backup_ready_title">Bu kasa değiştirilsin mi?</string>
     <string name="backup_ready_body">Mevcut tüm profiller ve belgeler bu yedeklemenin içeriğiyle değiştirilecek.</string>
-    <string name="backup_phone_owner_question">Bu telefonda My Vault\'ı kim kullanacak?</string>
+    <string name="backup_phone_owner_question">Bu telefonda FT Vault\'ı kim kullanacak?</string>
     <string name="backup_phone_owner_subtitle">Profilinizi seçin. Tüm profiller ve belgeler geri yüklenecektir.</string>
     <string name="backup_original_owner">Orijinal sahibi</string>
     <string name="backup_restore_mode_title">Bu yedekleme nasıl geri yüklenmelidir?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Yedekleme geri yükleniyor…</string>
     <string name="backup_restored">Yedekleme geri yüklendi.</string>
     <string name="backup_restore_failed">Yedekleme geri yüklenemedi. Mevcut kasanız değişmedi.</string>
-    <string name="backup_invalid_file">Bu geçerli bir My Vault yedeklemesi değil veya dosya hasarlı.</string>
+    <string name="backup_invalid_file">Bu geçerli bir FT Vault yedeklemesi değil veya dosya hasarlı.</string>
     <string name="backup_wrong_password">Yanlış yedekleme şifresi.</string>
     <string name="backup_unprotected">Şifre koruması yok</string>
     <string name="backup_password_protected">Şifre korumalı</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Bu cihazda %1$s kullanılıyor</string>
     <string name="settings_safety_body" formatted="false">• Her dosya kaydedilmeden önce AES-256 ile şifrelenir.\n• Şifreleme anahtarı bu telefonun güvenli anahtar deposundan asla ayrılmaz.\n• Kasanız çevrimdışı çalışır. Uygulama interneti yalnızca Ayarlar açıldığında (en fazla günde bir kez) veya manuel olarak kontrol ettiğinizde güncellemeleri kontrol etmek için kullanır; belgeler hiçbir zaman yüklenmez.\n• Ekran görüntüleri ve son uygulamaların önizlemeleri engellenir.\n• Kasa, arka planda 1 dakika sonra kendini kilitler.\n\n⚠️ Önemli: PIN cihazınızı unutursanız ve biyometrik verileriniz çalışmayı durdurursa, belgeleriniz kurtarılamaz. Orijinal belgelerinizi de güvende tutun.</string>
     <string name="pin_wrong">Yanlış PIN</string>
-    <string name="biometric_title">My Vault kilidini aç</string>
+    <string name="biometric_title">FT Vault kilidini aç</string>
     <string name="biometric_subtitle">Kasanızı açmak için parmak izinizi veya yüzünüzü kullanın</string>
     <string name="biometric_use_pin">PIN kullanın</string>
     <string name="pin_biometric_content_description">Parmak iziyle kilidi açın</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">İçerik oluşturucu alanı</string>
     <string name="creator_role">Tarafından tasarlandı ve üretildi</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">Aile belgelerini gizli, şifreli ve her zaman cihazda tutmak için My Vault\'ı geliştirdim; hesap yok, bulut yok, izleme yok.</string>
+    <string name="creator_bio">Aile belgelerini gizli, şifreli ve her zaman cihazda tutmak için FT Vault\'ı geliştirdim; hesap yok, bulut yok, izleme yok.</string>
     <string name="creator_badge_creator">Yaratıcı</string>
     <string name="creator_badge_privacy">Önce gizlilik</string>
     <string name="creator_connect">Bağlan</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">Güncellemeler kontrol edilemedi. Bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="settings_updates_download_failed">Güncelleme güvenli bir şekilde indirilemedi.</string>
     <string name="settings_updates_checksum_failed">İndirme doğrulaması başarısız olduğundan APK açılmadı.</string>
-    <string name="settings_updates_allow_install">Android\'in, My Vault\'dan güncellemeleri yüklemek için izne ihtiyacı var. Ayarı açmak için dokunun, izin verin ve buraya geri dönün.</string>
+    <string name="settings_updates_allow_install">Android\'in, FT Vault\'dan güncellemeleri yüklemek için izne ihtiyacı var. Ayarı açmak için dokunun, izin verin ve buraya geri dönün.</string>
     <string name="settings_updates_allow_install_action">Yüklemelere izin ver</string>
     <string name="settings_updates_release_notes">Sürüm notları</string>
     <string name="settings_updates_no_notes">Hiçbir sürüm notu sağlanmadı.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Teşekkür ve lisanslar</string>
     <string name="settings_acknowledgements_subtitle">Bu uygulamanın arkasındaki kişilere ve açık kaynak projelerine teşekkür ederiz</string>
     <string name="ack_orion_title">Orion Store — tasarım ilhamı</string>
-    <string name="ack_orion_body">RookieZ (RookieEnough) ve Orion Store projesine, My Vault arayüzünün ardındaki etkileyici tasarım ilhamı için özel teşekkürler. My Vault bağımsız bir projedir ve Orion Store\'e bağlı değildir veya tarafından desteklenmemektedir.</string>
+    <string name="ack_orion_body">RookieZ (RookieEnough) ve Orion Store projesine, FT Vault arayüzünün ardındaki etkileyici tasarım ilhamı için özel teşekkürler. FT Vault bağımsız bir projedir ve Orion Store\'e bağlı değildir veya tarafından desteklenmemektedir.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">SIL Açık Yazı Tipi Lisansı 1.1 kapsamındaki başlıklar için paketlenmiştir. Tam lisans uygulamaya dahildir.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">Belge tarama ve Latince metin tanıma, cihaz üzerinde Google ML Kit ve Google Play services bileşenleri tarafından sağlanır.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Apache Lisansı 2.0 kapsamında kullanılan, şifresi çözülmüş belge önizlemeleri için resim yükleme.</string>
-    <string name="ack_my_vault_license">My Vault kaynak kodu GNU GPL-3.0 kapsamında lisanslanmıştır.</string>
+    <string name="ack_my_vault_license">FT Vault kaynak kodu GNU GPL-3.0 kapsamında lisanslanmıştır.</string>
     <string name="ack_open_project">Projeyi aç</string>
     <string name="creator_email">E-posta</string>
     <string name="creator_website">Web sitesi</string>

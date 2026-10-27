@@ -1,4 +1,4 @@
-# My Vault — Orion Store listing assets
+# FT Vault — Orion Store listing assets
 
 The screenshots in this folder are the real device captures supplied with the Orion Store submission in [Orion-Data issue #2185](https://github.com/RookieEnough/Orion-Data/issues/2185), fetched into this repository and used as submitted. They show the fictional sample vault only; no real documents or ID numbers are shown. The first four files keep their original PNG paths so their repository URLs do not change, and the remaining five captures are kept as the submitted JPEGs.
 
@@ -34,11 +34,11 @@ The reusable Shield Keyhole source is in [`icon.svg`](icon.svg).
 
 ## Current Orion submission
 
-My Vault was submitted through Orion Store's in-app **Add/Submit App** flow. The generated request is tracked in [RookieEnough/Orion-Data issue #2185](https://github.com/RookieEnough/Orion-Data/issues/2185); check that issue for the live review status. Do not create a duplicate submission or manually rewrite the generated body unless an Orion maintainer asks for a correction.
+The app was submitted as **My Vault Android** through Orion Store's in-app **Add/Submit App** flow, and was renamed to **FT Vault** in v1.3.0. The generated request is tracked in [RookieEnough/Orion-Data issue #2185](https://github.com/RookieEnough/Orion-Data/issues/2185); check that issue for the live review status. Do not create a duplicate submission or manually rewrite the generated body unless an Orion maintainer asks for a correction; the listing name can be updated by the maintainer when the submission is reviewed.
 
 | Field | Submitted value |
 | --- | --- |
-| Name | My Vault Android |
+| Name | FT Vault Android (submitted as: My Vault Android) |
 | ID | `my-vault-android` |
 | Package | `com.ftsinan.myvault` |
 | GitHub repo | `ft-sinan/My-vault-android` |
@@ -71,11 +71,11 @@ Offline-first encrypted family document vault for Indian IDs and certificates.
 
 ## Full description
 
-My Vault is an offline-first Android document vault built for Indian family IDs and certificates. Store Aadhaar, PAN, passports, driving licences, SSLC/degree certificates, vehicle and property documents, and other important papers for each family member.
+FT Vault is an offline-first Android document vault built for Indian family IDs and certificates. Store Aadhaar, PAN, passports, driving licences, SSLC/degree certificates, vehicle and property documents, and other important papers for each family member.
 
 Documents can be added by multi-page ML Kit scanning or by choosing an image/PDF file. On-device OCR suggests Aadhaar, PAN and Driving Licence numbers for review before saving. Document pages and profile photos are encrypted on the device with AES-256-GCM using Android Keystore, and the vault is protected by a PIN with optional biometric unlock.
 
-My Vault also includes 15 languages—English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian—plus family profiles, personal and shared document groups, search and favourites, clean profile-card sharing, and portable `.mvbackup` backup files. Each backup can use a PBKDF2/AES-256-GCM password or be explicitly created without one after a warning.
+FT Vault also includes 15 languages—English, Malayalam, Hindi, Spanish, French, Arabic, Russian, Brazilian Portuguese, Simplified Chinese, Indonesian, German, Japanese, Korean, Turkish, and Italian—plus family profiles, personal and shared document groups, search and favourites, clean profile-card sharing, and portable `.mvbackup` backup files. Each backup can use a PBKDF2/AES-256-GCM password or be explicitly created without one after a warning.
 
 No account. No ads. No document upload. The only network feature is a GitHub Releases update check when Settings opens (at most once a day) or when the user checks manually; updates never download automatically.
 

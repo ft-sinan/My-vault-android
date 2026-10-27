@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">आपके आईडी प्रूफ़ और प्रमाणपत्र, एक ही स्थान पर सुरक्षित</string>
     <string name="action_back">वापस</string>
     <string name="action_cancel">रद्द करें</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">आप इसे बाद में सेटिंग में बदल सकते हैं</string>
     <string name="lock_welcome_back">पुनः स्वागत है, %1$s</string>
     <string name="lock_enter_pin">अनलॉक करने के लिए अपना PIN दर्ज करें</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">अपना PIN बनाएं</string>
     <string name="pin_create_subtitle">अपनी तिजोरी के लिए 4-अंकीय PIN चुनें। \nइसे याद रखें - इसे पुनर्प्राप्त नहीं किया जा सकता है।</string>
     <string name="pin_confirm_title">अपने PIN की पुष्टि करें</string>
     <string name="pin_confirm_subtitle">पुष्टि करने के लिए एक बार फिर वही PIN दर्ज करें।</string>
     <string name="pin_mismatch">PINs मेल नहीं खाते। कृपया पुनः प्रारंभ करें.</string>
     <string name="first_run_backup_question">क्या आपके पास बैकअप है?</string>
-    <string name="first_run_backup_subtitle">यदि आपने पहले My Vault का उपयोग किया है, तो अपनी प्रोफ़ाइल और दस्तावेज़ वापस लाने के लिए अपनी .mvbackup फ़ाइल को पुनर्स्थापित करें।</string>
+    <string name="first_run_backup_subtitle">यदि आपने पहले FT Vault का उपयोग किया है, तो अपनी प्रोफ़ाइल और दस्तावेज़ वापस लाने के लिए अपनी .mvbackup फ़ाइल को पुनर्स्थापित करें।</string>
     <string name="first_run_restore_backup">हाँ, मेरा बैकअप पुनर्स्थापित करें</string>
     <string name="first_run_restore_backup_subtitle">एक .mvbackup फ़ाइल चुनें</string>
     <string name="first_run_create_new_vault">नहीं, एक नई तिजोरी बनाएं</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">भाषा</string>
     <string name="settings_wallpaper_colors">मेरे वॉलपेपर के रंगों का मिलान करें</string>
     <string name="settings_wallpaper_colors_subtitle">Material You आपके वॉलपेपर से गतिशील रंग</string>
-    <string name="settings_wallpaper_colors_unavailable">आवश्यकता है Android 12 या नया; My Vault पैलेट का उपयोग करना</string>
+    <string name="settings_wallpaper_colors_unavailable">आवश्यकता है Android 12 या नया; FT Vault पैलेट का उपयोग करना</string>
     <string name="settings_family">परिवार के सदस्य</string>
     <string name="settings_family_subtitle">सदस्यों को जोड़ें, संपादित करें, नाम बदलें और पुनः व्यवस्थित करें</string>
     <string name="settings_security">सुरक्षा</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">बैकअप बनाएं</string>
     <string name="backup_restore">बैकअप पुनर्स्थापित करें</string>
     <string name="backup_create_title">इस बैकअप को सुरक्षित रखें</string>
-    <string name="backup_create_body">इस विशिष्ट बैकअप के लिए सुरक्षा चुनें. बैकअप पासवर्ड कभी भी My Vault द्वारा संग्रहीत नहीं किया जाता है।</string>
+    <string name="backup_create_body">इस विशिष्ट बैकअप के लिए सुरक्षा चुनें. बैकअप पासवर्ड कभी भी FT Vault द्वारा संग्रहीत नहीं किया जाता है।</string>
     <string name="backup_current_pin_body">जारी रखने के लिए अपने वर्तमान वॉल्ट PIN की पुष्टि करें।</string>
     <string name="backup_use_password">पासवर्ड का प्रयोग करें</string>
     <string name="backup_use_password_subtitle">अनुशंसित • बैकअप फ़ाइल को एन्क्रिप्ट करता है</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">बैकअप बनाया जा रहा है...</string>
     <string name="backup_created">बैकअप बनाया गया.</string>
     <string name="backup_share">बैकअप साझा करें</string>
-    <string name="backup_share_title">My Vault बैकअप साझा करें</string>
+    <string name="backup_share_title">FT Vault बैकअप साझा करें</string>
     <string name="backup_share_no_password_warning">इस बैकअप में कोई पासवर्ड नहीं है. इसे केवल उसी व्यक्ति के साथ साझा करें जिस पर आपको पूरा भरोसा है।</string>
     <string name="backup_create_failed">बैकअप नहीं बनाया जा सका. कृपया पुन: प्रयास करें।</string>
     <string name="backup_restore_title">बैकअप बहाल</string>
-    <string name="backup_restore_password_body">इस बैकअप का पासवर्ड दर्ज करें ताकि My Vault इसे सत्यापित कर सके।</string>
+    <string name="backup_restore_password_body">इस बैकअप का पासवर्ड दर्ज करें ताकि FT Vault इसे सत्यापित कर सके।</string>
     <string name="backup_check">बैकअप जांचें</string>
     <string name="backup_preparing">बैकअप जाँच रहा है...</string>
     <string name="backup_ready_title">इस तिजोरी को बदलें?</string>
     <string name="backup_ready_body">सभी मौजूदा प्रोफ़ाइल और दस्तावेज़ इस बैकअप की सामग्री से बदल दिए जाएंगे।</string>
-    <string name="backup_phone_owner_question">इस फ़ोन पर My Vault का उपयोग कौन करेगा?</string>
+    <string name="backup_phone_owner_question">इस फ़ोन पर FT Vault का उपयोग कौन करेगा?</string>
     <string name="backup_phone_owner_subtitle">अपनी प्रोफ़ाइल चुनें. सभी प्रोफ़ाइल और दस्तावेज़ पुनर्स्थापित कर दिए जाएंगे.</string>
     <string name="backup_original_owner">मूल स्वामी</string>
     <string name="backup_restore_mode_title">इस बैकअप को कैसे पुनर्स्थापित किया जाना चाहिए?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">बैकअप बहाल किया जा रहा है...</string>
     <string name="backup_restored">बैकअप पुनर्स्थापित किया गया.</string>
     <string name="backup_restore_failed">बैकअप पुनर्स्थापित नहीं किया जा सका। आपकी वर्तमान तिजोरी नहीं बदली गई थी.</string>
-    <string name="backup_invalid_file">यह वैध My Vault बैकअप नहीं है, या फ़ाइल क्षतिग्रस्त है।</string>
+    <string name="backup_invalid_file">यह वैध FT Vault बैकअप नहीं है, या फ़ाइल क्षतिग्रस्त है।</string>
     <string name="backup_wrong_password">ग़लत बैकअप पासवर्ड.</string>
     <string name="backup_unprotected">कोई पासवर्ड सुरक्षा नहीं</string>
     <string name="backup_password_protected">पासवर्ड सुरक्षित</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">इस डिवाइस पर %1$s का उपयोग कर रहे हैं</string>
     <string name="settings_safety_body" formatted="false">• प्रत्येक फ़ाइल को सहेजने से पहले AES-256 से एन्क्रिप्ट किया जाता है।\n• एन्क्रिप्शन कुंजी इस फ़ोन के सुरक्षित कीस्टोर को कभी नहीं छोड़ती।\n• आपका वॉल्ट ऑफ़लाइन काम करता है। ऐप इंटरनेट का उपयोग केवल तब करता है जब Settings खुलती है (दिन में अधिकतम एक बार) या जब आप मैन्युअल रूप से अपडेट जांचते हैं; दस्तावेज़ कभी अपलोड नहीं किए जाते।\n• स्क्रीनशॉट और हाल के ऐप्स की झलक अवरुद्ध हैं।\n• पृष्ठभूमि में 1 मिनट के बाद वॉल्ट अपने आप लॉक हो जाता है।\n\n⚠️ महत्वपूर्ण: यदि आप अपना PIN भूल जाते हैं और बायोमेट्रिक्स काम करना बंद कर देते हैं, तो आपके दस्तावेज़ पुनर्प्राप्त नहीं किए जा सकते। अपने मूल दस्तावेज़ भी सुरक्षित रखें।</string>
     <string name="pin_wrong">गलत PIN</string>
-    <string name="biometric_title">अनलॉक करें My Vault</string>
+    <string name="biometric_title">अनलॉक करें FT Vault</string>
     <string name="biometric_subtitle">अपनी तिजोरी खोलने के लिए अपने फिंगरप्रिंट या चेहरे का उपयोग करें</string>
     <string name="biometric_use_pin">PIN का प्रयोग करें</string>
     <string name="pin_biometric_content_description">फ़िंगरप्रिंट से अनलॉक करें</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">निर्माता स्थान</string>
     <string name="creator_role">द्वारा डिज़ाइन और निर्मित</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">मैंने पारिवारिक दस्तावेज़ों को निजी, एन्क्रिप्टेड और हमेशा डिवाइस पर रखने के लिए My Vault बनाया - कोई खाता नहीं, कोई क्लाउड नहीं, कोई ट्रैकिंग नहीं।</string>
+    <string name="creator_bio">मैंने पारिवारिक दस्तावेज़ों को निजी, एन्क्रिप्टेड और हमेशा डिवाइस पर रखने के लिए FT Vault बनाया - कोई खाता नहीं, कोई क्लाउड नहीं, कोई ट्रैकिंग नहीं।</string>
     <string name="creator_badge_creator">निर्माता</string>
     <string name="creator_badge_privacy">गोपनीयता पहले</string>
     <string name="creator_connect">जोड़ना</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">अद्यतनों की जाँच नहीं की जा सकी. अपना कनेक्शन जांचें और पुनः प्रयास करें।</string>
     <string name="settings_updates_download_failed">अपडेट सुरक्षित रूप से डाउनलोड नहीं किया जा सका।</string>
     <string name="settings_updates_checksum_failed">डाउनलोड सत्यापन विफल रहा, इसलिए APK नहीं खोला गया।</string>
-    <string name="settings_updates_allow_install">Android को My Vault से अपडेट इंस्टॉल करने की अनुमति की आवश्यकता है। सेटिंग खोलने के लिए टैप करें, इसकी अनुमति दें, फिर यहां वापस आएं।</string>
+    <string name="settings_updates_allow_install">Android को FT Vault से अपडेट इंस्टॉल करने की अनुमति की आवश्यकता है। सेटिंग खोलने के लिए टैप करें, इसकी अनुमति दें, फिर यहां वापस आएं।</string>
     <string name="settings_updates_allow_install_action">इंस्टॉल की अनुमति दें</string>
     <string name="settings_updates_release_notes">रिलीज नोट्स</string>
     <string name="settings_updates_no_notes">कोई रिलीज़ नोट उपलब्ध नहीं कराया गया.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">स्वीकृतियां एवं लाइसेंस</string>
     <string name="settings_acknowledgements_subtitle">इस ऐप के पीछे के लोगों और ओपन-सोर्स प्रोजेक्ट्स को श्रेय</string>
     <string name="ack_orion_title">Orion Store — डिज़ाइन प्रेरणा</string>
-    <string name="ack_orion_body">My Vault के इंटरफ़ेस के पीछे अभिव्यंजक डिज़ाइन प्रेरणा के लिए RookieZ (RookieEnough) और Orion Store प्रोजेक्ट को विशेष धन्यवाद। My Vault एक स्वतंत्र परियोजना है और यह Orion Store से संबद्ध या समर्थित नहीं है।</string>
+    <string name="ack_orion_body">FT Vault के इंटरफ़ेस के पीछे अभिव्यंजक डिज़ाइन प्रेरणा के लिए RookieZ (RookieEnough) और Orion Store प्रोजेक्ट को विशेष धन्यवाद। FT Vault एक स्वतंत्र परियोजना है और यह Orion Store से संबद्ध या समर्थित नहीं है।</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">एसआईएल ओपन फॉन्ट लाइसेंस 1.1 के तहत शीर्षकों के लिए बंडल किया गया। ऐप के साथ पूरा लाइसेंस शामिल है।</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">दस्तावेज़ स्कैनिंग और लैटिन टेक्स्ट पहचान Google ML Kit और Google Play services घटकों द्वारा डिवाइस पर प्रदान की जाती है।</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">डिक्रिप्टेड दस्तावेज़ पूर्वावलोकन के लिए छवि लोडिंग, अपाचे लाइसेंस 2.0 के तहत उपयोग की जाती है।</string>
-    <string name="ack_my_vault_license">My Vault स्रोत कोड को GNU GPL-3.0 के अंतर्गत लाइसेंस प्राप्त है।</string>
+    <string name="ack_my_vault_license">FT Vault स्रोत कोड को GNU GPL-3.0 के अंतर्गत लाइसेंस प्राप्त है।</string>
     <string name="ack_open_project">ओपन प्रोजेक्ट</string>
     <string name="creator_email">ईमेल</string>
     <string name="creator_website">वेबसाइट</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">身分証明書と証明書を 1 か所に保管</string>
     <string name="action_back">戻る</string>
     <string name="action_cancel">キャンセル</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">これは後で [設定] で変更できます</string>
     <string name="lock_welcome_back">おかえりなさい、%1$s</string>
     <string name="lock_enter_pin">ロックを解除するには PIN を入力してください</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">PIN を作成します</string>
     <string name="pin_create_subtitle">保管庫に 4 桁の PIN を選択してください。\n覚えておいてください。復元することはできません。</string>
     <string name="pin_confirm_title">PIN を確認してください</string>
     <string name="pin_confirm_subtitle">確認のため、同じ PIN をもう一度入力します。</string>
     <string name="pin_mismatch">PIN は一致しません。もう一度始めてください。</string>
     <string name="first_run_backup_question">バックアップはありますか?</string>
-    <string name="first_run_backup_subtitle">以前に My Vault を使用したことがある場合は、.mvbackup ファイルを復元してプロファイルとドキュメントを戻してください。</string>
+    <string name="first_run_backup_subtitle">以前に FT Vault を使用したことがある場合は、.mvbackup ファイルを復元してプロファイルとドキュメントを戻してください。</string>
     <string name="first_run_restore_backup">はい、バックアップを復元します</string>
     <string name="first_run_restore_backup_subtitle">.mvbackup ファイルを選択してください</string>
     <string name="first_run_create_new_vault">いいえ、新しいコンテナーを作成します</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">言語</string>
     <string name="settings_wallpaper_colors">壁紙の色に合わせてください</string>
     <string name="settings_wallpaper_colors_subtitle">Material You 壁紙の動的カラー</string>
-    <string name="settings_wallpaper_colors_unavailable">Android 12 以降が必要です。 My Vaultパレットの使用</string>
+    <string name="settings_wallpaper_colors_unavailable">Android 12 以降が必要です。 FT Vaultパレットの使用</string>
     <string name="settings_family">家族</string>
     <string name="settings_family_subtitle">メンバーの追加、編集、名前変更、並べ替え</string>
     <string name="settings_security">セキュリティ</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">バックアップの作成</string>
     <string name="backup_restore">バックアップの復元</string>
     <string name="backup_create_title">このバックアップを保護します</string>
-    <string name="backup_create_body">この特定のバックアップの保護を選択します。バックアップ パスワードは My Vault によって保存されることはありません。</string>
+    <string name="backup_create_body">この特定のバックアップの保護を選択します。バックアップ パスワードは FT Vault によって保存されることはありません。</string>
     <string name="backup_current_pin_body">続行するには、現在のコンテナー PIN を確認してください。</string>
     <string name="backup_use_password">パスワードを使用する</string>
     <string name="backup_use_password_subtitle">推奨 • バックアップ ファイルを暗号化する</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">バックアップを作成しています…</string>
     <string name="backup_created">バックアップが作成されました。</string>
     <string name="backup_share">共有バックアップ</string>
-    <string name="backup_share_title">共有 My Vault バックアップ</string>
+    <string name="backup_share_title">共有 FT Vault バックアップ</string>
     <string name="backup_share_no_password_warning">このバックアップにはパスワードがありません。完全に信頼できる人とのみ共有してください。</string>
     <string name="backup_create_failed">バックアップを作成できませんでした。もう一度試してください。</string>
     <string name="backup_restore_title">バックアップの復元</string>
-    <string name="backup_restore_password_body">My Vault が確認できるように、このバックアップのパスワードを入力してください。</string>
+    <string name="backup_restore_password_body">FT Vault が確認できるように、このバックアップのパスワードを入力してください。</string>
     <string name="backup_check">バックアップの確認</string>
     <string name="backup_preparing">バックアップをチェックしています…</string>
     <string name="backup_ready_title">このボールトを置き換えますか?</string>
     <string name="backup_ready_body">現在のプロファイルとドキュメントはすべて、このバックアップの内容に置き換えられます。</string>
-    <string name="backup_phone_owner_question">この電話で My Vault を使用するのは誰ですか?</string>
+    <string name="backup_phone_owner_question">この電話で FT Vault を使用するのは誰ですか?</string>
     <string name="backup_phone_owner_subtitle">プロフィールを選択してください。すべてのプロファイルとドキュメントが復元されます。</string>
     <string name="backup_original_owner">元の所有者</string>
     <string name="backup_restore_mode_title">このバックアップはどのように復元すればよいですか?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">バックアップを復元しています…</string>
     <string name="backup_restored">バックアップが復元されました。</string>
     <string name="backup_restore_failed">バックアップを復元できませんでした。現在のボールトは変更されていません。</string>
-    <string name="backup_invalid_file">これは有効な My Vault バックアップではないか、ファイルが破損しています。</string>
+    <string name="backup_invalid_file">これは有効な FT Vault バックアップではないか、ファイルが破損しています。</string>
     <string name="backup_wrong_password">バックアップパスワードが間違っています。</string>
     <string name="backup_unprotected">パスワード保護なし</string>
     <string name="backup_password_protected">パスワードで保護されています</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">このデバイスで %1$s を使用する</string>
     <string name="settings_safety_body" formatted="false">• すべてのファイルは保存前に AES-256 で暗号化されます。\n• 暗号化キーがこの携帯電話の安全なキーストアから離れることはありません。\n• 保管庫はオフラインで動作します。アプリは、設定を開いたとき (最大で 1 日に 1 回)、または手動で確認するときにのみインターネットを使用して更新を確認します。ドキュメントはアップロードされません。\n• スクリーンショットと最近使用したアプリのプレビューはブロックされます。\n• バックグラウンドで 1 分後に金庫が自動的にロックされます。\n\n⚠️ 重要: PIN を忘れて生体認証が機能しなくなった場合、ドキュメントは復元できません。原本の書類も安全に保管してください。</string>
     <string name="pin_wrong">間違っています PIN</string>
-    <string name="biometric_title">ロックを解除 My Vault</string>
+    <string name="biometric_title">ロックを解除 FT Vault</string>
     <string name="biometric_subtitle">指紋または顔を使用して金庫を開けます</string>
     <string name="biometric_use_pin">PIN を使用します</string>
     <string name="pin_biometric_content_description">指紋によるロック解除</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">クリエイタースペース</string>
     <string name="creator_role">によって設計および構築されました</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">私は家族のドキュメントをプライベートに保ち、暗号化し、常にデバイス上に保存するために My Vault を構築しました。アカウントもクラウドも追跡も必要ありません。</string>
+    <string name="creator_bio">私は家族のドキュメントをプライベートに保ち、暗号化し、常にデバイス上に保存するために FT Vault を構築しました。アカウントもクラウドも追跡も必要ありません。</string>
     <string name="creator_badge_creator">作成者</string>
     <string name="creator_badge_privacy">プライバシーを第一に</string>
     <string name="creator_connect">接続する</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">アップデートをチェックできませんでした。接続を確認して、もう一度試してください。</string>
     <string name="settings_updates_download_failed">アップデートを安全にダウンロードできませんでした。</string>
     <string name="settings_updates_checksum_failed">ダウンロードの検証に失敗したため、APK は開かれませんでした。</string>
-    <string name="settings_updates_allow_install">Android には My Vault からアップデートをインストールする権限が必要です。タップして設定を開き、許可してからここに戻ります。</string>
+    <string name="settings_updates_allow_install">Android には FT Vault からアップデートをインストールする権限が必要です。タップして設定を開き、許可してからここに戻ります。</string>
     <string name="settings_updates_allow_install_action">インストールを許可する</string>
     <string name="settings_updates_release_notes">リリースノート</string>
     <string name="settings_updates_no_notes">リリース ノートは提供されていません。</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">謝辞とライセンス</string>
     <string name="settings_acknowledgements_subtitle">このアプリの背後にある人々とオープンソース プロジェクトのクレジット</string>
     <string name="ack_orion_title">Orion Store — デザインのインスピレーション</string>
-    <string name="ack_orion_body">My Vault のインターフェースの背後にある表現力豊かなデザインのインスピレーションを与えてくれた RookieZ (RookieEnough) と Orion Store プロジェクトに特別に感謝します。 My Vault は独立したプロジェクトであり、Orion Store と提携または承認されていません。</string>
+    <string name="ack_orion_body">FT Vault のインターフェースの背後にある表現力豊かなデザインのインスピレーションを与えてくれた RookieZ (RookieEnough) と Orion Store プロジェクトに特別に感謝します。 FT Vault は独立したプロジェクトであり、Orion Store と提携または承認されていません。</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">SIL オープン フォント ライセンス 1.1 に基づく見出し用にバンドルされています。完全なライセンスはアプリに含まれています。</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">ドキュメント スキャンとラテン語テキスト認識は、Google ML Kit および Google Play services コンポーネントによってデバイス上で提供されます。</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Apache License 2.0 に基づいて使用される、復号化されたドキュメント プレビュー用の画像の読み込み。</string>
-    <string name="ack_my_vault_license">My Vault ソース コードは GNU GPL-3.0 に基づいてライセンスされています。</string>
+    <string name="ack_my_vault_license">FT Vault ソース コードは GNU GPL-3.0 に基づいてライセンスされています。</string>
     <string name="ack_open_project">プロジェクトを開く</string>
     <string name="creator_email">電子メール</string>
     <string name="creator_website">ウェブサイト</string>

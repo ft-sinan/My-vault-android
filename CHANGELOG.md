@@ -1,8 +1,15 @@
 # Changelog
 
-All notable changes to My Vault are documented here.
+All notable changes to FT Vault are documented here.
 
 ## [Unreleased]
+
+## [1.3.0] - 2026-10-27
+
+### Changed
+- **My Vault is now FT Vault** — the first app in the FT family (FT Music, FT Tube, and more to come). Same app, same package, same encrypted vault: existing installs update in place and every `.mvbackup` backup still restores exactly as before.
+- New **FT Shield** app icon: the cream shield now carries the FT monogram with the lime keyhole dot.
+- Default backup file name is now `FT-Vault-Backup-….mvbackup`; older `My-Vault-Backup-….mvbackup` files remain fully restorable.
 
 ## [1.2.0] - 2026-10-24
 

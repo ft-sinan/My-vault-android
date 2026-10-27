@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">당신의 신분증과 증명서를 한곳에 안전하게 보관하세요</string>
     <string name="action_back">뒤로</string>
     <string name="action_cancel">취소</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">나중에 설정에서 변경할 수 있습니다.</string>
     <string name="lock_welcome_back">다시 오신 것을 환영합니다. %1$s</string>
     <string name="lock_enter_pin">잠금을 해제하려면 PIN을 입력하세요.</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">PIN 만들기</string>
     <string name="pin_create_subtitle">볼트로 4자리 PIN을 선택하세요.\n기억하세요. 복구할 수 없습니다.</string>
     <string name="pin_confirm_title">PIN 확인</string>
     <string name="pin_confirm_subtitle">동일한 PIN을 한 번 더 입력하여 확인합니다.</string>
     <string name="pin_mismatch">PIN이(가) 일치하지 않습니다. 다시 시작해주세요.</string>
     <string name="first_run_backup_question">백업이 있나요?</string>
-    <string name="first_run_backup_subtitle">이전에 My Vault을(를) 사용한 경우 .mvbackup 파일을 복원하여 프로필과 문서를 다시 가져오세요.</string>
+    <string name="first_run_backup_subtitle">이전에 FT Vault을(를) 사용한 경우 .mvbackup 파일을 복원하여 프로필과 문서를 다시 가져오세요.</string>
     <string name="first_run_restore_backup">예, 백업을 복원합니다.</string>
     <string name="first_run_restore_backup_subtitle">.mvbackup 파일을 선택하세요</string>
     <string name="first_run_create_new_vault">아니요, 새 볼트를 생성하세요</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">언어</string>
     <string name="settings_wallpaper_colors">배경화면 색상을 맞춰보세요</string>
     <string name="settings_wallpaper_colors_subtitle">Material You 배경화면의 동적 색상</string>
-    <string name="settings_wallpaper_colors_unavailable">Android 12 이상이 필요합니다. My Vault 팔레트 사용</string>
+    <string name="settings_wallpaper_colors_unavailable">Android 12 이상이 필요합니다. FT Vault 팔레트 사용</string>
     <string name="settings_family">가족 구성원</string>
     <string name="settings_family_subtitle">멤버 추가, 편집, 이름 바꾸기 및 재정렬</string>
     <string name="settings_security">보안</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">백업 생성</string>
     <string name="backup_restore">백업 복원</string>
     <string name="backup_create_title">이 백업을 보호하세요</string>
-    <string name="backup_create_body">이 특정 백업에 대한 보호를 선택합니다. 백업 비밀번호는 My Vault에 저장되지 않습니다.</string>
+    <string name="backup_create_body">이 특정 백업에 대한 보호를 선택합니다. 백업 비밀번호는 FT Vault에 저장되지 않습니다.</string>
     <string name="backup_current_pin_body">계속하려면 현재 볼트 PIN를 확인하세요.</string>
     <string name="backup_use_password">비밀번호를 사용하세요</string>
     <string name="backup_use_password_subtitle">권장 • 백업 파일을 암호화</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">백업 생성 중…</string>
     <string name="backup_created">백업이 생성되었습니다.</string>
     <string name="backup_share">공유 백업</string>
-    <string name="backup_share_title">My Vault 백업 공유</string>
+    <string name="backup_share_title">FT Vault 백업 공유</string>
     <string name="backup_share_no_password_warning">이 백업에는 비밀번호가 없습니다. 완전히 신뢰하는 사람에게만 공유하세요.</string>
     <string name="backup_create_failed">백업을 생성할 수 없습니다. 다시 시도해 주세요.</string>
     <string name="backup_restore_title">백업 복원</string>
-    <string name="backup_restore_password_body">My Vault이(를) 확인할 수 있도록 이 백업의 비밀번호를 입력하세요.</string>
+    <string name="backup_restore_password_body">FT Vault이(를) 확인할 수 있도록 이 백업의 비밀번호를 입력하세요.</string>
     <string name="backup_check">백업 확인</string>
     <string name="backup_preparing">백업 확인 중…</string>
     <string name="backup_ready_title">이 볼트를 교체하시겠습니까?</string>
     <string name="backup_ready_body">모든 현재 프로필과 문서는 이 백업의 내용으로 대체됩니다.</string>
-    <string name="backup_phone_owner_question">이 전화기에서 My Vault을(를) 사용할 사람은 누구입니까?</string>
+    <string name="backup_phone_owner_question">이 전화기에서 FT Vault을(를) 사용할 사람은 누구입니까?</string>
     <string name="backup_phone_owner_subtitle">프로필을 선택하세요. 모든 프로필과 문서가 복원됩니다.</string>
     <string name="backup_original_owner">원래 소유자</string>
     <string name="backup_restore_mode_title">이 백업을 어떻게 복원해야 합니까?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">백업 복원 중…</string>
     <string name="backup_restored">백업이 복원되었습니다.</string>
     <string name="backup_restore_failed">백업을 복원할 수 없습니다. 현재 저장소는 변경되지 않았습니다.</string>
-    <string name="backup_invalid_file">이것은 유효한 My Vault 백업이 아니거나 파일이 손상되었습니다.</string>
+    <string name="backup_invalid_file">이것은 유효한 FT Vault 백업이 아니거나 파일이 손상되었습니다.</string>
     <string name="backup_wrong_password">백업 비밀번호가 잘못되었습니다.</string>
     <string name="backup_unprotected">비밀번호 보호 없음</string>
     <string name="backup_password_protected">비밀번호로 보호됨</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">이 기기에서 %1$s 사용 중</string>
     <string name="settings_safety_body" formatted="false">• 모든 파일은 저장되기 전에 AES-256로 암호화됩니다.\n• 암호화 키는 이 휴대폰의 보안 키 저장소를 벗어나지 않습니다.\n• 저장소는 오프라인에서 작동합니다. 앱은 설정이 열릴 때(최대 하루에 한 번) 업데이트를 확인하거나 수동으로 확인할 때만 인터넷을 사용합니다. 문서는 절대 업로드되지 않습니다.\n• 스크린샷 및 최근 앱 미리보기가 차단됩니다.\n• 저장소는 백그라운드에서 1분 후에 자동으로 잠깁니다.\n\n⚠️ 중요: PIN 및 생체 인식이 작동하지 않는 경우 문서를 복구할 수 없습니다. 원본 문서도 안전하게 보관하세요.</string>
     <string name="pin_wrong">틀렸음 PIN</string>
-    <string name="biometric_title">잠금 해제 My Vault</string>
+    <string name="biometric_title">잠금 해제 FT Vault</string>
     <string name="biometric_subtitle">지문이나 얼굴을 사용하여 금고를 엽니다.</string>
     <string name="biometric_use_pin">PIN 사용</string>
     <string name="pin_biometric_content_description">지문으로 잠금 해제</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">크리에이터 공간</string>
     <string name="creator_role">설계 및 제작</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">저는 가족 문서를 비공개로 암호화하고 항상 기기에 보관하기 위해 My Vault을 만들었습니다. 계정도, 클라우드도, 추적도 없습니다.</string>
+    <string name="creator_bio">저는 가족 문서를 비공개로 암호화하고 항상 기기에 보관하기 위해 FT Vault을 만들었습니다. 계정도, 클라우드도, 추적도 없습니다.</string>
     <string name="creator_badge_creator">크리에이터</string>
     <string name="creator_badge_privacy">개인정보 보호 우선</string>
     <string name="creator_connect">연결</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">업데이트를 확인할 수 없습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="settings_updates_download_failed">업데이트를 안전하게 다운로드할 수 없습니다.</string>
     <string name="settings_updates_checksum_failed">다운로드 확인에 실패하여 APK이(가) 열리지 않았습니다.</string>
-    <string name="settings_updates_allow_install">Android이(가) My Vault의 업데이트를 설치하려면 권한이 필요합니다. 탭하여 설정을 열고 허용한 다음 여기로 돌아오세요.</string>
+    <string name="settings_updates_allow_install">Android이(가) FT Vault의 업데이트를 설치하려면 권한이 필요합니다. 탭하여 설정을 열고 허용한 다음 여기로 돌아오세요.</string>
     <string name="settings_updates_allow_install_action">설치 허용</string>
     <string name="settings_updates_release_notes">출시 노트</string>
     <string name="settings_updates_no_notes">릴리스 노트가 제공되지 않았습니다.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">승인 및 라이선스</string>
     <string name="settings_acknowledgements_subtitle">이 앱 뒤에 있는 사람들과 오픈 소스 프로젝트를 위한 크레딧</string>
     <string name="ack_orion_title">Orion Store — 디자인 영감</string>
-    <string name="ack_orion_body">My Vault 인터페이스 뒤에 있는 표현적 디자인 영감을 주신 RookieZ (RookieEnough) 및 Orion Store 프로젝트에 특별히 감사드립니다. My Vault는 독립적인 프로젝트이며 Orion Store과 제휴하거나 승인하지 않습니다.</string>
+    <string name="ack_orion_body">FT Vault 인터페이스 뒤에 있는 표현적 디자인 영감을 주신 RookieZ (RookieEnough) 및 Orion Store 프로젝트에 특별히 감사드립니다. FT Vault는 독립적인 프로젝트이며 Orion Store과 제휴하거나 승인하지 않습니다.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">SIL Open Font License 1.1에 따라 제목용으로 번들로 제공됩니다. 전체 라이센스가 앱에 포함되어 있습니다.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">문서 스캔 및 라틴어 텍스트 인식은 Google ML Kit 및 Google Play services 구성 요소를 통해 장치 내에서 제공됩니다.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Apache License 2.0에 따라 사용되는 해독된 문서 미리보기를 위한 이미지 로드입니다.</string>
-    <string name="ack_my_vault_license">My Vault 소스 코드는 GNU GPL-3.0에 따라 라이센스가 부여됩니다.</string>
+    <string name="ack_my_vault_license">FT Vault 소스 코드는 GNU GPL-3.0에 따라 라이센스가 부여됩니다.</string>
     <string name="ack_open_project">프로젝트 열기</string>
     <string name="creator_email">이메일</string>
     <string name="creator_website">홈페이지</string>
