@@ -27,17 +27,17 @@ class AppUpdateUtilsTest {
     fun `checksum parser selects the APK line`() {
         val text = """
             1111111111111111111111111111111111111111111111111111111111111111  other.apk
-            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  MyVault-v1.1.0.apk
+            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA  FTVault-v1.3.0.apk
         """.trimIndent()
         assertEquals(
             "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            ChecksumParser.expectedHash(text, "MyVault-v1.1.0.apk")
+            ChecksumParser.expectedHash(text, "FTVault-v1.3.0.apk")
         )
     }
 
     @Test
     fun `checksum parser accepts a bare hash`() {
         val hash = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-        assertEquals(hash, ChecksumParser.expectedHash(hash, "MyVault-v1.1.0.apk"))
+        assertEquals(hash, ChecksumParser.expectedHash(hash, "FTVault-v1.3.0.apk"))
     }
 }

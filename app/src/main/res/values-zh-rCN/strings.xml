@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">您的身份证件和证书，安全在一处</string>
     <string name="action_back">返回</string>
     <string name="action_cancel">取消</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">您可以稍后在“设置”中更改此设置</string>
     <string name="lock_welcome_back">欢迎回来，%1$s</string>
     <string name="lock_enter_pin">输入您的 PIN 进行解锁</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">创建您的 PIN</string>
     <string name="pin_create_subtitle">为您的保管库选择一个 4 位数字 PIN。\n记住它 - 它无法恢复。</string>
     <string name="pin_confirm_title">确认您的PIN</string>
     <string name="pin_confirm_subtitle">再次输入相同的 PIN 进行确认。</string>
     <string name="pin_mismatch">PIN 不匹配。请重新开始。</string>
     <string name="first_run_backup_question">你有备份吗？</string>
-    <string name="first_run_backup_subtitle">如果您之前使用过 My Vault，请恢复您的 .mvbackup 文件以恢复您的配置文件和文档。</string>
+    <string name="first_run_backup_subtitle">如果您之前使用过 FT Vault，请恢复您的 .mvbackup 文件以恢复您的配置文件和文档。</string>
     <string name="first_run_restore_backup">是的，恢复我的备份</string>
     <string name="first_run_restore_backup_subtitle">选择一个 .mvbackup 文件</string>
     <string name="first_run_create_new_vault">否，创建一个新保管库</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">语言</string>
     <string name="settings_wallpaper_colors">匹配我的壁纸颜色</string>
     <string name="settings_wallpaper_colors_subtitle">Material You 壁纸的动态颜色</string>
-    <string name="settings_wallpaper_colors_unavailable">需要 Android 12 或更高版本；使用 My Vault 调色板</string>
+    <string name="settings_wallpaper_colors_unavailable">需要 Android 12 或更高版本；使用 FT Vault 调色板</string>
     <string name="settings_family">家庭成员</string>
     <string name="settings_family_subtitle">添加、编辑、重命名和重新排序成员</string>
     <string name="settings_security">安全</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">创建备份</string>
     <string name="backup_restore">恢复备份</string>
     <string name="backup_create_title">保护此备份</string>
-    <string name="backup_create_body">为此特定备份选择保护。 My Vault 永远不会存储备份密码。</string>
+    <string name="backup_create_body">为此特定备份选择保护。 FT Vault 永远不会存储备份密码。</string>
     <string name="backup_current_pin_body">确认您当前的保管库 PIN 以继续。</string>
     <string name="backup_use_password">使用密码</string>
     <string name="backup_use_password_subtitle">推荐 • 加密备份文件</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">正在创建备份...</string>
     <string name="backup_created">备份已创建。</string>
     <string name="backup_share">共享备份</string>
-    <string name="backup_share_title">共享 My Vault 备份</string>
+    <string name="backup_share_title">共享 FT Vault 备份</string>
     <string name="backup_share_no_password_warning">此备份没有密码。仅与您完全信任的人分享。</string>
     <string name="backup_create_failed">无法创建备份。请再试一次。</string>
     <string name="backup_restore_title">恢复备份</string>
-    <string name="backup_restore_password_body">输入此备份的密码，以便 My Vault 可以验证它。</string>
+    <string name="backup_restore_password_body">输入此备份的密码，以便 FT Vault 可以验证它。</string>
     <string name="backup_check">检查备份</string>
     <string name="backup_preparing">正在检查备份...</string>
     <string name="backup_ready_title">更换此保管库？</string>
     <string name="backup_ready_body">所有当前配置文件和文档都将替换为此备份的内容。</string>
-    <string name="backup_phone_owner_question">谁会在这款手机上使用 My Vault？</string>
+    <string name="backup_phone_owner_question">谁会在这款手机上使用 FT Vault？</string>
     <string name="backup_phone_owner_subtitle">选择您的个人资料。所有配置文件和文档都将恢复。</string>
     <string name="backup_original_owner">原主人</string>
     <string name="backup_restore_mode_title">应如何恢复此备份？</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">正在恢复备份...</string>
     <string name="backup_restored">备份已恢复。</string>
     <string name="backup_restore_failed">无法恢复备份。您当前的保管库未更改。</string>
-    <string name="backup_invalid_file">这不是有效的 My Vault 备份，或者文件已损坏。</string>
+    <string name="backup_invalid_file">这不是有效的 FT Vault 备份，或者文件已损坏。</string>
     <string name="backup_wrong_password">备份密码错误。</string>
     <string name="backup_unprotected">无密码保护</string>
     <string name="backup_password_protected">密码保护</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">在此设备上使用 %1$s</string>
     <string name="settings_safety_body" formatted="false">• 每个文件在保存之前都会使用 AES-256 进行加密。\n• 加密密钥永远不会离开此手机的安全密钥库。\n• 您的保管库可以离线工作。该应用程序仅在“设置”打开（每天最多一次）或手动检查时使用互联网检查更新；文档永远不会上传。\n• 屏幕截图和最近的应用程序预览被阻止。\n• 保管库在后台 1 分钟后自行锁定。\n\n⚠️ 重要提示：如果您忘记了 PIN 并且生物识别功能停止工作，您的文档将无法恢复。也请妥善保管您的原始文件。</string>
     <string name="pin_wrong">错误 PIN</string>
-    <string name="biometric_title">解锁 My Vault</string>
+    <string name="biometric_title">解锁 FT Vault</string>
     <string name="biometric_subtitle">使用指纹或面部打开您的保管库</string>
     <string name="biometric_use_pin">使用 PIN</string>
     <string name="pin_biometric_content_description">指纹解锁</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">创作者空间</string>
     <string name="creator_role">设计和建造</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">我构建了 My Vault 来保持家庭文档的私密性、加密性并始终保存在设备上 — 无需帐户、无需云、无需跟踪。</string>
+    <string name="creator_bio">我构建了 FT Vault 来保持家庭文档的私密性、加密性并始终保存在设备上 — 无需帐户、无需云、无需跟踪。</string>
     <string name="creator_badge_creator">创建者</string>
     <string name="creator_badge_privacy">隐私第一</string>
     <string name="creator_connect">连接</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">无法检查更新。检查您的连接并重试。</string>
     <string name="settings_updates_download_failed">无法安全下载更新。</string>
     <string name="settings_updates_checksum_failed">下载验证失败，因此APK未打开。</string>
-    <string name="settings_updates_allow_install">Android 需要获得安装来自 My Vault 的更新的权限。点击以打开设置，允许它，然后返回此处。</string>
+    <string name="settings_updates_allow_install">Android 需要获得安装来自 FT Vault 的更新的权限。点击以打开设置，允许它，然后返回此处。</string>
     <string name="settings_updates_allow_install_action">允许安装</string>
     <string name="settings_updates_release_notes">发行说明</string>
     <string name="settings_updates_no_notes">未提供发行说明。</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">致谢和许可</string>
     <string name="settings_acknowledgements_subtitle">此应用程序背后的人员和开源项目的功劳</string>
     <string name="ack_orion_title">Orion Store — 设计灵感</string>
-    <string name="ack_orion_body">特别感谢 RookieZ (RookieEnough) 和 Orion Store 项目为 My Vault 界面背后的富有表现力的设计灵感。 My Vault 是一个独立项目，不隶属于 Orion Store，也不受 Orion Store 认可。</string>
+    <string name="ack_orion_body">特别感谢 RookieZ (RookieEnough) 和 Orion Store 项目为 FT Vault 界面背后的富有表现力的设计灵感。 FT Vault 是一个独立项目，不隶属于 Orion Store，也不受 Orion Store 认可。</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">捆绑在 SIL 开放字体许可证 1.1 下的标题。完整的许可证包含在应用程序中。</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">文档扫描和拉丁文本识别由 Google ML Kit 和 Google Play services 组件在设备上提供。</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">用于解密文档预览的图像加载，在 Apache License 2.0 下使用。</string>
-    <string name="ack_my_vault_license">My Vault 源代码已获得 GNU GPL-3.0 许可。</string>
+    <string name="ack_my_vault_license">FT Vault 源代码已获得 GNU GPL-3.0 许可。</string>
     <string name="ack_open_project">打开项目</string>
     <string name="creator_email">电子邮件</string>
     <string name="creator_website">网站</string>

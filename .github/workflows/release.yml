@@ -110,7 +110,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p release-assets
-          apk_name="MyVault-${RELEASE_TAG}.apk"
+          apk_name="FTVault-${RELEASE_TAG}.apk"
           cp app/build/outputs/apk/release/app-release.apk "release-assets/$apk_name"
           (
             cd release-assets
@@ -123,7 +123,7 @@ jobs:
             capture { print }
           ' CHANGELOG.md > /tmp/release-notes.md
           if [[ ! -s /tmp/release-notes.md ]]; then
-            printf 'My Vault %s\n' "$RELEASE_TAG" > /tmp/release-notes.md
+            printf 'FT Vault %s\n' "$RELEASE_TAG" > /tmp/release-notes.md
           fi
 
       - name: Publish GitHub Release
@@ -132,20 +132,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          apk_name="MyVault-${RELEASE_TAG}.apk"
+          apk_name="FTVault-${RELEASE_TAG}.apk"
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release upload "$RELEASE_TAG" \
               "release-assets/$apk_name" \
               "release-assets/$apk_name.sha256" \
               --clobber
             gh release edit "$RELEASE_TAG" \
-              --title "My Vault $RELEASE_TAG" \
+              --title "FT Vault $RELEASE_TAG" \
               --notes-file /tmp/release-notes.md
           else
             gh release create "$RELEASE_TAG" \
               "release-assets/$apk_name" \
               "release-assets/$apk_name.sha256" \
               --verify-tag \
-              --title "My Vault $RELEASE_TAG" \
+              --title "FT Vault $RELEASE_TAG" \
               --notes-file /tmp/release-notes.md
           fi

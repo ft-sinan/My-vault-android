@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Bukti &amp; sertifikat ID Anda, aman di satu tempat</string>
     <string name="action_back">Kembali</string>
     <string name="action_cancel">Batal</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Anda dapat mengubahnya nanti di Pengaturan</string>
     <string name="lock_welcome_back">Selamat datang kembali, %1$s</string>
     <string name="lock_enter_pin">Masukkan PIN Anda untuk membuka kunci</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Buat PIN Anda</string>
     <string name="pin_create_subtitle">Pilih 4 digit PIN untuk brankas Anda.\nIngat — brankas tidak dapat dipulihkan.</string>
     <string name="pin_confirm_title">Konfirmasikan PIN Anda</string>
     <string name="pin_confirm_subtitle">Masukkan PIN yang sama sekali lagi untuk konfirmasi.</string>
     <string name="pin_mismatch">PIN tidak cocok. Silakan mulai lagi.</string>
     <string name="first_run_backup_question">Apakah Anda memiliki cadangan?</string>
-    <string name="first_run_backup_subtitle">Jika Anda pernah menggunakan My Vault sebelumnya, pulihkan file .mvbackup Anda untuk mengembalikan profil dan dokumen Anda.</string>
+    <string name="first_run_backup_subtitle">Jika Anda pernah menggunakan FT Vault sebelumnya, pulihkan file .mvbackup Anda untuk mengembalikan profil dan dokumen Anda.</string>
     <string name="first_run_restore_backup">Ya, pulihkan cadangan saya</string>
     <string name="first_run_restore_backup_subtitle">Pilih file .mvbackup.</string>
     <string name="first_run_create_new_vault">Tidak, buat brankas baru</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Bahasa</string>
     <string name="settings_wallpaper_colors">Cocokkan warna wallpaper saya</string>
     <string name="settings_wallpaper_colors_subtitle">Material You warna dinamis dari wallpaper Anda</string>
-    <string name="settings_wallpaper_colors_unavailable">Membutuhkan Android 12 atau lebih baru; menggunakan palet My Vault.</string>
+    <string name="settings_wallpaper_colors_unavailable">Membutuhkan Android 12 atau lebih baru; menggunakan palet FT Vault.</string>
     <string name="settings_family">Anggota keluarga</string>
     <string name="settings_family_subtitle">Menambah, mengedit, mengganti nama, dan menyusun ulang anggota</string>
     <string name="settings_security">Keamanan</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Buat cadangan</string>
     <string name="backup_restore">Pulihkan cadangan</string>
     <string name="backup_create_title">Lindungi cadangan ini</string>
-    <string name="backup_create_body">Pilih perlindungan untuk cadangan khusus ini. Kata sandi cadangan tidak pernah disimpan oleh My Vault.</string>
+    <string name="backup_create_body">Pilih perlindungan untuk cadangan khusus ini. Kata sandi cadangan tidak pernah disimpan oleh FT Vault.</string>
     <string name="backup_current_pin_body">Konfirmasikan brankas Anda saat ini PIN untuk melanjutkan.</string>
     <string name="backup_use_password">Gunakan kata sandi</string>
     <string name="backup_use_password_subtitle">Direkomendasikan • mengenkripsi file cadangan</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Membuat cadangan…</string>
     <string name="backup_created">Cadangan dibuat.</string>
     <string name="backup_share">Bagikan cadangan</string>
-    <string name="backup_share_title">Bagikan My Vault cadangan</string>
+    <string name="backup_share_title">Bagikan FT Vault cadangan</string>
     <string name="backup_share_no_password_warning">Cadangan ini tidak memiliki kata sandi. Hanya bagikan dengan seseorang yang Anda percayai sepenuhnya.</string>
     <string name="backup_create_failed">Tidak dapat membuat cadangan. Silakan coba lagi.</string>
     <string name="backup_restore_title">Pulihkan cadangan</string>
-    <string name="backup_restore_password_body">Masukkan kata sandi cadangan ini sehingga My Vault dapat memverifikasinya.</string>
+    <string name="backup_restore_password_body">Masukkan kata sandi cadangan ini sehingga FT Vault dapat memverifikasinya.</string>
     <string name="backup_check">Periksa cadangan</string>
     <string name="backup_preparing">Memeriksa cadangan…</string>
     <string name="backup_ready_title">Ganti brankas ini?</string>
     <string name="backup_ready_body">Semua profil dan dokumen saat ini akan digantikan oleh konten cadangan ini.</string>
-    <string name="backup_phone_owner_question">Siapa yang akan menggunakan My Vault di ponsel ini?</string>
+    <string name="backup_phone_owner_question">Siapa yang akan menggunakan FT Vault di ponsel ini?</string>
     <string name="backup_phone_owner_subtitle">Pilih profil Anda. Semua profil dan dokumen akan dipulihkan.</string>
     <string name="backup_original_owner">Pemilik asli</string>
     <string name="backup_restore_mode_title">Bagaimana cara memulihkan cadangan ini?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Memulihkan cadangan…</string>
     <string name="backup_restored">Cadangan dipulihkan.</string>
     <string name="backup_restore_failed">Tidak dapat memulihkan cadangan. Gudang Anda saat ini tidak diubah.</string>
-    <string name="backup_invalid_file">Ini bukan cadangan My Vault yang valid, atau file rusak.</string>
+    <string name="backup_invalid_file">Ini bukan cadangan FT Vault yang valid, atau file rusak.</string>
     <string name="backup_wrong_password">Kata sandi cadangan salah.</string>
     <string name="backup_unprotected">Tidak ada perlindungan kata sandi</string>
     <string name="backup_password_protected">Dilindungi kata sandi</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Menggunakan %1$s pada perangkat ini</string>
     <string name="settings_safety_body" formatted="false">• Setiap file dienkripsi dengan AES-256 sebelum disimpan.\n• Kunci enkripsi tidak pernah meninggalkan keystore aman ponsel ini.\n• Vault Anda berfungsi offline. Aplikasi ini menggunakan internet hanya untuk memeriksa pembaruan saat Pengaturan terbuka (paling banyak sekali sehari) atau saat Anda memeriksa secara manual; dokumen tidak pernah diunggah.\n• Tangkapan layar dan pratinjau aplikasi terbaru diblokir.\n• Vault terkunci sendiri setelah 1 menit di latar belakang.\n\n⚠️ Penting: jika Anda lupa PIN dan biometrik berhenti berfungsi, dokumen Anda tidak dapat dipulihkan. Simpan juga dokumen asli Anda dengan aman.</string>
     <string name="pin_wrong">Salah PIN</string>
-    <string name="biometric_title">Buka kunci My Vault</string>
+    <string name="biometric_title">Buka kunci FT Vault</string>
     <string name="biometric_subtitle">Gunakan sidik jari atau wajah Anda untuk membuka brankas Anda</string>
     <string name="biometric_use_pin">Gunakan PIN</string>
     <string name="pin_biometric_content_description">Buka kunci dengan sidik jari</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">Ruang pembuat</string>
     <string name="creator_role">Dirancang &amp; dibuat oleh</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">Saya membuat My Vault untuk menjaga kerahasiaan dokumen keluarga, terenkripsi, dan selalu ada di perangkat — tanpa akun, tanpa cloud, tanpa pelacakan.</string>
+    <string name="creator_bio">Saya membuat FT Vault untuk menjaga kerahasiaan dokumen keluarga, terenkripsi, dan selalu ada di perangkat — tanpa akun, tanpa cloud, tanpa pelacakan.</string>
     <string name="creator_badge_creator">Pencipta</string>
     <string name="creator_badge_privacy">Privasi diutamakan</string>
     <string name="creator_connect">Hubungkan</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">Tidak dapat memeriksa pembaruan. Periksa koneksi Anda dan coba lagi.</string>
     <string name="settings_updates_download_failed">Pembaruan tidak dapat diunduh dengan aman.</string>
     <string name="settings_updates_checksum_failed">Verifikasi download gagal, sehingga APK tidak dapat dibuka.</string>
-    <string name="settings_updates_allow_install">Android memerlukan izin untuk menginstal pembaruan dari My Vault. Ketuk untuk membuka pengaturan, izinkan, lalu kembali ke sini.</string>
+    <string name="settings_updates_allow_install">Android memerlukan izin untuk menginstal pembaruan dari FT Vault. Ketuk untuk membuka pengaturan, izinkan, lalu kembali ke sini.</string>
     <string name="settings_updates_allow_install_action">Izinkan pemasangan</string>
     <string name="settings_updates_release_notes">Catatan rilis</string>
     <string name="settings_updates_no_notes">Tidak ada catatan rilis yang diberikan.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Ucapan Terima Kasih &amp; Lisensi</string>
     <string name="settings_acknowledgements_subtitle">Penghargaan untuk orang-orang dan proyek sumber terbuka di balik aplikasi ini</string>
     <string name="ack_orion_title">Orion Store — inspirasi desain</string>
-    <string name="ack_orion_body">Terima kasih khusus kepada RookieZ (RookieEnough) dan proyek Orion Store atas inspirasi desain ekspresif di balik antarmuka My Vault. My Vault adalah proyek independen dan tidak berafiliasi atau didukung oleh Orion Store.</string>
+    <string name="ack_orion_body">Terima kasih khusus kepada RookieZ (RookieEnough) dan proyek Orion Store atas inspirasi desain ekspresif di balik antarmuka FT Vault. FT Vault adalah proyek independen dan tidak berafiliasi atau didukung oleh Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Dibundel untuk judul di bawah SIL Open Font License 1.1. Lisensi penuh disertakan dengan aplikasi.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">Pemindaian dokumen dan pengenalan teks Latin disediakan di perangkat oleh komponen Google ML Kit dan Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Pemuatan gambar untuk pratinjau dokumen yang didekripsi, digunakan di bawah Lisensi Apache 2.0.</string>
-    <string name="ack_my_vault_license">Kode sumber My Vault dilisensikan di bawah GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">Kode sumber FT Vault dilisensikan di bawah GNU GPL-3.0.</string>
     <string name="ack_open_project">Buka proyek</string>
     <string name="creator_email">Surel</string>
     <string name="creator_website">Situs web</string>

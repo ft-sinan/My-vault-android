@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Suas provas e certificados de identidade, seguros em um só lugar</string>
     <string name="action_back">Voltar</string>
     <string name="action_cancel">Cancelar</string>
@@ -15,14 +15,14 @@
     <string name="language_choose_subtitle">Você pode alterar isso mais tarde em Configurações</string>
     <string name="lock_welcome_back">Bem vindo de volta, %1$s</string>
     <string name="lock_enter_pin">Digite seu PIN para desbloquear</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Crie seu PIN</string>
     <string name="pin_create_subtitle">Escolha um PIN de 4 dígitos para o seu cofre.\nLembre-se: ele não pode ser recuperado.</string>
     <string name="pin_confirm_title">Confirme seu PIN</string>
     <string name="pin_confirm_subtitle">Digite o mesmo PIN mais uma vez para confirmar.</string>
     <string name="pin_mismatch">PINs não correspondem. Por favor, comece de novo.</string>
     <string name="first_run_backup_question">Você tem um backup?</string>
-    <string name="first_run_backup_subtitle">Se você já usou My Vault antes, restaure seu arquivo .mvbackup para recuperar seus perfis e documentos.</string>
+    <string name="first_run_backup_subtitle">Se você já usou FT Vault antes, restaure seu arquivo .mvbackup para recuperar seus perfis e documentos.</string>
     <string name="first_run_restore_backup">Sim, restaure meu backup</string>
     <string name="first_run_restore_backup_subtitle">Escolha um arquivo .mvbackup</string>
     <string name="first_run_create_new_vault">Não, crie um novo cofre</string>
@@ -143,7 +143,7 @@
     <string name="settings_language">Idioma</string>
     <string name="settings_wallpaper_colors">Combine as cores do meu papel de parede</string>
     <string name="settings_wallpaper_colors_subtitle">Material You cor dinâmica do seu papel de parede</string>
-    <string name="settings_wallpaper_colors_unavailable">Precisa de Android 12 ou mais recente; usando a paleta My Vault</string>
+    <string name="settings_wallpaper_colors_unavailable">Precisa de Android 12 ou mais recente; usando a paleta FT Vault</string>
     <string name="settings_family">Membros da família</string>
     <string name="settings_family_subtitle">Adicionar, editar, renomear e reordenar membros</string>
     <string name="settings_security">Segurança</string>
@@ -152,7 +152,7 @@
     <string name="backup_create">Criar backup</string>
     <string name="backup_restore">Restaurar backup</string>
     <string name="backup_create_title">Proteja este backup</string>
-    <string name="backup_create_body">Escolha proteção para este backup específico. Uma senha de backup nunca é armazenada por My Vault.</string>
+    <string name="backup_create_body">Escolha proteção para este backup específico. Uma senha de backup nunca é armazenada por FT Vault.</string>
     <string name="backup_current_pin_body">Confirme seu cofre atual PIN para continuar.</string>
     <string name="backup_use_password">Usar uma senha</string>
     <string name="backup_use_password_subtitle">Recomendado • criptografa o arquivo de backup</string>
@@ -166,16 +166,16 @@
     <string name="backup_creating">Criando backup…</string>
     <string name="backup_created">Backup criado.</string>
     <string name="backup_share">Compartilhar backup</string>
-    <string name="backup_share_title">Compartilhar backup My Vault</string>
+    <string name="backup_share_title">Compartilhar backup FT Vault</string>
     <string name="backup_share_no_password_warning">Este backup não possui senha. Compartilhe apenas com alguém em quem você confia totalmente.</string>
     <string name="backup_create_failed">Não foi possível criar o backup. Por favor, tente novamente.</string>
     <string name="backup_restore_title">Restaurar backup</string>
-    <string name="backup_restore_password_body">Digite a senha deste backup para que My Vault possa verificá-lo.</string>
+    <string name="backup_restore_password_body">Digite a senha deste backup para que FT Vault possa verificá-lo.</string>
     <string name="backup_check">Verifique o backup</string>
     <string name="backup_preparing">Verificando backup…</string>
     <string name="backup_ready_title">Substituir este cofre?</string>
     <string name="backup_ready_body">Todos os perfis e documentos atuais serão substituídos pelo conteúdo deste backup.</string>
-    <string name="backup_phone_owner_question">Quem usará My Vault neste telefone?</string>
+    <string name="backup_phone_owner_question">Quem usará FT Vault neste telefone?</string>
     <string name="backup_phone_owner_subtitle">Escolha seu perfil. Todos os perfis e documentos serão restaurados.</string>
     <string name="backup_original_owner">Proprietário original</string>
     <string name="backup_restore_mode_title">Como este backup deve ser restaurado?</string>
@@ -194,7 +194,7 @@
     <string name="backup_restoring">Restaurando backup…</string>
     <string name="backup_restored">Backup restaurado.</string>
     <string name="backup_restore_failed">Não foi possível restaurar o backup. Seu cofre atual não foi alterado.</string>
-    <string name="backup_invalid_file">Este não é um backup My Vault válido ou o arquivo está danificado.</string>
+    <string name="backup_invalid_file">Este não é um backup FT Vault válido ou o arquivo está danificado.</string>
     <string name="backup_wrong_password">Senha de backup errada.</string>
     <string name="backup_unprotected">Sem proteção por senha</string>
     <string name="backup_password_protected">Protegido por senha</string>
@@ -256,7 +256,7 @@
     <string name="settings_storage_using">Usando %1$s neste dispositivo</string>
     <string name="settings_safety_body" formatted="false">• Cada arquivo é criptografado com AES-256 antes de ser salvo.\n• A chave de criptografia nunca sai do armazenamento de chaves seguro deste telefone.\n• Seu cofre funciona offline. O aplicativo usa a internet apenas para verificar atualizações quando as Configurações são abertas (no máximo uma vez por dia) ou quando você verifica manualmente; os documentos nunca são carregados.\n• Capturas de tela e visualizações de aplicativos recentes são bloqueadas.\n• O cofre se bloqueia após 1 minuto em segundo plano.\n\n⚠️ Importante: se você esquecer seu PIN e a biometria parar de funcionar, seus documentos não poderão ser recuperados. Mantenha seus documentos originais também seguros.</string>
     <string name="pin_wrong">Errado PIN</string>
-    <string name="biometric_title">Desbloquear My Vault</string>
+    <string name="biometric_title">Desbloquear FT Vault</string>
     <string name="biometric_subtitle">Use sua impressão digital ou rosto para abrir seu cofre</string>
     <string name="biometric_use_pin">Usar PIN</string>
     <string name="pin_biometric_content_description">Desbloqueio com impressão digital</string>
@@ -309,7 +309,7 @@
     <string name="creator_title">Espaço do criador</string>
     <string name="creator_role">Projetado e construído por</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">Criei My Vault para manter os documentos familiares privados, criptografados e sempre no dispositivo — sem conta, sem nuvem, sem rastreamento.</string>
+    <string name="creator_bio">Criei FT Vault para manter os documentos familiares privados, criptografados e sempre no dispositivo — sem conta, sem nuvem, sem rastreamento.</string>
     <string name="creator_badge_creator">Criador</string>
     <string name="creator_badge_privacy">Privacidade em primeiro lugar</string>
     <string name="creator_connect">Conectar</string>
@@ -341,7 +341,7 @@
     <string name="settings_updates_failed">Não foi possível verificar atualizações. Verifique sua conexão e tente novamente.</string>
     <string name="settings_updates_download_failed">Não foi possível baixar a atualização com segurança.</string>
     <string name="settings_updates_checksum_failed">A verificação de download falhou, portanto o APK não foi aberto.</string>
-    <string name="settings_updates_allow_install">Android precisa de permissão para instalar atualizações de My Vault. Toque para abrir a configuração, permita e volte aqui.</string>
+    <string name="settings_updates_allow_install">Android precisa de permissão para instalar atualizações de FT Vault. Toque para abrir a configuração, permita e volte aqui.</string>
     <string name="settings_updates_allow_install_action">Permitir instalações</string>
     <string name="settings_updates_release_notes">Notas de lançamento</string>
     <string name="settings_updates_no_notes">Nenhuma nota de versão foi fornecida.</string>
@@ -350,7 +350,7 @@
     <string name="settings_acknowledgements">Agradecimentos e licenças</string>
     <string name="settings_acknowledgements_subtitle">Créditos para as pessoas e projetos de código aberto por trás deste aplicativo</string>
     <string name="ack_orion_title">Orion Store — inspiração de design</string>
-    <string name="ack_orion_body">Agradecimentos especiais a RookieZ (RookieEnough) e ao projeto Orion Store pela expressiva inspiração de design por trás da interface de My Vault. My Vault é um projeto independente e não é afiliado ou endossado por Orion Store.</string>
+    <string name="ack_orion_body">Agradecimentos especiais a RookieZ (RookieEnough) e ao projeto Orion Store pela expressiva inspiração de design por trás da interface de FT Vault. FT Vault é um projeto independente e não é afiliado ou endossado por Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Pacote para títulos sob a licença SIL Open Font 1.1. A licença completa está incluída no aplicativo.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -359,7 +359,7 @@
     <string name="ack_mlkit_body">A digitalização de documentos e o reconhecimento de texto latino são fornecidos no dispositivo pelos componentes Google ML Kit e Google Play services.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Carregamento de imagem para visualizações de documentos descriptografados, usado sob licença Apache 2.0.</string>
-    <string name="ack_my_vault_license">O código-fonte do My Vault é licenciado sob a GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">O código-fonte do FT Vault é licenciado sob a GNU GPL-3.0.</string>
     <string name="ack_open_project">Abrir projeto</string>
     <string name="creator_email">E-mail</string>
     <string name="creator_website">Site</string>

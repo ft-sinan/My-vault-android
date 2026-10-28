@@ -216,7 +216,7 @@ object AppUpdateManager {
             connectTimeout = 20_000
             readTimeout = 30_000
             instanceFollowRedirects = true
-            setRequestProperty("User-Agent", "MyVault-Android")
+            setRequestProperty("User-Agent", "FTVault-Android")
             if (githubApi) {
                 setRequestProperty("Accept", "application/vnd.github+json")
                 setRequestProperty("X-GitHub-Api-Version", "2022-11-28")

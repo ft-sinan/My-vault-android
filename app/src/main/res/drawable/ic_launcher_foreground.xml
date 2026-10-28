@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Shield Keyhole adaptive-icon foreground.
+    FT Shield adaptive-icon foreground.
 
-    The shield is kept inside the adaptive-icon safe zone (roughly
+    The cream shield from the original Shield Keyhole icon is retained;
+    the keyhole is replaced by a bold geometric FT monogram (the FT
+    franchise master mark) with the lime keyhole dot kept beneath it.
+    Everything stays inside the adaptive-icon safe zone (roughly
     29.5-78.5 x 22.2-83.2 in the 108dp layer), so circle, squircle,
     rounded-square and teardrop launcher masks do not clip it.
 -->
@@ -24,14 +27,18 @@
         android:strokeLineJoin="round"
         android:pathData="M54,29.9 L70.7,35.1 L70.7,48.8 C70.7,60 63.8,68.6 54,73.8 C44.2,68.6 37.3,60 37.3,48.8 L37.3,35.1 Z" />
 
-    <!-- Lime keyhole badge. -->
+    <!-- F of the FT monogram. -->
+    <path
+        android:fillColor="#173F35"
+        android:pathData="M39.5,40 L51.5,40 L51.5,44.6 L44.1,44.6 L44.1,47.2 L51,47.2 L51,51.4 L44.1,51.4 L44.1,58 L39.5,58 Z" />
+
+    <!-- T of the FT monogram. -->
+    <path
+        android:fillColor="#173F35"
+        android:pathData="M56,40 L68.5,40 L68.5,44.6 L64.5,44.6 L64.5,58 L59.9,58 L59.9,44.6 L56,44.6 Z" />
+
+    <!-- Lime keyhole dot. -->
     <path
         android:fillColor="#C8F169"
-        android:pathData="M54,53 m-12.8,0 a12.8,12.8 0 1,0 25.6,0 a12.8,12.8 0 1,0 -25.6,0" />
-    <path
-        android:fillColor="#173F35"
-        android:pathData="M54,49.7 m-4,0 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" />
-    <path
-        android:fillColor="#173F35"
-        android:pathData="M50.9,52.3 L57.1,52.3 L58.8,61.4 L49.2,61.4 Z" />
+        android:pathData="M54,64.5 m-3.4,0 a3.4,3.4 0 1,0 6.8,0 a3.4,3.4 0 1,0 -6.8,0" />
 </vector>

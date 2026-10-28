@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Vault</string>
+    <string name="app_name">FT Vault</string>
     <string name="app_tagline">Your ID proofs &amp; certificates, safe in one place</string>
 
     <!-- General -->
@@ -18,14 +18,14 @@
     <string name="language_choose_subtitle">You can change this later in Settings</string>
     <string name="lock_welcome_back">Welcome back, %1$s</string>
     <string name="lock_enter_pin">Enter your PIN to unlock</string>
-    <string name="lock_my_vault">My Vault</string>
+    <string name="lock_my_vault">FT Vault</string>
     <string name="pin_create_title">Create your PIN</string>
     <string name="pin_create_subtitle">Choose a 4-digit PIN for your vault.\nRemember it — it cannot be recovered.</string>
     <string name="pin_confirm_title">Confirm your PIN</string>
     <string name="pin_confirm_subtitle">Enter the same PIN once more to confirm.</string>
     <string name="pin_mismatch">PINs don\'t match. Please start again.</string>
     <string name="first_run_backup_question">Do you have a backup?</string>
-    <string name="first_run_backup_subtitle">If you have used My Vault before, restore your .mvbackup file to bring back your profiles and documents.</string>
+    <string name="first_run_backup_subtitle">If you have used FT Vault before, restore your .mvbackup file to bring back your profiles and documents.</string>
     <string name="first_run_restore_backup">Yes, restore my backup</string>
     <string name="first_run_restore_backup_subtitle">Choose a .mvbackup file</string>
     <string name="first_run_create_new_vault">No, create a new vault</string>
@@ -156,7 +156,7 @@
     <string name="settings_language">Language</string>
     <string name="settings_wallpaper_colors">Match my wallpaper colours</string>
     <string name="settings_wallpaper_colors_subtitle">Material You dynamic colour from your wallpaper</string>
-    <string name="settings_wallpaper_colors_unavailable">Needs Android 12 or newer; using the My Vault palette</string>
+    <string name="settings_wallpaper_colors_unavailable">Needs Android 12 or newer; using the FT Vault palette</string>
     <string name="settings_family">Family members</string>
     <string name="settings_family_subtitle">Add, edit, rename and reorder members</string>
     <string name="settings_security">Security</string>
@@ -165,7 +165,7 @@
     <string name="backup_create">Create backup</string>
     <string name="backup_restore">Restore backup</string>
     <string name="backup_create_title">Protect this backup</string>
-    <string name="backup_create_body">Choose protection for this specific backup. A backup password is never stored by My Vault.</string>
+    <string name="backup_create_body">Choose protection for this specific backup. A backup password is never stored by FT Vault.</string>
     <string name="backup_current_pin_body">Confirm your current vault PIN to continue.</string>
     <string name="backup_use_password">Use a password</string>
     <string name="backup_use_password_subtitle">Recommended • encrypts the backup file</string>
@@ -179,16 +179,16 @@
     <string name="backup_creating">Creating backup…</string>
     <string name="backup_created">Backup created.</string>
     <string name="backup_share">Share backup</string>
-    <string name="backup_share_title">Share My Vault backup</string>
+    <string name="backup_share_title">Share FT Vault backup</string>
     <string name="backup_share_no_password_warning">This backup has no password. Only share it with someone you fully trust.</string>
     <string name="backup_create_failed">Could not create the backup. Please try again.</string>
     <string name="backup_restore_title">Restore backup</string>
-    <string name="backup_restore_password_body">Enter this backup’s password so My Vault can verify it.</string>
+    <string name="backup_restore_password_body">Enter this backup’s password so FT Vault can verify it.</string>
     <string name="backup_check">Check backup</string>
     <string name="backup_preparing">Checking backup…</string>
     <string name="backup_ready_title">Replace this vault?</string>
     <string name="backup_ready_body">All current profiles and documents will be replaced by the contents of this backup.</string>
-    <string name="backup_phone_owner_question">Who will use My Vault on this phone?</string>
+    <string name="backup_phone_owner_question">Who will use FT Vault on this phone?</string>
     <string name="backup_phone_owner_subtitle">Choose your profile. All profiles and documents will be restored.</string>
     <string name="backup_original_owner">Original owner</string>
     <string name="backup_restore_mode_title">How should this backup be restored?</string>
@@ -207,7 +207,7 @@
     <string name="backup_restoring">Restoring backup…</string>
     <string name="backup_restored">Backup restored.</string>
     <string name="backup_restore_failed">Could not restore the backup. Your current vault was not changed.</string>
-    <string name="backup_invalid_file">This is not a valid My Vault backup, or the file is damaged.</string>
+    <string name="backup_invalid_file">This is not a valid FT Vault backup, or the file is damaged.</string>
     <string name="backup_wrong_password">Wrong backup password.</string>
     <string name="backup_unprotected">No password protection</string>
     <string name="backup_password_protected">Password protected</string>
@@ -273,7 +273,7 @@
     <string name="settings_storage_using">Using %1$s on this device</string>
     <string name="settings_safety_body" formatted="false">• Every file is encrypted with AES-256 before it is saved.\n• The encryption key never leaves this phone\'s secure keystore.\n• Your vault works offline. The app uses the internet only to check for updates when Settings opens (at most once a day) or when you check manually; documents are never uploaded.\n• Screenshots and recent-apps previews are blocked.\n• The vault locks itself after 1 minute in the background.\n\n⚠️ Important: if you forget your PIN and biometrics stop working, your documents cannot be recovered. Keep your original documents safe too.</string>
     <string name="pin_wrong">Wrong PIN</string>
-    <string name="biometric_title">Unlock My Vault</string>
+    <string name="biometric_title">Unlock FT Vault</string>
     <string name="biometric_subtitle">Use your fingerprint or face to open your vault</string>
     <string name="biometric_use_pin">Use PIN</string>
     <string name="pin_biometric_content_description">Unlock with fingerprint</string>
@@ -326,7 +326,7 @@
     <string name="creator_title">Creator space</string>
     <string name="creator_role">Designed &amp; built by</string>
     <string name="creator_name">Sinan</string>
-    <string name="creator_bio">I built My Vault to keep family documents private, encrypted, and always on the device — no account, no cloud, no tracking.</string>
+    <string name="creator_bio">I built FT Vault to keep family documents private, encrypted, and always on the device — no account, no cloud, no tracking.</string>
     <string name="creator_badge_creator">Creator</string>
     <string name="creator_badge_privacy">Privacy first</string>
     <string name="creator_connect">Connect</string>
@@ -360,7 +360,7 @@
     <string name="settings_updates_failed">Could not check for updates. Check your connection and try again.</string>
     <string name="settings_updates_download_failed">The update could not be downloaded safely.</string>
     <string name="settings_updates_checksum_failed">Download verification failed, so the APK was not opened.</string>
-    <string name="settings_updates_allow_install">Android needs permission to install updates from My Vault. Tap to open the setting, allow it, then return here.</string>
+    <string name="settings_updates_allow_install">Android needs permission to install updates from FT Vault. Tap to open the setting, allow it, then return here.</string>
     <string name="settings_updates_allow_install_action">Allow installs</string>
     <string name="settings_updates_release_notes">Release notes</string>
     <string name="settings_updates_no_notes">No release notes were provided.</string>
@@ -369,7 +369,7 @@
     <string name="settings_acknowledgements">Acknowledgements &amp; licences</string>
     <string name="settings_acknowledgements_subtitle">Credits for the people and open-source projects behind this app</string>
     <string name="ack_orion_title">Orion Store — design inspiration</string>
-    <string name="ack_orion_body">Special thanks to RookieZ (RookieEnough) and the Orion Store project for the expressive design inspiration behind My Vault\'s interface. My Vault is an independent project and is not affiliated with or endorsed by Orion Store.</string>
+    <string name="ack_orion_body">Special thanks to RookieZ (RookieEnough) and the Orion Store project for the expressive design inspiration behind FT Vault\'s interface. FT Vault is an independent project and is not affiliated with or endorsed by Orion Store.</string>
     <string name="ack_space_grotesk_title">Space Grotesk</string>
     <string name="ack_space_grotesk_body">Bundled for headings under the SIL Open Font License 1.1. The full licence is included with the app.</string>
     <string name="ack_androidx_title">AndroidX &amp; Jetpack Compose</string>
@@ -378,7 +378,7 @@
     <string name="ack_mlkit_body">Document scanning and Latin text recognition are provided on-device by Google ML Kit and Google Play services components.</string>
     <string name="ack_coil_title">Coil</string>
     <string name="ack_coil_body">Image loading for decrypted document previews, used under Apache License 2.0.</string>
-    <string name="ack_my_vault_license">My Vault source code is licensed under GNU GPL-3.0.</string>
+    <string name="ack_my_vault_license">FT Vault source code is licensed under GNU GPL-3.0.</string>
     <string name="ack_open_project">Open project</string>
     <string name="creator_email">Email</string>
     <string name="creator_website">Website</string>
