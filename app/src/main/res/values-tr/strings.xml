@@ -38,6 +38,8 @@
     <string name="member_edit_title">Aile üyesini düzenle</string>
     <string name="field_name">Tam ad *</string>
     <string name="field_name_hint">Kimliğinizdeki İsim</string>
+    <string name="field_display_name">Görünen ad (isteğe bağlı)</string>
+    <string name="field_display_name_hint">Ana Sayfa ve Aile bölümünde görünen ad</string>
     <string name="field_relation">Akrabalık</string>
     <string name="field_dob">Doğum tarihi</string>
     <string name="field_gender">Cinsiyet</string>

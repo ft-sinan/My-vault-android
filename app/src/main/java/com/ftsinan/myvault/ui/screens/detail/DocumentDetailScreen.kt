@@ -8,7 +8,8 @@ import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -73,7 +74,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -643,6 +643,17 @@ private fun ZoomableImage(bytes: ByteArray) {
     var scale by remember(bytes.size) { mutableStateOf(1f) }
     var offsetX by remember(bytes.size) { mutableStateOf(0f) }
     var offsetY by remember(bytes.size) { mutableStateOf(0f) }
+    val transformState = rememberTransformableState { zoomChange, panChange, _ ->
+        val newScale = (scale * zoomChange).coerceIn(1f, 5f)
+        scale = newScale
+        if (newScale > 1f) {
+            offsetX += panChange.x
+            offsetY += panChange.y
+        } else {
+            offsetX = 0f
+            offsetY = 0f
+        }
+    }
 
     Card(modifier = Modifier.fillMaxWidth()) {
         Box(
@@ -650,18 +661,12 @@ private fun ZoomableImage(bytes: ByteArray) {
                 .fillMaxWidth()
                 .aspectRatio(0.72f)
                 .clip(MaterialTheme.shapes.large)
-                .pointerInput(Unit) {
-                    detectTransformGestures { _, pan, zoom, _ ->
-                        scale = (scale * zoom).coerceIn(1f, 5f)
-                        if (scale > 1f) {
-                            offsetX += pan.x
-                            offsetY += pan.y
-                        } else {
-                            offsetX = 0f
-                            offsetY = 0f
-                        }
-                    }
-                }
+                .transformable(
+                    state = transformState,
+                    // At the default scale, leave one-finger drags to the parent LazyColumn.
+                    // Once zoomed, allow the image itself to pan.
+                    canPan = { scale > 1f }
+                )
         ) {
             AsyncImage(
                 model = bytes,

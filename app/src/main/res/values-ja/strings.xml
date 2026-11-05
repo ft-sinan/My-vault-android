@@ -38,6 +38,8 @@
     <string name="member_edit_title">家族メンバーの編集</string>
     <string name="field_name">フルネーム *</string>
     <string name="field_name_hint">ID に記載されている名前</string>
+    <string name="field_display_name">表示名（任意）</string>
+    <string name="field_display_name_hint">ホームとファミリーに表示する名前</string>
     <string name="field_relation">続柄</string>
     <string name="field_dob">生年月日</string>
     <string name="field_gender">性別</string>

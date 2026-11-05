@@ -28,7 +28,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
@@ -221,7 +221,7 @@ fun HomeScreen(
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = onFamilyClick) {
-                            Icon(Icons.Filled.ChevronRight, contentDescription = null)
+                            Icon(Icons.AutoMirrored.Filled.ChevronRight, contentDescription = null)
                         }
                     }
                 }
@@ -250,7 +250,7 @@ fun HomeScreen(
                                 )
                                 Spacer(Modifier.height(6.dp))
                                 Text(
-                                    text = item.member.name.split(" ").firstOrNull() ?: "",
+                                    text = item.member.listName.split(" ").firstOrNull() ?: "",
                                     style = MaterialTheme.typography.labelMedium,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
@@ -457,7 +457,7 @@ private fun OwnerProfileCard(
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.ChevronRight,
+                                imageVector = Icons.AutoMirrored.Filled.ChevronRight,
                                 contentDescription = null,
                                 tint = contentColor,
                                 modifier = Modifier.size(18.dp)

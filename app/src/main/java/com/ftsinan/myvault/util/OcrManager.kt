@@ -1,7 +1,10 @@
 package com.ftsinan.myvault.util
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.pdf.PdfRenderer
 import android.net.Uri
+import android.os.ParcelFileDescriptor
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -113,24 +116,18 @@ object IdNumberParser {
 
 /**
  * Runs ML Kit's bundled Latin text recognizer entirely on-device over
- * picked/scanned image URIs and returns a detected ID suggestion.
+ * picked/scanned image or PDF URIs and returns a detected ID suggestion.
  */
 class OcrManager(context: Context) {
 
     private val appContext = context.applicationContext
 
     suspend fun detectId(uris: List<Uri>): DetectedId? = withContext(Dispatchers.IO) {
-        val imageUris = uris.filter { uri ->
-            appContext.contentResolver.getType(uri)?.startsWith("image/") ?: true
-        }.take(2)
-        if (imageUris.isEmpty()) return@withContext null
-
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         try {
             val combinedText = StringBuilder()
-            for (uri in imageUris) {
-                val image = runCatching { InputImage.fromFilePath(appContext, uri) }
-                    .getOrNull() ?: continue
+
+            suspend fun inspect(image: InputImage): DetectedId? {
                 val text = suspendCancellableCoroutine<String?> { continuation ->
                     recognizer.process(image)
                         .addOnSuccessListener { result ->
@@ -142,9 +139,60 @@ class OcrManager(context: Context) {
                 }
                 if (!text.isNullOrBlank()) {
                     combinedText.appendLine(text)
-                    IdNumberParser.parse(combinedText.toString())
+                    return IdNumberParser.parse(combinedText.toString())
                         ?.takeIf { it.number.isNotBlank() }
-                        ?.let { return@withContext it }
+                }
+                return null
+            }
+
+            for (uri in uris.take(2)) {
+                val mimeType = appContext.contentResolver.getType(uri).orEmpty()
+                if (mimeType.equals("application/pdf", ignoreCase = true)) {
+                    val pdfResult = runCatching {
+                        appContext.contentResolver.openFileDescriptor(uri, "r")?.use { descriptor ->
+                            PdfRenderer(descriptor).use { renderer ->
+                                // OCR the first two pages; ID numbers are usually on page one.
+                                for (pageIndex in 0 until minOf(renderer.pageCount, 2)) {
+                                    val page = renderer.openPage(pageIndex)
+                                    val bitmap = try {
+                                        val scale = minOf(
+                                            2f,
+                                            1600f / page.width.coerceAtLeast(1),
+                                            2000f / page.height.coerceAtLeast(1)
+                                        )
+                                        Bitmap.createBitmap(
+                                            (page.width * scale).toInt().coerceAtLeast(1),
+                                            (page.height * scale).toInt().coerceAtLeast(1),
+                                            Bitmap.Config.ARGB_8888
+                                        ).also { output ->
+                                            output.eraseColor(android.graphics.Color.WHITE)
+                                            page.render(
+                                                output,
+                                                null,
+                                                null,
+                                                PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                                            )
+                                        }
+                                    } finally {
+                                        page.close()
+                                    }
+                                    val detected = try {
+                                        inspect(InputImage.fromBitmap(bitmap, 0))
+                                    } finally {
+                                        bitmap.recycle()
+                                    }
+                                    if (detected != null) return@use detected
+                                }
+                                null
+                            }
+                        }
+                    }.getOrNull()
+                    if (pdfResult != null) return@withContext pdfResult
+                } else {
+                    val imageResult = runCatching {
+                        inspect(InputImage.fromFilePath(appContext, uri))
+                    }.getOrNull()
+                    if (imageResult != null) return@withContext imageResult
                 }
             }
             IdNumberParser.parse(combinedText.toString())

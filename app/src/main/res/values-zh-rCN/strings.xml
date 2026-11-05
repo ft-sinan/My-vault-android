@@ -38,6 +38,8 @@
     <string name="member_edit_title">编辑家庭成员</string>
     <string name="field_name">全名 *</string>
     <string name="field_name_hint">姓名与您身份证上的姓名相同</string>
+    <string name="field_display_name">显示名称（可选）</string>
+    <string name="field_display_name_hint">在主页和家庭页面显示的名称</string>
     <string name="field_relation">关系</string>
     <string name="field_dob">出生日期</string>
     <string name="field_gender">性别</string>

@@ -38,6 +38,8 @@
     <string name="member_edit_title">परिवार के सदस्य संपादित करें</string>
     <string name="field_name">पूरा नाम *</string>
     <string name="field_name_hint">आपके पहचान पत्र पर दिया गया नाम</string>
+    <string name="field_display_name">प्रदर्शित नाम (वैकल्पिक)</string>
+    <string name="field_display_name_hint">होम और परिवार में दिखने वाला नाम</string>
     <string name="field_relation">रिश्ता</string>
     <string name="field_dob">जन्मतिथि</string>
     <string name="field_gender">लिंग</string>

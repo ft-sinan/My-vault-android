@@ -68,6 +68,9 @@ class LanguageManager(context: Context) {
             val config = Configuration(base.resources.configuration)
             config.setLocale(locale)
             config.setLocales(android.os.LocaleList(locale))
+            // Make Compose/Views resolve Start/End and RTL layout explicitly
+            // for Arabic instead of relying only on per-resource heuristics.
+            config.setLayoutDirection(locale)
             return base.createConfigurationContext(config)
         }
     }

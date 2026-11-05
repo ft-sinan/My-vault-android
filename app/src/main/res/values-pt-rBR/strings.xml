@@ -38,6 +38,8 @@
     <string name="member_edit_title">Editar membro da família</string>
     <string name="field_name">Nome completo *</string>
     <string name="field_name_hint">Nome como em seu documento de identificação</string>
+    <string name="field_display_name">Nome de exibição (opcional)</string>
+    <string name="field_display_name_hint">Nome exibido em Início e Família</string>
     <string name="field_relation">Parentesco</string>
     <string name="field_dob">Data de nascimento</string>
     <string name="field_gender">Gênero</string>

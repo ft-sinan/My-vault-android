@@ -38,6 +38,8 @@
     <string name="member_edit_title">Изменить члена семьи</string>
     <string name="field_name">Полное имя *</string>
     <string name="field_name_hint">Имя, указанное в вашем удостоверении личности.</string>
+    <string name="field_display_name">Отображаемое имя (необязательно)</string>
+    <string name="field_display_name_hint">Имя для отображения на главном экране и во вкладке «Семья»</string>
     <string name="field_relation">Родство</string>
     <string name="field_dob">Дата рождения</string>
     <string name="field_gender">Пол</string>

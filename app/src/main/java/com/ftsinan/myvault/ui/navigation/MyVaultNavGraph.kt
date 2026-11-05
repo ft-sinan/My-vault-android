@@ -83,6 +83,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.navArgument
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.AssignedGroup
@@ -94,12 +95,14 @@ import com.ftsinan.myvault.ui.theme.LocalGlassBottomBar
 import com.ftsinan.myvault.ui.screens.addedit.ImportSource
 import com.ftsinan.myvault.ui.screens.detail.DocumentDetailScreen
 import com.ftsinan.myvault.ui.screens.documents.DocumentsScreen
+import com.ftsinan.myvault.ui.screens.documents.DocumentsViewModel
 import com.ftsinan.myvault.ui.screens.home.HomeScreen
 import com.ftsinan.myvault.ui.screens.profile.FamilyScreen
 import com.ftsinan.myvault.ui.screens.profile.MemberEditScreen
 import com.ftsinan.myvault.ui.screens.profile.ProfileDetailScreen
 import com.ftsinan.myvault.ui.screens.settings.ManageMembersScreen
 import com.ftsinan.myvault.ui.screens.settings.SettingsScreen
+import kotlinx.coroutines.flow.collect
 
 object Routes {
     const val HOME = "home"
@@ -142,6 +145,14 @@ fun MyVaultNavGraph(
     onLanguageSelected: (AppLanguage) -> Unit
 ) {
     val navController = rememberNavController()
+    // Start observing document data while Home is visible so the first Documents
+    // tab visit can use a warm state instead of showing a full-screen loader.
+    val documentsViewModel: DocumentsViewModel = viewModel(
+        factory = DocumentsViewModel.Factory
+    )
+    LaunchedEffect(documentsViewModel) {
+        documentsViewModel.uiState.collect { }
+    }
     val glassBottomBar = LocalGlassBottomBar.current
     val animationsEnabled = LocalAnimationsEnabled.current
     var showAddSheet by remember { mutableStateOf(false) }
@@ -246,7 +257,11 @@ fun MyVaultNavGraph(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         NavHost(
             navController = navController,
             startDestination = Routes.HOME,
@@ -260,10 +275,7 @@ fun MyVaultNavGraph(
                     val fromTop = routeRank(initialState.destination.route) < 10
                     val toTop = routeRank(targetState.destination.route) < 10
                     if (fromTop && toTop) {
-                        fadeIn(tween(260)) + scaleIn(
-                            initialScale = 0.985f,
-                            animationSpec = tween(260)
-                        )
+                        EnterTransition.None
                     } else {
                         fadeIn(tween(240)) + slideInHorizontally(tween(320)) { it / 5 } +
                             scaleIn(initialScale = 0.99f, animationSpec = tween(320))
@@ -277,10 +289,7 @@ fun MyVaultNavGraph(
                     val fromTop = routeRank(initialState.destination.route) < 10
                     val toTop = routeRank(targetState.destination.route) < 10
                     if (fromTop && toTop) {
-                        fadeOut(tween(180)) + scaleOut(
-                            targetScale = 0.99f,
-                            animationSpec = tween(180)
-                        )
+                        ExitTransition.None
                     } else {
                         fadeOut(tween(180)) + slideOutHorizontally(tween(240)) { -it / 8 }
                     }
@@ -293,10 +302,7 @@ fun MyVaultNavGraph(
                     val fromTop = routeRank(initialState.destination.route) < 10
                     val toTop = routeRank(targetState.destination.route) < 10
                     if (fromTop && toTop) {
-                        fadeIn(tween(240)) + scaleIn(
-                            initialScale = 0.985f,
-                            animationSpec = tween(240)
-                        )
+                        EnterTransition.None
                     } else {
                         fadeIn(tween(220)) + slideInHorizontally(tween(300)) { -it / 5 }
                     }
@@ -309,10 +315,7 @@ fun MyVaultNavGraph(
                     val fromTop = routeRank(initialState.destination.route) < 10
                     val toTop = routeRank(targetState.destination.route) < 10
                     if (fromTop && toTop) {
-                        fadeOut(tween(180)) + scaleOut(
-                            targetScale = 0.99f,
-                            animationSpec = tween(180)
-                        )
+                        ExitTransition.None
                     } else {
                         fadeOut(tween(180)) + slideOutHorizontally(tween(260)) { it / 5 }
                     }
@@ -344,7 +347,8 @@ fun MyVaultNavGraph(
                 DocumentsScreen(
                     initialGroup = initialGroup,
                     onAddDocument = { navController.navigate(Routes.add(it)) },
-                    onDocumentClick = { navController.navigate(Routes.detail(it)) }
+                    onDocumentClick = { navController.navigate(Routes.detail(it)) },
+                    viewModel = documentsViewModel
                 )
             }
 

@@ -183,6 +183,7 @@ class BackupManager(
                             JSONObject().apply {
                                 put("id", member.id)
                                 put("name", member.name)
+                                putOrNull("displayName", member.displayName)
                                 put("relation", member.relation.name)
                                 putOrNull("photoEntry", photo?.entry)
                                 putOrNull("photoSize", photo?.size)
@@ -515,6 +516,7 @@ class BackupManager(
             members += MemberProfile(
                 id = backupId,
                 name = name,
+                displayName = item.optNullableString("displayName")?.trim()?.takeIf { it.isNotEmpty() },
                 relation = enumOrDefault(item.optString("relation"), Relation.OTHER),
                 photoEncryptedFileName = photo?.encryptedFileName,
                 photoMimeType = item.optNullableString("photoMimeType"),

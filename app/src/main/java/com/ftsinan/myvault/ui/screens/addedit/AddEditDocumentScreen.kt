@@ -376,7 +376,7 @@ fun AddEditDocumentScreen(
                 shape = RoundedCornerShape(18.dp),
                 modifier = Modifier.fillMaxWidth()
             )
-            if (!uiState.pendingIsPdf && uiState.pendingUris.isNotEmpty()) {
+            if (uiState.pendingUris.isNotEmpty()) {
                 when {
                     uiState.isOcrRunning -> {
                         Row(verticalAlignment = Alignment.CenterVertically) {

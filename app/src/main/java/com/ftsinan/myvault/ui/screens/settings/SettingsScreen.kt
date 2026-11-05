@@ -133,6 +133,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
@@ -1246,7 +1248,9 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(96.dp))
+            // Keep scroll clearance for the floating bottom dock without a large
+            // empty tail below the final Creator Space card.
+            Spacer(modifier = Modifier.height(80.dp))
             }
         }
     }
@@ -2654,6 +2658,7 @@ private fun CreatorSpace(
     val haptic = localSelectionHaptic()
     val copiedText = stringResource(R.string.action_copied)
     val animationsEnabled = LocalAnimationsEnabled.current
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     var flipped by remember { mutableStateOf(false) }
     var selectedBadge by remember { mutableStateOf<Int?>(null) }
@@ -3055,21 +3060,21 @@ private fun CreatorSpace(
             ) {
                 CreatorConnectTile(
                     icon = Icons.Filled.Code,
-                    label = "GitHub",
+                    label = if (isRtl) "جيت هب" else "GitHub",
                     modifier = Modifier.weight(1f),
                     onClick = { openUrl("https://github.com/ft-sinan") },
                     onLongClick = { copyCreatorText("https://github.com/ft-sinan") }
                 )
                 CreatorConnectTile(
                     icon = Icons.Filled.Send,
-                    label = "Telegram",
+                    label = if (isRtl) "تيليجرام" else "Telegram",
                     modifier = Modifier.weight(1f),
                     onClick = { openUrl("https://t.me/Exotatic") },
                     onLongClick = { copyCreatorText("@Exotatic") }
                 )
                 CreatorConnectTile(
                     icon = Icons.Filled.Chat,
-                    label = "WhatsApp",
+                    label = if (isRtl) "واتساب" else "WhatsApp",
                     modifier = Modifier.weight(1f),
                     onClick = { openUrl("https://wa.me/917558874118") },
                     onLongClick = { copyCreatorText("+91 7558874118") }

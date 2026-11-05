@@ -38,6 +38,8 @@
     <string name="member_edit_title">Modifica membro della famiglia</string>
     <string name="field_name">Nome completo *</string>
     <string name="field_name_hint">Nome come sul documento d\'identità</string>
+    <string name="field_display_name">Nome visualizzato (facoltativo)</string>
+    <string name="field_display_name_hint">Nome mostrato in Home e Famiglia</string>
     <string name="field_relation">Parentela</string>
     <string name="field_dob">Data di nascita</string>
     <string name="field_gender">Sesso</string>

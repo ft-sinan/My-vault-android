@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.Card
@@ -296,7 +296,7 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                     .weight(1f)
             ) {
                 Text(
-                    text = member.name,
+                    text = member.listName,
                     style = MaterialTheme.typography.titleLarge,
                     color = contentColor,
                     maxLines = 1,
@@ -333,7 +333,7 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                 Spacer(Modifier.width(4.dp))
             }
             Icon(
-                Icons.Filled.ChevronRight,
+                Icons.AutoMirrored.Filled.ChevronRight,
                 contentDescription = null,
                 tint = mutedContentColor
             )
