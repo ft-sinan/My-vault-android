@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -55,6 +54,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.backup.BackupProtection
 import com.ftsinan.myvault.ui.components.BackupOwnerSelector
+import com.ftsinan.myvault.ui.components.DirectionalChevronRight
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
 import com.ftsinan.myvault.ui.components.ShieldKeyholeMark
 import com.ftsinan.myvault.util.FormatUtils
@@ -428,9 +428,7 @@ private fun FirstRunChoiceCard(
                     color = subtitleColor
                 )
             }
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ChevronRight,
-                contentDescription = null,
+            DirectionalChevronRight(
                 tint = chevronColor,
                 modifier = Modifier.size(22.dp)
             )

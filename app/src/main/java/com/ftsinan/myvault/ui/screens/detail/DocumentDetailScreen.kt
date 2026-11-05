@@ -6,6 +6,7 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import android.text.format.DateFormat
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -638,6 +639,7 @@ private fun PageLabel(pageNumber: Int, totalPages: Int) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ZoomableImage(bytes: ByteArray) {
     var scale by remember(bytes.size) { mutableStateOf(1f) }

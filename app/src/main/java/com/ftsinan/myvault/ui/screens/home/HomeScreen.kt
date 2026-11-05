@@ -28,7 +28,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
@@ -67,6 +66,7 @@ import com.ftsinan.myvault.R
 import com.ftsinan.myvault.ui.theme.LocalAnimationsEnabled
 import com.ftsinan.myvault.ui.theme.animatedPlacement
 import com.ftsinan.myvault.data.model.MemberListItem
+import com.ftsinan.myvault.ui.components.DirectionalChevronRight
 import com.ftsinan.myvault.ui.components.DocumentCard
 import com.ftsinan.myvault.ui.components.EmptyState
 import com.ftsinan.myvault.ui.components.CapsuleTopBar
@@ -221,7 +221,7 @@ fun HomeScreen(
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = onFamilyClick) {
-                            Icon(Icons.AutoMirrored.Filled.ChevronRight, contentDescription = null)
+                            DirectionalChevronRight()
                         }
                     }
                 }
@@ -456,9 +456,7 @@ private fun OwnerProfileCard(
                                 .background(contentColor.copy(alpha = 0.10f)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ChevronRight,
-                                contentDescription = null,
+                            DirectionalChevronRight(
                                 tint = contentColor,
                                 modifier = Modifier.size(18.dp)
                             )

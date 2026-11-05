@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.Card
@@ -50,6 +49,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ftsinan.myvault.R
 import com.ftsinan.myvault.data.model.MemberListItem
 import com.ftsinan.myvault.ui.components.CapsuleTopBar
+import com.ftsinan.myvault.ui.components.DirectionalChevronRight
 import com.ftsinan.myvault.ui.components.HeaderCircleButton
 import com.ftsinan.myvault.ui.components.MemberAvatar
 import com.ftsinan.myvault.ui.components.MorphingShapeBox
@@ -332,11 +332,7 @@ private fun MemberProfileCard(item: MemberListItem, onClick: () -> Unit, modifie
                 }
                 Spacer(Modifier.width(4.dp))
             }
-            Icon(
-                Icons.AutoMirrored.Filled.ChevronRight,
-                contentDescription = null,
-                tint = mutedContentColor
-            )
+            DirectionalChevronRight(tint = mutedContentColor)
         }
     }
 }
