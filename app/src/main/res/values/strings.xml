@@ -41,6 +41,8 @@
     <string name="member_edit_title">Edit family member</string>
     <string name="field_name">Full name *</string>
     <string name="field_name_hint">Name as on your ID</string>
+    <string name="field_display_name">Display name (optional)</string>
+    <string name="field_display_name_hint">Name shown in Home and Family</string>
     <string name="field_relation">Relation</string>
     <string name="field_dob">Date of birth</string>
     <string name="field_gender">Gender</string>

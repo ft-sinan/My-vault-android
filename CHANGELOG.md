@@ -2,7 +2,16 @@
 
 All notable changes to FT Vault are documented here.
 
-## [Unreleased]
+## [1.4.0] - 2026-11-05
+
+### Added
+- Optional family-member display names for Home and Family lists. Tapping a member still opens their profile with the real name; `.mvbackup` restore preserves display names, and existing vaults migrate safely.
+- On-device OCR suggestions for imported PDFs as well as images, checking up to the first two PDF pages.
+
+### Changed
+- Arabic now uses explicit RTL layout direction, mirrored navigation chevrons, and more natural Arabic UI wording, including localized technical/social labels.
+- Main tabs draw edge-to-edge behind transparent system bars, and Home/Documents/Family tab switches no longer animate, reducing perceived load delay.
+- Reduced excess space below Creator Space; document preview images now allow page scrolling at normal zoom while preserving pinch zoom and pan.
 
 ## [1.3.0] - 2026-10-27
 

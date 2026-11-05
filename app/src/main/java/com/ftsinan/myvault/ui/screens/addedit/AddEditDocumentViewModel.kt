@@ -182,9 +182,8 @@ class AddEditDocumentViewModel(
             )
         }
 
-        if (!isPdf) runOcr(accepted) else {
-            _uiState.update { it.copy(ocrCompleted = true, ocrFoundNumber = false) }
-        }
+        // OCR both picked images and PDFs (the PDF path checks its first pages).
+        runOcr(accepted)
     }
 
     fun onScannerError(message: String?) {

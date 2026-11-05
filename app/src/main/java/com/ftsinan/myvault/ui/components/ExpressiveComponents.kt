@@ -34,6 +34,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -63,6 +64,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -84,6 +86,21 @@ import kotlin.math.sin
  * available to My Vault. The blob is intentionally a real animated Shape:
  * its lobes slowly rotate and breathe instead of being a static rounded box.
  */
+@Composable
+fun DirectionalChevronRight(
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colorScheme.onSurface,
+    contentDescription: String? = null
+) {
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    Icon(
+        imageVector = Icons.Filled.ChevronRight,
+        contentDescription = contentDescription,
+        tint = tint,
+        modifier = modifier.graphicsLayer { scaleX = if (isRtl) -1f else 1f }
+    )
+}
+
 class BlobShape(
     private val lobes: Int = 9,
     private val wave: Float = 0.13f,

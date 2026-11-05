@@ -291,6 +291,11 @@ class DocumentRepository(
                     matchedMemberCount += 1
 
                     var updated = match
+                    if (updated.displayName.isNullOrBlank() &&
+                        !backupMember.displayName.isNullOrBlank()
+                    ) {
+                        updated = updated.copy(displayName = backupMember.displayName)
+                    }
                     if (updated.gender.isNullOrBlank() &&
                         !backupMember.gender.isNullOrBlank()
                     ) {

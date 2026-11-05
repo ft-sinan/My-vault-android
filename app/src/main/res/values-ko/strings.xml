@@ -38,6 +38,8 @@
     <string name="member_edit_title">가족 구성원 편집</string>
     <string name="field_name">성명 *</string>
     <string name="field_name_hint">신분증상의 이름</string>
+    <string name="field_display_name">표시 이름(선택사항)</string>
+    <string name="field_display_name_hint">홈과 가족 화면에 표시할 이름</string>
     <string name="field_relation">관계</string>
     <string name="field_dob">생년월일</string>
     <string name="field_gender">성별</string>

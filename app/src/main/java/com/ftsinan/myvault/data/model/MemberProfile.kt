@@ -14,6 +14,8 @@ import androidx.room.PrimaryKey
 data class MemberProfile(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
+    /** Optional friendly label shown in Home/Family lists; profile details keep [name]. */
+    val displayName: String? = null,
     val relation: Relation = Relation.OTHER,
     val photoEncryptedFileName: String? = null,
     val photoMimeType: String? = null,
@@ -26,7 +28,10 @@ data class MemberProfile(
     val sortOrder: Int = 0,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
-)
+) {
+    val listName: String
+        get() = displayName?.trim()?.takeIf { it.isNotEmpty() } ?: name
+}
 
 object ProfileOptions {
     val genders = listOf("Male", "Female", "Other", "Prefer not to say")

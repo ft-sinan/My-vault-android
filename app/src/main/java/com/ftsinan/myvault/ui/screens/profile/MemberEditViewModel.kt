@@ -21,6 +21,7 @@ data class MemberEditUiState(
     val existing: MemberProfile? = null,
     val isOwner: Boolean = false,
     val name: String = "",
+    val displayName: String = "",
     val relation: Relation = Relation.OTHER,
     val dateOfBirth: Long? = null,
     val gender: String? = null,
@@ -63,6 +64,7 @@ class MemberEditViewModel(
                 existing = member,
                 isOwner = member.isOwner,
                 name = member.name,
+                displayName = member.displayName.orEmpty(),
                 relation = member.relation,
                 dateOfBirth = member.dateOfBirth,
                 gender = member.gender,
@@ -73,6 +75,7 @@ class MemberEditViewModel(
     }
 
     fun onNameChange(value: String) = _uiState.update { it.copy(name = value, error = null) }
+    fun onDisplayNameChange(value: String) = _uiState.update { it.copy(displayName = value) }
     fun onRelationChange(value: Relation) = _uiState.update { it.copy(relation = value) }
     fun onDateOfBirthChange(value: Long?) = _uiState.update { it.copy(dateOfBirth = value) }
     fun onGenderChange(value: String?) = _uiState.update { it.copy(gender = value) }
@@ -94,6 +97,7 @@ class MemberEditViewModel(
                 val member = MemberProfile(
                     id = existing?.id ?: 0,
                     name = state.name.trim(),
+                    displayName = state.displayName.trim().takeIf { it.isNotEmpty() },
                     relation = if (state.isOwner) Relation.SELF else state.relation,
                     photoEncryptedFileName = existing?.photoEncryptedFileName,
                     photoMimeType = existing?.photoMimeType,

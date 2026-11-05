@@ -38,6 +38,8 @@
     <string name="member_edit_title">Familienmitglied bearbeiten</string>
     <string name="field_name">Vollständiger Name *</string>
     <string name="field_name_hint">Name wie auf Ihrem Ausweis</string>
+    <string name="field_display_name">Anzeigename (optional)</string>
+    <string name="field_display_name_hint">Name, der auf Startseite und Familie angezeigt wird</string>
     <string name="field_relation">Verwandtschaft</string>
     <string name="field_dob">Geburtsdatum</string>
     <string name="field_gender">Geschlecht</string>

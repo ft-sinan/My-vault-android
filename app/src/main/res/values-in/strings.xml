@@ -38,6 +38,8 @@
     <string name="member_edit_title">Edit anggota keluarga</string>
     <string name="field_name">Nama lengkap *</string>
     <string name="field_name_hint">Nama sesuai ID Anda</string>
+    <string name="field_display_name">Nama tampilan (opsional)</string>
+    <string name="field_display_name_hint">Nama yang ditampilkan di Beranda dan Keluarga</string>
     <string name="field_relation">Hubungan keluarga</string>
     <string name="field_dob">Tanggal lahir</string>
     <string name="field_gender">Jenis Kelamin</string>

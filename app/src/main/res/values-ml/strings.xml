@@ -39,6 +39,8 @@
     <string name="member_edit_title">കുടുംബാംഗത്തെ തിരുത്തുക</string>
     <string name="field_name">മുഴുവൻ പേര് *</string>
     <string name="field_name_hint">ഐഡിയിലെ പോലെ പേര്</string>
+    <string name="field_display_name">പ്രദർശന നാമം (ഐച്ഛികം)</string>
+    <string name="field_display_name_hint">ഹോമിലും കുടുംബത്തിലും കാണിക്കുന്ന പേര്</string>
     <string name="field_relation">ബന്ധം</string>
     <string name="field_dob">ജനനത്തീയതി</string>
     <string name="field_gender">ലിംഗം</string>

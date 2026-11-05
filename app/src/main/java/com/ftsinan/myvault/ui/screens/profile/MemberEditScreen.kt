@@ -210,6 +210,16 @@ fun MemberEditScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            OutlinedTextField(
+                value = uiState.displayName,
+                onValueChange = viewModel::onDisplayNameChange,
+                label = { Text(stringResource(R.string.field_display_name)) },
+                placeholder = { Text(stringResource(R.string.field_display_name_hint)) },
+                singleLine = true,
+                shape = RoundedCornerShape(18.dp),
+                modifier = Modifier.fillMaxWidth()
+            )
+
             if (!uiState.isOwner) {
                 FieldLabel(stringResource(R.string.field_relation))
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
