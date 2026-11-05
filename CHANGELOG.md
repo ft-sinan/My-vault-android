@@ -2,7 +2,7 @@
 
 All notable changes to FT Vault are documented here.
 
-## [Unreleased]
+## [1.4.0] - 2026-11-05
 
 ### Added
 - Optional family-member display names for Home and Family lists. Tapping a member still opens their profile with the real name; `.mvbackup` restore preserves display names, and existing vaults migrate safely.
